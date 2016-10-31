@@ -10,6 +10,7 @@ class TeammateSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'name',
             'role',
+            'photo',
             )
 
 

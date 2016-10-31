@@ -19,6 +19,7 @@ from web import views as web_views
 from team import urls as team_urls
 from projects import urls as projects_urls
 from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -34,4 +35,4 @@ if settings.DEBUG:
     urlpatterns += [
         url(r'^', include('fake_uaa_provider.urls',
                           namespace='fake_uaa_provider'))
-        ]
+        ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

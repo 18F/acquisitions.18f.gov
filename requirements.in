@@ -7,6 +7,7 @@ djangorestframework
 factory_boy
 markdown
 pep8
+Pillow
 pip-tools
 poirot
 psycopg2

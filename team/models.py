@@ -20,6 +20,10 @@ class Teammate(models.Model):
     slack = models.CharField(max_length=100, blank=True, null=True)
     read_only = models.BooleanField(default=False)
     role = models.ForeignKey(Role)
+    photo = models.ImageField(
+        upload_to='/team/photos',
+        default='/team/photos/default.png'
+        )
 
     def __str__(self):
         return self.name
