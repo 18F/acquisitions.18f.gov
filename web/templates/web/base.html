@@ -1,0 +1,43 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}TTS Office of Acquisitions{% endblock %}</title>
+    <meta name="description" content="Modular Contracting and Agile Development in government.">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="TTS Office of Acquisitions" />
+    <meta name="twitter:title" content="TTS Office of Acquisitions">
+    <meta property="og:url" content="{{ request.get_host }}/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="{{ request.get_host }}/assets/img/feature-background.jpg">
+    <meta name="twitter:image" content="{{ request.get_host }}/assets/img/feature-background.jpg">
+    <meta property="og:description" content="Modular Contracting and Agile Development in government.">
+    <meta name="twitter:description" content="Modular Contracting and Agile Development in government.">
+
+    <link rel="stylesheet" href="{% static "css/uswds.min.css" %}">
+    <link rel="stylesheet" href="{% static "web/css/style.css" %}">
+    <script src="{% static "js/uswds.min.js" %}"></script>
+
+    <link rel="shortcut icon" type="image/x-icon" href="{% static "img/favicons/favicon.ico" %}" />
+
+    {% block resources %}{% endblock %}
+  </head>
+  <body>
+    <a class="usa-skipnav" href="#main-content">Skip to main content</a>
+    {% include "web/includes/header.html" %}
+    <div class="usa-overlay"></div>
+    <main id="main-content" class="usa-grid">
+
+      {% block content %}
+
+      {% endblock %}
+
+    </main>
+    {% include "web/includes/footer.html" %}
+  </body>
+</html>

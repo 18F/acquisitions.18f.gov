@@ -1,0 +1,10 @@
+applications:
+- name: acquisitions
+  instances: 1
+  memory: 512M
+  disk_quota: 1024M
+  routes:
+  - route: acquisitions.fr.cloud.gov
+  services:
+  - acquisitions-psql
+  stack: cflinuxfs2

@@ -1,0 +1,36 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+  <div class="usa-width-one-full">
+    <h1>Projects</h1>
+    <h2>Current</h2>
+    <div id="current">
+
+    </div>
+  </div>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var team = document.getElementById('team');
+      var r = new XMLHttpRequest();
+      r.open("GET", "/projects/api/projects", true);
+      r.onreadystatechange = function () {
+        if (r.readyState != 4 || r.status != 200) return;
+        var jsonResponse = JSON.parse(r.responseText);
+        if (jsonResponse.length > 0) {
+          for (const person of jsonResponse) {
+            var div = document.createElement("div");
+            var content = document.createTextNode(person.name);
+            div.appendChild(content);
+            team.appendChild(div);
+          }
+        } else {
+          var div = document.createElement("div");
+          var content = document.createTextNode("No current projects");
+          div.appendChild(content);
+          team.appendChild(div);
+        }
+      };
+      r.send();
+    });
+  </script>
+{% endblock %}
