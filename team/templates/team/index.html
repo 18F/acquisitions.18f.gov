@@ -55,6 +55,9 @@
               var grid = document.createElement('div');
               grid.className = 'usa-grid-full';
               grid.appendChild(createTeammate(person.name, person.role, person.photo));
+              if (count === jsonResponse.length) {
+                team.appendChild(grid);
+              }
             } else {
               // Add an element and close the grid row if this is an element
               // in the second column
