@@ -9,7 +9,7 @@ def home(request):
     return render(request, "projects/index.html")
 
 
-class IaaViewSet(viewsets.ModelViewSet):
+class IAAViewSet(viewsets.ModelViewSet):
     """
     API method to view IAAs
     """
