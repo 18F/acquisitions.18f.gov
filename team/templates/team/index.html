@@ -8,10 +8,16 @@
     </div>
   </div>
   <script type="text/javascript">
-    function createTeammate(name, role) {
+    function createTeammate(name, role, photoUrl) {
       // Create a div element with information about the teammate
       let div = document.createElement("div");
       div.className = 'usa-width-one-half';
+      let innerDiv = document.createElement('div');
+      innerDiv.className = 'usa-grid';
+      let leftDiv = document.createElement('div');
+      leftDiv.className = 'usa-width-one-third';
+      let rightDiv = document.createElement('div');
+      rightDiv.className = 'usa-width-two-thirds teammateRight';
       let teammateName = document.createElement('div');
       let nameContent = document.createTextNode(name);
       teammateName.appendChild(nameContent);
@@ -20,8 +26,16 @@
       let roleContent = document.createTextNode(role);
       teammateRole.appendChild(roleContent);
       teammateRole.className = 'teammateRole';
-      div.appendChild(teammateName);
-      div.appendChild(teammateRole);
+      let teammatePhoto = document.createElement('img');
+      teammatePhoto.src = photoUrl;
+      teammatePhoto.alt = name;
+      teammatePhoto.height = 96;
+      leftDiv.appendChild(teammatePhoto);
+      rightDiv.appendChild(teammateName);
+      rightDiv.appendChild(teammateRole);
+      innerDiv.appendChild(leftDiv);
+      innerDiv.appendChild(rightDiv);
+      div.appendChild(innerDiv)
       return div
     }
     document.addEventListener("DOMContentLoaded", function(event) {
@@ -40,11 +54,11 @@
               // in the first column
               var grid = document.createElement('div');
               grid.className = 'usa-grid-full';
-              grid.appendChild(createTeammate(person.name, person.role));
+              grid.appendChild(createTeammate(person.name, person.role, person.photo));
             } else {
               // Add an element and close the grid row if this is an element
               // in the second column
-              grid.appendChild(createTeammate(person.name, person.role));
+              grid.appendChild(createTeammate(person.name, person.role, person.photo));
               team.appendChild(grid);
             }
           }

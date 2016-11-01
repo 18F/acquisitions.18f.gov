@@ -1,3 +1,12 @@
 .teammateName {
   font-weight: bold;
 }
+
+@media screen and (min-width: 600px) {
+  .teammateRight {
+    height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
