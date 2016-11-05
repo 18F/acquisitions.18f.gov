@@ -24,7 +24,7 @@ pip install -r requirements.txt
 The project runs a PostgreSQL database. Set up the database:
 
 ```
-createdb
+createdb acquisitions
 ./manage.py migrate
 ```
 
