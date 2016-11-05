@@ -5,9 +5,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
 
-from . import email
-from .schedules import registry
-
 
 class UniqueEmailFormMixin:
     '''
@@ -93,7 +90,7 @@ class CustomUserAdmin(UserAdmin):
 
     form = CustomUserChangeForm
 
-    add_form_template = 'admin/data_capture/add_user_form.html'
+    add_form_template = 'admin/add_user_form.html'
 
     add_form = CustomUserCreationForm
 
