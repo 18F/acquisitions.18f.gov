@@ -18,7 +18,6 @@ class Teammate(models.Model):
     bio = models.TextField(max_length=1000, blank=True, null=True)
     github = models.CharField(max_length=100, blank=True, null=True)
     slack = models.CharField(max_length=100, blank=True, null=True)
-    read_only = models.BooleanField(default=False)
     role = models.ForeignKey(Role)
     photo = models.ImageField(
         upload_to='/team/photos',
@@ -30,6 +29,3 @@ class Teammate(models.Model):
 
     def is_teammate(self):
         return True
-
-    def is_read_only(self):
-        return self.read_only
