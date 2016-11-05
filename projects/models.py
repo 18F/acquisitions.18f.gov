@@ -86,3 +86,8 @@ class Project(models.Model):
     active = models.BooleanField(
         default=True,
     )
+
+    class Meta:
+        permissions = (
+            ('view_private', 'Can view non-public projects'),
+        )

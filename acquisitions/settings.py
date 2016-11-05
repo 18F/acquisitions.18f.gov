@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'team',
     'web',
     'uaa_client',
+    'acquisitions',
 )
 
 MIDDLEWARE_CLASSES = (
