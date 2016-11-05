@@ -1,19 +1,21 @@
 {% extends "web/base.html" %}
 
 {% block content %}
-  <div class="usa-width-one-full">
-    <h1>Team</h1>
-    <div id="team">
+  <section class="usa-grid">
+    <div class="usa-width-one-full">
+      <h1>Team</h1>
+      <div id="team">
 
+      </div>
     </div>
-  </div>
+  </section>
   <script type="text/javascript">
     function createTeammate(name, role, photoUrl) {
       // Create a div element with information about the teammate
       let div = document.createElement("div");
       div.className = 'usa-width-one-half';
       let innerDiv = document.createElement('div');
-      innerDiv.className = 'usa-grid';
+      innerDiv.className = 'usa-grid-full';
       let leftDiv = document.createElement('div');
       leftDiv.className = 'usa-width-one-third';
       let rightDiv = document.createElement('div');
