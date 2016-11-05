@@ -68,7 +68,7 @@ that API rather than building it into the templates.
 There are several potential tiers of users:
 
 1. Public users with no authentication
-1. Internal users with cloud.gov-supported email addresses (currently gsa@.gov
+1. Internal users with cloud.gov-supported email addresses (currently @gsa.gov
   and @epa.gov)
 1. Internal users who are also "teammates"
 1. Internal users who are also "teammates" and have write privileges.
