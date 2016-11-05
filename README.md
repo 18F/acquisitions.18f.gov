@@ -21,17 +21,19 @@ mkvirtualenv acquisitions
 pip install -r requirements.txt
 ```
 
-The project runs a PostgreSQL database. Set up the database:
+The project runs a PostgreSQL database. Set up the database and create the user groups:
 
 ```
 createdb acquisitions
 ./manage.py migrate
+./manage.py init_groups
 ```
 
 Optionally, populate the database with some fake data:
 
 ```
 ./manage.py create_team
+./manage.py create_projects
 ```
 
 Because of the authentication flow, a superuser should be created without a
