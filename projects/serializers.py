@@ -2,7 +2,7 @@ from rest_framework import serializers
 from projects.models import IAA, Project
 
 
-class IaaSerializer(serializers.HyperlinkedModelSerializer):
+class IAASerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = IAA
         fields = (

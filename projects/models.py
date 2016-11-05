@@ -50,6 +50,9 @@ class IAA(models.Model):
         null=True,
     )
 
+    def is_signed(self):
+        return self.signed_on != null
+
 
 class Project(models.Model):
     name = models.CharField(

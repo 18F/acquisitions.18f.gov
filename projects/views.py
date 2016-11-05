@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from projects.models import IAA, Project
-from projects.serializers import IaaSerializer, ProjectSerializer
+from projects.serializers import IAASerializer, ProjectSerializer
 
 
 # Create your views here.
@@ -13,13 +13,25 @@ class IAAViewSet(viewsets.ModelViewSet):
     """
     API method to view IAAs
     """
-    queryset = IAA.objects.all()
-    serializer_class = IaaSerializer
+    serializer_class = IAASerializer
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated():
+            return IAA.objects.all()
+        else:
+            return IAA.objects.exclude(signed_on=null)
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
     """
     API method to view projects
     """
-    queryset = Project.objects.filter(public=True)
     serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        # TODO: should look at user approval to see information, which
+        # may be more restricted than authentication
+        if self.request.user.is_authenticated():
+            return Project.objects.all()
+        else:
+            return Project.objects.filter(public=True)
