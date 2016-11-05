@@ -4,6 +4,7 @@
   <div class="usa-width-one-full">
     <h1>Projects</h1>
     <h2>Current</h2>
+    <!-- TODO: divide projects into phases -->
     <div id="current">
 
     </div>
@@ -34,7 +35,6 @@
         if (jsonResponse.length > 0) {
           for (const project of jsonResponse) {
             var grid = document.createElement('div');
-            // grid.className = 'usa-grid-full';
             grid.appendChild(createProject(project.name, project.description));
             current.appendChild(grid);
           }
