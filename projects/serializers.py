@@ -16,5 +16,6 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         model = Project
         fields = (
             'name',
-            'project_type'
+            'project_type',
+            'description'
             )

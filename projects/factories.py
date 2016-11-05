@@ -20,6 +20,6 @@ class ProjectFactory(factory.django.DjangoModelFactory):
         model = Project
 
     iaa = factory.SubFactory(IAAFactory)
-    description = factory.Faker('paragraphs')
+    description = factory.Faker('paragraph')
     name = factory.Faker('catch_phrase')
     public = factory.Faker('boolean')

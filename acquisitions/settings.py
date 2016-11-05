@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework.authtoken',
     'projects',
     'team',
     'web',
@@ -148,3 +149,12 @@ if not UAA_CLIENT_SECRET:
         UAA_AUTH_URL = UAA_TOKEN_URL = 'fake:'
     else:
         raise Exception('UAA_CLIENT_SECRET must be defined in production.')
+
+
+# REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
