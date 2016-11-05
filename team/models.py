@@ -29,3 +29,8 @@ class Teammate(models.Model):
 
     def is_teammate(self):
         return True
+
+    class Meta:
+        permissions = (
+            ('view_private', 'Can view private team info'),
+        )

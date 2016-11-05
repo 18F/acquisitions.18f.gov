@@ -14,6 +14,22 @@ class TeammateSerializer(serializers.HyperlinkedModelSerializer):
             )
 
 
+class TeammatePlusSerializer(serializers.HyperlinkedModelSerializer):
+    role = serializers.CharField(source='role.name')
+    email = serializers.EmailField(source='user.email')
+
+    class Meta:
+        model = Teammate
+        fields = (
+            'name',
+            'role',
+            'photo',
+            'github',
+            'slack',
+            'email',
+            )
+
+
 class RoleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Role

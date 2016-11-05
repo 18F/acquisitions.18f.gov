@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from team.models import Teammate, Role
-from team.serializers import TeammateSerializer, RoleSerializer
+from team.serializers import TeammateSerializer, \
+    TeammatePlusSerializer, RoleSerializer
 
 
 # Create your views here.
@@ -14,7 +15,12 @@ class TeammateViewSet(viewsets.ModelViewSet):
     API method to view teammates
     """
     queryset = Teammate.objects.all()
-    serializer_class = TeammateSerializer
+
+    def get_serializer_class(self):
+        if self.request.user.has_perm('team.view_private'):
+            return TeammatePlusSerializer
+        else:
+            return TeammateSerializer
 
 
 class RoleViewSet(viewsets.ModelViewSet):

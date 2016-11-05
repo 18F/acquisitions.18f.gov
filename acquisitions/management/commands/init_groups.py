@@ -16,7 +16,29 @@ class Command(BaseCommand):
             )
             group.save()
         group.permissions = [
-            Permission.objects.get(codename='view_private'),
+            Permission.objects.get(
+                codename='view_private',
+                content_type=9,
+            ),
+            Permission.objects.get(codename='add_iaa'),
+            Permission.objects.get(codename='change_iaa'),
+            Permission.objects.get(codename='add_project'),
+            Permission.objects.get(codename='change_project')
+        ]
+        group.save()
+
+        try:
+            group = Group.objects.get(name='Teammates')
+        except Group.DoesNotExist:
+            group = Group(
+                name='Teammates'
+            )
+            group.save()
+        group.permissions = [
+            Permission.objects.get(
+                codename='view_private',
+                content_type=11,
+            ),
             Permission.objects.get(codename='add_iaa'),
             Permission.objects.get(codename='change_iaa'),
             Permission.objects.get(codename='add_project'),
