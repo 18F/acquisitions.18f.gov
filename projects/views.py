@@ -31,7 +31,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # TODO: should look at user approval to see information, which
         # may be more restricted than authentication
-        if self.request.user.is_authenticated():
+        if self.request.user.has_perm('projects.view_private'):
             return Project.objects.all()
         else:
             return Project.objects.filter(public=True)
