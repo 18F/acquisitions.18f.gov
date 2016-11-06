@@ -5,6 +5,7 @@ Django
 django-filter
 djangorestframework
 factory_boy
+httmock
 markdown
 pep8
 Pillow

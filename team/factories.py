@@ -10,7 +10,6 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     username = factory.Faker('user_name')
     email = factory.Faker('safe_email')
-    password = factory.Faker('password', length=30)
     is_active = True
     is_staff = False
     is_superuser = False

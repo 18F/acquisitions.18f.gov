@@ -2,6 +2,18 @@ import factory
 import string
 import factory.fuzzy
 from projects.models import IAA, Project
+from django.contrib.auth.models import User
+
+
+class UserFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = User
+
+    username = factory.Faker('user_name')
+    email = factory.Faker('safe_email')
+    is_active = True
+    is_staff = False
+    is_superuser = False
 
 
 class IAAFactory(factory.django.DjangoModelFactory):
