@@ -14,17 +14,41 @@ def home(request):
     return render(request, "projects/index.html")
 
 
-# class IAAViewSet(viewsets.ModelViewSet):
-#     """
-#     API method to view IAAs
-#     """
-#     serializer_class = IAASerializer
-#
-#     def get_queryset(self):
-#         if self.request.user.is_authenticated():
-#             return IAA.objects.all()
-#         else:
-#             return IAA.objects.exclude(signed_on=null)
+class IAAList(mixins.ListModelMixin,
+              generics.GenericAPIView):
+    """
+    List all IAAs
+    """
+    serializer_class = IAASerializer
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated():
+            return IAA.objects.all()
+        else:
+            return IAA.objects.exclude(signed_on=null)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+def IAADetail(mixins.RetrieveModelMixin,
+              generics.GenericAPIView):
+    """
+    Retrieve details of one IAA
+    """
+    serializer_class = IAASerializer
+
+    def get_queryset(self):
+        iaa = IAA.objects.get(pk=self.kwargs['pk'])
+        if iaa.signed_on:
+            return iaa
+        elif self.request.user.is_authenticated():
+            return iaa
+        else:
+            raise Http404
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
 
 class ProjectList(mixins.ListModelMixin,
