@@ -1,13 +1,10 @@
 from django.shortcuts import render
 from django.http import Http404
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from projects.models import IAA, Project
 from projects.serializers import IAASerializer, ProjectSerializer
 
@@ -28,26 +25,6 @@ def home(request):
 #             return IAA.objects.all()
 #         else:
 #             return IAA.objects.exclude(signed_on=null)
-
-
-# @api_view(['GET'])
-# def project_list(request, format=None):
-#     if request.method == 'GET':
-#         projects = Project.objects.all()
-#         serializer = ProjectSerializer(projects, many=True)
-#         return Response(serializer.data)
-
-
-@api_view(['GET'])
-def project_detail(request, pk, format=None):
-    try:
-        project = Project.objects.get(pk=pk)
-    except Project.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = ProjectSerializer(project)
-        return Response(serializer.data)
 
 
 class ProjectList(mixins.ListModelMixin,
