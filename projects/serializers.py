@@ -11,7 +11,7 @@ class IAASerializer(serializers.HyperlinkedModelSerializer):
             )
 
 
-class ProjectSerializer(serializers.HyperlinkedModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = (
