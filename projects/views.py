@@ -3,6 +3,8 @@ from django.http import Http404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from rest_framework import status
+from rest_framework import mixins
+from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -48,28 +50,32 @@ def project_detail(request, pk, format=None):
         return Response(serializer.data)
 
 
-class ProjectList(APIView):
+class ProjectList(mixins.ListModelMixin,
+                  generics.GenericAPIView):
     """
     List all projects
     """
+    serializer_class = ProjectSerializer
+
     def get_queryset(self):
         if self.request.user.has_perm('projects.view_private'):
             return Project.objects.all()
         else:
             return Project.objects.filter(public=True)
 
-    def get(self, request, format=None):
-        queryset = self.get_queryset()
-        serializer = ProjectSerializer(queryset, many=True)
-        return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 
-class ProjectDetail(APIView):
+class ProjectDetail(mixins.RetrieveModelMixin,
+                    generics.GenericAPIView):
     """
     Retrieve details of one project
     """
-    def get_object(self, pk):
-        project = Project.objects.get(pk=pk)
+    serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        project = Project.objects.get(pk=self.kwargs['pk'])
         if project.public:
             return project
         elif self.request.user.has_perm('projects.view_private'):
@@ -77,7 +83,5 @@ class ProjectDetail(APIView):
         else:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        queryset = self.get_object(pk)
-        serializer = ProjectSerializer(queryset)
-        return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
