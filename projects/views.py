@@ -31,7 +31,7 @@ class IAAList(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
 
-def IAADetail(mixins.RetrieveModelMixin,
+class IAADetail(mixins.RetrieveModelMixin,
               generics.GenericAPIView):
     """
     Retrieve details of one IAA
@@ -41,9 +41,9 @@ def IAADetail(mixins.RetrieveModelMixin,
     def get_queryset(self):
         iaa = IAA.objects.get(pk=self.kwargs['pk'])
         if iaa.signed_on:
-            return iaa
+            return IAA.objects.filter(pk=self.kwargs['pk'])
         elif self.request.user.is_authenticated():
-            return iaa
+            return IAA.objects.filter(pk=self.kwargs['pk'])
         else:
             raise Http404
 
@@ -77,10 +77,10 @@ class ProjectDetail(mixins.RetrieveModelMixin,
 
     def get_queryset(self):
         project = Project.objects.get(pk=self.kwargs['pk'])
-        if project.public:
-            return project
+        if project.public is True:
+            return Project.objects.filter(pk=self.kwargs['pk'])
         elif self.request.user.has_perm('projects.view_private'):
-            return project
+            return Project.objects.filter(pk=self.kwargs['pk'])
         else:
             raise Http404
 

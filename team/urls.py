@@ -1,13 +1,11 @@
 from django.conf.urls import include, url
 from team import views
-from rest_framework import routers
-
-# TODO: convert from viewsets to views for greater control
-router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'people/?', views.TeammateViewSet)
-router.register(r'roles/?', views.RoleViewSet)
+from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
-    url(r'^api/', include(router.urls))
+    url(r'^api/people/$', views.TeammateList.as_view()),
+    url(r'^api/people/(?P<pk>[0-9]+)', views.TeammateDetail.as_view())
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
