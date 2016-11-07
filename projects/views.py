@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -37,6 +38,7 @@ class JSONResponse(HttpResponse):
 #             return IAA.objects.exclude(signed_on=null)
 
 
+@csrf_exempt
 def project_list(request):
     if request.method == 'GET':
         projects = Project.objects.all()
