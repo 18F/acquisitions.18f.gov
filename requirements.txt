@@ -10,6 +10,7 @@ coverage==4.2
 dj-database-url==0.4.1
 django-filter==0.15.3
 django==1.10.3
+djangorestframework-csv==2.0.0
 djangorestframework==3.5.2
 factory-boy==2.7.0
 fake-factory==0.7.2       # via factory-boy
@@ -31,6 +32,7 @@ pytest==3.0.3
 python-dateutil==2.5.3    # via fake-factory
 regex==2016.10.22         # via poirot
 requests==2.11.1
-six==1.10.0               # via fake-factory, pip-tools, python-dateutil
+six==1.10.0               # via djangorestframework-csv, fake-factory, pip-tools, python-dateutil
 tqdm==4.9.0               # via poirot
+unicodecsv==0.14.1        # via djangorestframework-csv
 whitenoise==3.2.2

@@ -4,6 +4,7 @@ dj-database-url
 Django
 django-filter
 djangorestframework
+djangorestframework-csv
 factory_boy
 httmock
 markdown
