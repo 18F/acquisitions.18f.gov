@@ -2,10 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
+from rest_framework.decorators import api_view
 from projects.models import IAA, Project
 from projects.serializers import IAASerializer, ProjectSerializer
 
@@ -13,16 +13,6 @@ from projects.serializers import IAASerializer, ProjectSerializer
 # Create your views here.
 def home(request):
     return render(request, "projects/index.html")
-
-
-class JSONResponse(HttpResponse):
-    """
-    An HttpResponse that renders its content into JSON.
-    """
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
 
 
 # class IAAViewSet(viewsets.ModelViewSet):
@@ -38,12 +28,24 @@ class JSONResponse(HttpResponse):
 #             return IAA.objects.exclude(signed_on=null)
 
 
-@csrf_exempt
-def project_list(request):
+@api_view(['GET'])
+def project_list(request, format=None):
     if request.method == 'GET':
         projects = Project.objects.all()
         serializer = ProjectSerializer(projects, many=True)
-        return JSONResponse(serializer.data)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def project_detail(request, pk, format=None):
+    try:
+        project = Project.objects.get(pk=pk)
+    except Project.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ProjectSerializer(project)
+        return Response(serializer.data)
 
 
 # class ProjectList(APIView):
