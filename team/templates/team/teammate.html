@@ -1,0 +1,40 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+  <section class="usa-grid-full">
+    <h1>{{ teammate.name }}</h1>
+    <div id="info">
+      <p id="role"></p>
+    </div>
+    {% if user == teammate.user %}
+    <div id="api-token">
+      <h2>API Token</h2>
+      {% if user.auth_token %}
+      <div class="">
+        Token: {{ user.auth_token }}
+      </div>
+      <a class="usa-button" href="/team/{{ teammate.user.username }}/refresh_token/">Refresh token</a>
+      {% else %}
+      <div class="">
+        No API Token
+      </div>
+      <a class="usa-button" href="/team/{{ teammate.user.username }}/refresh_token/">Get a token</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </section>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+      let info = document.getElementById('info');
+      let r = new XMLHttpRequest();
+      r.open("GET", "/team/api/people/{{ teammate.id }}", true);
+      r.onreadystatechange = function () {
+        if (r.readyState != 4 || r.status != 200) return;
+        var jsonResponse = JSON.parse(r.responseText);
+        const roleContent = document.createTextNode(jsonResponse.role)
+        document.getElementById('role').appendChild(roleContent)
+      };
+      r.send();
+    });
+  </script>
+{% endblock %}
