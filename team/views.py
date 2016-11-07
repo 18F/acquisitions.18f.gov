@@ -49,9 +49,25 @@ class TeammateDetail(mixins.RetrieveModelMixin,
         return self.retrieve(request, *args, **kwargs)
 
 
-class RoleViewSet(viewsets.ModelViewSet):
+class RoleList(mixins.ListModelMixin,
+               generics.GenericAPIView):
     """
-    API method to view roles on the team
+    List all roles
     """
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class RoleDetail(mixins.RetrieveModelMixin,
+                 generics.GenericAPIView):
+    """
+    Retrive details for a role
+    """
+    queryset = Role.objects.all()
+    serializer_class = RoleSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
