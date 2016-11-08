@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.core.exceptions import ValidationError
 from datetime import date
 
 
@@ -20,7 +21,6 @@ class IAA(models.Model):
     signed_on = models.DateField(
         blank=True,
         null=True,
-        default=date.today,
     )
     expires_on = models.DateField(
         blank=True,
@@ -52,6 +52,12 @@ class IAA(models.Model):
 
     def is_signed(self):
         return self.signed_on != null
+
+    def clean(self):
+        if self.signed_on > date.today():
+            raise ValidationError({
+                'signed_on': 'Date may not be in the future.'
+            })
 
 
 class Project(models.Model):
