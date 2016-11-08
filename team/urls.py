@@ -8,7 +8,6 @@ urlpatterns = [
     url(r'^api/people/(?P<pk>[0-9]+)', views.TeammateDetail.as_view()),
     url(r'^api/roles/$', views.RoleList.as_view()),
     url(r'^api/roles/(?P<pk>[0-9]+)', views.RoleDetail.as_view()),
-    url(r'(?P<teammate>\w+)/refresh_token', views.refresh_token),
     url(r'(?P<teammate>\w+)', views.teammate),
 ]
 
