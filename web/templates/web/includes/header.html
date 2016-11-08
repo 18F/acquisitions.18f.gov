@@ -120,7 +120,7 @@
           </li>
           {% if user.id %}
           <li>
-            <a href="#">{{ user.email }}</a>
+            <a href="/profile">{{ user.email }}</a>
           </li>
           <li>
             <a href="{% url 'uaa_client:logout' %}">Log out</a>

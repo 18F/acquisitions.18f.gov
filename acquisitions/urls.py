@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^team/', include(team_urls, namespace='team')),
     url(r'^projects/', include(projects_urls, namespace='projects')),
+    url(r'^profile/', web_views.profile),
     url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
 ]
 
