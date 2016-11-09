@@ -31,5 +31,4 @@ class TeammateFactory(factory.django.DjangoModelFactory):
     bio = factory.Faker('paragraphs')
     github = factory.Faker('user_name')
     slack = factory.Faker('user_name')
-    read_only = factory.Faker('boolean')
     role = factory.SubFactory(RoleFactory)
