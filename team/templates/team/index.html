@@ -3,7 +3,7 @@
 {% block content %}
   <div class="usa-width-one-full">
     <h1>Team</h1>
-    {{ user }}
+    {% if perms.team.view_private %}<div>Showing: <strong>public</strong> and <strong>non-public</strong> information</div>{% endif %}
     <div id="team">
 
     </div>
@@ -42,7 +42,7 @@
     document.addEventListener("DOMContentLoaded", function(event) {
       let team = document.getElementById('team');
       let r = new XMLHttpRequest();
-      r.open("GET", "/team/api/people", true);
+      r.open("GET", "/team/api/people/", true);
       r.onreadystatechange = function () {
         if (r.readyState != 4 || r.status != 200) return;
         var jsonResponse = JSON.parse(r.responseText);
