@@ -7,7 +7,8 @@ install: pip install -r requirements.txt
 cache:
   directories:
   - "$HOME/.cache/pip"
-script: "./manage.py collectstatic --noinput -v 0 && py.test --cov=acquisitions --cov=projects --cov=team --cov=web && codeclimate-test-reporter"
+script: "./manage.py collectstatic --noinput -v 0 && py.test --cov=acquisitions --cov=projects
+  --cov=team --cov=web && codeclimate-test-reporter"
 after_script:
 - npm install -g pa11y-crawl
 - pa11y-crawl --run "./manage.py runserver" --ci http://localhost:8000
@@ -22,3 +23,6 @@ deploy:
   skip_cleanup: true
   on:
     branch: develop
+env:
+  global:
+    - secure: Nf375s8h8cSMgKdSR3wpCl26pwaYAhbxHiJ9tf4rWtJNZKv+WeX/hgsv+EG+oztyMz8QYOaSsONz3BszMG/zi3JOov/mZIRm6kQhGexzTSXh3sTZU+/3ZGuX2SQORKIl0NMLnV2KIvsGrKskCSkc4jR6jvMmNQscU6zp6PcmfPQrfZtnHv8Iz9okCjvZMD+iWTYeV0Y9wtNk15beNbk/B7HKyR6UyQ1ELDbyK99yp2GlBJkqqM0n+lPcYq3Y6VhEetFvuw6wwR0CasVFhP+1MCooRkoC96oF7/gh2UBqQFsHazCvK1wAx2Qv7kfZy0oASIkOvqT2VJ0+YPj5eR2WVbl6jkrV6CVMhZZNulR5K3engKGYCgJN1ZawkyDNeI5Soxc11kA7nB+khshTYgFUXBiPFBW1TLvDd8h5aTlvsQHhyHcw6PJi8ioREdRZ4+E8jzF7xCOM+JGw5M7l1VMliIevBB4FmJbSwrInYYokFJRIo3zWtkDWIlZOUjdkSiWLV560I9tBEiFwTPXmQlgLPwWo5FKMJZia6d1s9UpxXxIgSgxUL0vcqt+vrAu3zEnKvMGtlNWzNocjgR65YHEeWGgxiBDfOYmdYhQCJTHh1REY9T3URluQ5FlezHiTqzyqsU0aqmP+3Wysptk3p2dIGZUmCIeGkgwMQcu0FZvP7og=
