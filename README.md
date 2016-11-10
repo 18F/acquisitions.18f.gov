@@ -21,17 +21,19 @@ mkvirtualenv acquisitions
 pip install -r requirements.txt
 ```
 
-The project runs a PostgreSQL database. Set up the database:
+The project runs a PostgreSQL database. Set up the database and create the user groups:
 
 ```
 createdb acquisitions
 ./manage.py migrate
+./manage.py init_groups
 ```
 
 Optionally, populate the database with some fake data:
 
 ```
 ./manage.py create_team
+./manage.py create_projects
 ```
 
 Because of the authentication flow, a superuser should be created without a
@@ -68,7 +70,7 @@ that API rather than building it into the templates.
 There are several potential tiers of users:
 
 1. Public users with no authentication
-1. Internal users with cloud.gov-supported email addresses (currently gsa@.gov
+1. Internal users with cloud.gov-supported email addresses (currently @gsa.gov
   and @epa.gov)
 1. Internal users who are also "teammates"
 1. Internal users who are also "teammates" and have write privileges.

@@ -1,0 +1,26 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+  <section class="usa-grid">
+    <div class="usa-width-one-full">
+      <h1>{{ teammate.name }}</h1>
+      <div id="info">
+        <p id="role"></p>
+      </div>
+    </div>
+  </section>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+      let info = document.getElementById('info');
+      let r = new XMLHttpRequest();
+      r.open("GET", "/team/api/people/{{ teammate.id }}", true);
+      r.onreadystatechange = function () {
+        if (r.readyState != 4 || r.status != 200) return;
+        var jsonResponse = JSON.parse(r.responseText);
+        const roleContent = document.createTextNode(jsonResponse.role)
+        document.getElementById('role').appendChild(roleContent)
+      };
+      r.send();
+    });
+  </script>
+{% endblock %}

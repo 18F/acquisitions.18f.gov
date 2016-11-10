@@ -5,18 +5,20 @@
 #    pip-compile --output-file requirements.txt requirements.in
 #
 click==6.6                # via pip-tools
-codeclimate-test-reporter==0.1.2
+codeclimate-test-reporter==0.2.0
 coverage==4.2
 dj-database-url==0.4.1
-django-filter==0.14.0
-Django==1.10.1
-djangorestframework==3.4.6
+django-filter==0.15.3
+django==1.10.3
+djangorestframework-csv==2.0.0
+djangorestframework==3.5.2
 factory-boy==2.7.0
 fake-factory==0.7.2       # via factory-boy
 first==2.0.1              # via pip-tools
-Jinja2==2.8               # via poirot
-markdown==2.6.6
-MarkupSafe==0.23          # via jinja2
+httmock==1.2.5
+jinja2==2.8               # via poirot
+markdown==2.6.7
+markupsafe==0.23          # via jinja2
 pep8==1.7.0
 pillow==3.4.2
 pip-tools==1.7.0
@@ -24,12 +26,13 @@ poirot==1.0.1
 psycopg2==2.6.2
 py==1.4.31                # via pytest
 pyjwt==1.4.2
-pytest-cov==2.3.1
+pytest-cov==2.4.0
 pytest-django==3.0.0
-pytest==3.0.2
+pytest==3.0.3
 python-dateutil==2.5.3    # via fake-factory
-regex==2016.8.27          # via poirot
+regex==2016.10.22         # via poirot
 requests==2.11.1
-six==1.10.0               # via fake-factory, pip-tools, python-dateutil
-tqdm==4.8.4               # via poirot
+six==1.10.0               # via djangorestframework-csv, fake-factory, pip-tools, python-dateutil
+tqdm==4.9.0               # via poirot
+unicodecsv==0.14.1        # via djangorestframework-csv
 whitenoise==3.2.2

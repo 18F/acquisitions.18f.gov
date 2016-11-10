@@ -2,7 +2,7 @@ from rest_framework import serializers
 from projects.models import IAA, Project
 
 
-class IaaSerializer(serializers.HyperlinkedModelSerializer):
+class IAASerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = IAA
         fields = (
@@ -11,10 +11,11 @@ class IaaSerializer(serializers.HyperlinkedModelSerializer):
             )
 
 
-class ProjectSerializer(serializers.HyperlinkedModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = (
             'name',
-            'project_type'
+            'project_type',
+            'description'
             )

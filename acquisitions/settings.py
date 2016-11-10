@@ -42,10 +42,12 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework.authtoken',
     'projects',
     'team',
     'web',
     'uaa_client',
+    'acquisitions',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -148,3 +150,17 @@ if not UAA_CLIENT_SECRET:
         UAA_AUTH_URL = UAA_TOKEN_URL = 'fake:'
     else:
         raise Exception('UAA_CLIENT_SECRET must be defined in production.')
+
+
+# REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework_csv.renderers.CSVRenderer',
+    ),
+}
