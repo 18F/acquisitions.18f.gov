@@ -7,7 +7,7 @@ install: pip install -r requirements.txt
 cache:
   directories:
   - "$HOME/.cache/pip"
-script: "./manage.py collectstatic --noinput -v 0 && py.test --cov && codeclimate-test-reporter"
+script: "./manage.py collectstatic --noinput -v 0 && py.test --cov=acquisitions --cov=projects --cov=team --cov=web && codeclimate-test-reporter"
 after_script:
 - npm install -g pa11y-crawl
 - pa11y-crawl --run "./manage.py runserver" --ci http://localhost:8000
