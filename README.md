@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/18F/acquisitions.18f.gov.svg?branch=develop)](https://travis-ci.org/18F/acquisitions.18f.gov)
+[![Code Climate](https://codeclimate.com/github/18F/acquisitions.18f.gov/badges/gpa.svg)](https://codeclimate.com/github/18F/acquisitions.18f.gov)
+[![Test Coverage](https://codeclimate.com/github/18F/acquisitions.18f.gov/badges/coverage.svg)](https://codeclimate.com/github/18F/acquisitions.18f.gov/coverage)
 
 # acquisitions.18f.gov
 
