@@ -9,6 +9,7 @@ codeclimate-test-reporter==0.2.0
 coverage==4.2
 dj-database-url==0.4.1
 django-filter==0.15.3
+django-floppyforms==1.7.0
 django==1.10.3
 djangorestframework-csv==2.0.0
 djangorestframework==3.5.2

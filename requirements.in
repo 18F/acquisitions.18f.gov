@@ -3,6 +3,7 @@ coverage
 dj-database-url
 Django
 django-filter
+django-floppyforms
 djangorestframework
 djangorestframework-csv
 factory_boy
