@@ -1,3 +1,7 @@
+.astronaut {
+  background-image: url('../img/astronaut.jpg');
+}
+
 .teammateName {
   font-weight: bold;
 }

@@ -7,17 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{% block title %}TTS Office of Acquisitions{% endblock %}</title>
-    <meta name="description" content="Modular Contracting and Agile Development in government.">
+    <meta name="description" content="Making Procurement Joyful.">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="TTS Office of Acquisitions" />
     <meta name="twitter:title" content="TTS Office of Acquisitions">
-    <meta property="og:url" content="{{ request.get_host }}/">
+    <meta property="og:url" content="https://{{ request.get_host }}/">
     <meta name="twitter:card" content="summary_large_image">
-    <meta property="og:image" content="{{ request.get_host }}/assets/img/feature-background.jpg">
-    <meta name="twitter:image" content="{{ request.get_host }}/assets/img/feature-background.jpg">
-    <meta property="og:description" content="Modular Contracting and Agile Development in government.">
-    <meta name="twitter:description" content="Modular Contracting and Agile Development in government.">
+    <meta property="og:image" content="https://{{ request.get_host }}/static/web/img/astronaut.jpg">
+    <meta name="twitter:image" content="https://{{ request.get_host }}/static/web/img/astronaut.jpg">
+    <meta property="og:description" content="Making Procurement Joyful.">
+    <meta name="twitter:description" content="Making Procurement Joyful.">
 
     <link rel="stylesheet" href="{% static "css/uswds.min.css" %}">
     <link rel="stylesheet" href="{% static "web/css/style.css" %}">
@@ -31,7 +31,7 @@
     <a class="usa-skipnav" href="#main-content">Skip to main content</a>
     {% include "web/includes/header.html" %}
     <div class="usa-overlay"></div>
-    <main id="main-content" class="usa-grid">
+    <main id="main-content">
 
       {% block content %}
 
