@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/18F/acquisitions.18f.gov.svg?branch=develop)](https://travis-ci.org/18F/acquisitions.18f.gov)
+
 # acquisitions.18f.gov
 
 This is the homepage for the TTS Office of Acquisitions. Its goal is to be a public-facing site for the office's efforts, as well as an internal site for coordinating and tracking work.
