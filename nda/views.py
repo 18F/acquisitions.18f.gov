@@ -9,13 +9,15 @@ from nda.forms import NDAForm
 # Create your views here.
 @login_required
 def sign_nda(request):
+    try:
+        request.user.groups.get(name='NDA Signed')
+        return render(request, 'nda/already-signed.html')
+    except Group.DoesNotExist:
+        print('NDA Signed group not yet created')
+        return Http404
     nda_form = NDAForm(request.POST or None)
     if nda_form.is_valid():
-        try:
-            group = Group.objects.get(name='NDA Signed')
-        except Group.DoesNotExist:
-            print('NDA Signed group not yet created')
-            return Http404
+        group = Group.objects.get(name='NDA Signed')
         request.user.groups.add(group)
         return render(request, 'nda/success.html')
     return render(request, 'nda/nda.html', {
