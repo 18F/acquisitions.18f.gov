@@ -1,0 +1,19 @@
+{% extends "web/base.html" %}
+{% load floppyforms %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>Non-Disclosure Agreement</h1>
+    {% include "nda/markdown/nda.md" %}
+    <form class="" method="post">
+      {% csrf_token %}
+      {% form nda_form using %}
+      {% formfield form.agree %}
+      <label for="id_agree">I agree</label>
+      {% endform %}
+      <p><input type="submit" value="Yay!"></p>
+    </form>
+  </div>
+</section>
+{% endblock %}
