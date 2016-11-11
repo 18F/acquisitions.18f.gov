@@ -1,8 +1,11 @@
+import markdown
+import os
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from acquisitions.settings import BASE_DIR
 from nda.forms import NDAForm
 
 
@@ -10,16 +13,24 @@ from nda.forms import NDAForm
 @login_required
 def sign_nda(request):
     try:
-        request.user.groups.get(name='NDA Signed')
-        return render(request, 'nda/already-signed.html')
+        group = Group.objects.get(name='NDA Signed')
     except Group.DoesNotExist:
         print('NDA Signed group not yet created')
-        return Http404
+        raise Http404
+    try:
+        request.user.groups.get(id=group.id)
+        return render(request, 'nda/already-signed.html')
+    except Group.DoesNotExist:
+        pass
     nda_form = NDAForm(request.POST or None)
     if nda_form.is_valid():
-        group = Group.objects.get(name='NDA Signed')
         request.user.groups.add(group)
         return render(request, 'nda/success.html')
+    md_path = os.path.join(BASE_DIR, 'nda/markdown/nda.md')
+    with open(md_path, 'r') as m:
+        md = m.read()
+    text = markdown.markdown(md)
     return render(request, 'nda/nda.html', {
-        'nda_form': nda_form
+        'nda_form': nda_form,
+        'text': text
     })
