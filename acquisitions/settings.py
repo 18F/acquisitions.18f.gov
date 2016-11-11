@@ -43,9 +43,12 @@ INSTALLED_APPS = (
 
     'rest_framework',
     'rest_framework.authtoken',
+    'floppyforms',
+
     'projects',
     'team',
     'web',
+    'nda',
     'uaa_client',
     'acquisitions',
 )

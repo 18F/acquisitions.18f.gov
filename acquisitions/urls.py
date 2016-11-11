@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from web import views as web_views
+from nda import views as nda_views
 from team import urls as team_urls
 from projects import urls as projects_urls
 from django.conf import settings
@@ -30,6 +31,7 @@ urlpatterns = [
     url(r'^projects/', include(projects_urls, namespace='projects')),
     url(r'^profile/$', web_views.profile),
     url(r'^profile/refresh_token/$', web_views.refresh_token),
+    url(r'^profile/sign_nda/$', nda_views.sign_nda),
     url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
 ]
 
