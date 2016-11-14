@@ -1,0 +1,10 @@
+applications:
+- name: acquisitions-staging
+  instances: 1
+  memory: 512M
+  disk_quota: 1024M
+  routes:
+  - route: acquisitions-staging.fr.cloud.gov
+  services:
+  - acquisitions-staging-psql
+  stack: cflinuxfs2
