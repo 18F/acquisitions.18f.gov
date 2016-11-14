@@ -1,10 +1,13 @@
 {% extends "web/base.html" %}
 {% load floppyforms %}
+{% load markdown_deux_tags %}
 
 {% block content %}
 <section class="usa-grid">
   <div class="usa-width-one-full">
-    {{ text|safe }}
+    {% markdown %}
+    {% include "nda/markdown/nda.md" %}
+    {% endmarkdown %}
     <form class="" method="post">
       {% csrf_token %}
       {% form nda_form using %}

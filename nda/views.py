@@ -1,11 +1,9 @@
-import markdown
 import os
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
-from acquisitions.settings import BASE_DIR
 from nda.forms import NDAForm
 
 
@@ -26,11 +24,6 @@ def sign_nda(request):
     if nda_form.is_valid():
         request.user.groups.add(group)
         return render(request, 'nda/success.html')
-    md_path = os.path.join(BASE_DIR, 'nda/markdown/nda.md')
-    with open(md_path, 'r') as m:
-        md = m.read()
-    text = markdown.markdown(md)
     return render(request, 'nda/nda.html', {
-        'nda_form': nda_form,
-        'text': text
+        'nda_form': nda_form
     })
