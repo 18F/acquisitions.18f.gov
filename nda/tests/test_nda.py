@@ -1,15 +1,14 @@
 import pytest
 from django.contrib.auth.models import Group
-from team.factories import UserFactory
 from nda.views import sign_nda
 from web.views import profile
 
 
 class TestNDA:
     @pytest.mark.django_db
-    def test_add_to_group(self, rf):
+    def test_add_to_group(self, rf, django_user_model):
         group = Group.objects.create(name='NDA Signed')
-        user = UserFactory.create()
+        user = django_user_model.objects.create()
         # POST form data using request factory
         request = rf.post('/profile/sign_nda', {'agree': True})
         request.user = user
@@ -18,9 +17,9 @@ class TestNDA:
         assert group == user.groups.get(id=group.id)
 
     @pytest.mark.django_db
-    def test_did_not_agree(self, rf):
+    def test_did_not_agree(self, rf, django_user_model):
         group = Group.objects.create(name='NDA Signed')
-        user = UserFactory.create()
+        user = django_user_model.objects.create()
         # POST form data using request factory
         request = rf.post('/profile/sign_nda', {'agree': False})
         request.user = user
@@ -34,9 +33,9 @@ class TestNDA:
         assert False
 
     @pytest.mark.django_db
-    def test_skip_if_unnecessary(self, rf):
+    def test_skip_if_unnecessary(self, rf, django_user_model):
         # create user
-        user = UserFactory.create()
+        user = django_user_model.objects.create()
         # add to group
         group = Group.objects.create(name='NDA Signed')
         user.groups.add(group)
