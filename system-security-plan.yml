@@ -1,6 +1,6 @@
 ---
 name: acquisitions.18f.gov
-uniqueID: <MB number – see https://docs.google.com/spreadsheets/d/1v4QfXGaJVy9-CZ0n6cFLHGGs_5TL1l8uCh6ZyNYjMDk/edit#gid=2047916505>
+uniqueID:
 version: 0.1
 # descriptions:
 # https://18f.gsa.gov/dashboard/
@@ -11,10 +11,10 @@ information-types:
 - D26 Civilian Operations
 
 # https://pages.18f.gov/before-you-ship/ato/levels/
-confidentiality: <none|low|moderate|high>
-integrity: <low|moderate|high>
-availability: <low|moderate|high>
-security-baseline: <open data|low|moderate|high>
+confidentiality: low
+integrity: low
+availability: low
+security-baseline: low
 
 system-type: minor
 level-of-identity-assurance: https://compliance.cloud.gov/
@@ -53,7 +53,6 @@ leveraged-authorizations:
 - https://www.fedramp.gov/marketplace/compliant-systems/amazon-web-services-aws-eastwest-us-public-cloud/
 purpose: https://github.com/18f/acquisitions.18f.gov
 components:
-- <link to item under https://18f.gsa.gov/dashboard/>
 - https://github.com/18f/acquisitions.18f.gov
 
 # these will be the same unless your architecture is especially complex
