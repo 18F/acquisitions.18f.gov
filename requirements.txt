@@ -19,12 +19,12 @@ httmock==1.2.5
 jinja2==2.8               # via poirot
 markdown==2.6.7
 markupsafe==0.23          # via jinja2
-pep8==1.7.0
 pillow==3.4.2
 pip-tools==1.7.0
 poirot==1.0.1
 psycopg2==2.6.2
 py==1.4.31                # via pytest
+pycodestyle==2.2.0
 pyjwt==1.4.2
 pytest-cov==2.4.0
 pytest-django==3.0.0

@@ -61,15 +61,15 @@ licenses:
   markdown2:
     name: MIT
     url: https://github.com/trentm/python-markdown2/blob/master/LICENSE.txt
-  pep8:
-    name: MIT
-    url: https://github.com/PyCQA/pycodestyle/blob/master/LICENSE
   Pillow:
     name: PIL (MIT)
     url: https://github.com/python-pillow/Pillow/blob/master/LICENSE
   psycopg2:
     name: LGPL-3.0
     url: https://github.com/psycopg/psycopg2/blob/master/LICENSE
+  pycodestyle:
+    name: MIT
+    url: https://github.com/PyCQA/pycodestyle/blob/master/LICENSE
   PyJWT:
     name: MIT
     url: https://github.com/jpadilla/pyjwt/blob/master/LICENSE

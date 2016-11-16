@@ -8,11 +8,11 @@ djangorestframework-csv
 factory_boy
 httmock
 markdown
-pep8
 Pillow
 pip-tools
 poirot
 psycopg2
+pycodestyle
 PyJWT
 pytest
 pytest-cov
