@@ -2,28 +2,28 @@
 # .about.yml project metadata
 #
 # This is a short name of your project that can be used as a URL slug. (required)
-name:
+name: acquisitions
 
 # This is the display name of your project. (required)
-full_name:
+full_name: acquisitions.18f.gov
 
 # What is the problem your project solves? What is the solution? Use the format shown below. The #dashboard team will gladly help you put this together for your project. (required)
-description:
+description: A homepage for the TTS Office of Acquisitions
 
 # What is the measurable impact of your project? Use the format shown below. The #dashboard team will gladly help you put this together for your project. (required)
-impact:
+impact: Make information about the TTS Office of Acquisitions more available to members of the public, and provide support tools for the office itself
 
 # What kind of team owns the repository? (required)
 # values: guild, working-group, project
-owner_type:
+owner_type: project
 
 # What is your project's current status? (required)
 # values: discovery, alpha, beta, live
-stage:
+stage: alpha
 
 # Should this repo have automated tests? If so, set to `true`. (required)
 # values: true, false
-testable:
+testable: true
 
 # What are the licenses that apply to the project and/or its components? (required)
 # Items by property name pattern:
@@ -31,18 +31,65 @@ testable:
 #     name: Name of the license from the Software Package Data Exchange (SPDX): https://spdx.org/licenses/
 #     url: URL for the text of the license
 licenses:
-  placeholder_label:
+  codeclimate-test-reporter:
+    name: MIT
+    url: https://github.com/codeclimate/python-test-reporter/blob/master/LICENSE.txt
+  coverage:
+    name: Apache-2.0
+    url: https://bitbucket.org/ned/coveragepy/src/3ede4137fe6ddf7bd7dc1427055c9fb44f7da5ad/LICENSE.txt?at=default&fileviewer=file-view-default
+  dj-database-url:
+    name: BSD-2-Clause
+    url: https://github.com/kennethreitz/dj-database-url/blob/master/LICENSE
+  Django:
+    name: BSD-3-Clause
+    url: https://github.com/django/django/blob/master/LICENSE
+  django-filter:
+    name: BSD-3-Clause
+    url: https://github.com/carltongibson/django-filter/blob/develop/LICENSE
+  djangorestframework:
+    name: BSD-2-Clause
+    url: https://github.com/tomchristie/django-rest-framework/blob/master/LICENSE.md
+  djangorestframework-csv:
+    name: BSD-2-Clause
+    url: https://github.com/mjumbewu/django-rest-framework-csv#license
+  factory_boy:
+    name: MIT
+    url: https://github.com/FactoryBoy/factory_boy/blob/master/LICENSE
+  httmock:
+    name: Apache-2.0
+    url: https://github.com/patrys/httmock/blob/master/LICENSE
+  markdown2:
+    name: MIT
+    url: https://github.com/trentm/python-markdown2/blob/master/LICENSE.txt
+  pep8:
+    name: MIT
+    url: https://github.com/PyCQA/pycodestyle/blob/master/LICENSE
+  Pillow:
+    name: PIL (MIT)
+    url: https://github.com/python-pillow/Pillow/blob/master/LICENSE
+  psycopg2:
+    name: LGPL-3.0
+    url: https://github.com/psycopg/psycopg2/blob/master/LICENSE
+  PyJWT:
+    name: MIT
+    url: https://github.com/jpadilla/pyjwt/blob/master/LICENSE
+  requests:
+    name: Apache-2.0
+    url: https://github.com/kennethreitz/requests/blob/master/LICENSE
+  whitenoise:
+    name: MIT
+    url: https://github.com/evansd/whitenoise/blob/master/LICENSE
 
 # Who is the partner for your project? (Use the full name of the partner documented here: https://github.com/18F/dashboard/blob/staging/_data/partners.yml)
 partners:
-- 
+-
 
 # The main point of contact(s) and/or the issue reporting system for your project, and either a `mailto:` link or URL for each contact.
 # Items:
 # - url: URL for the link
 #   text: Anchor text for the link
 contact:
-- 
+-
 
 # Who are the team members on your project? You can specify GitHub usernames, email addresses, or other organizational usernames. (required)
 # Items:
@@ -50,7 +97,9 @@ contact:
 #   id: Internal team identifier/user name
 #   role: Team member's role; leads should be designated as 'lead'
 team:
-- 
+-  github: stvnrlly
+   id: stvnrlly
+   role: lead
 
 # What kind of content is contained in the project repository?
 # values: app, docs, policy
@@ -58,7 +107,7 @@ type:
 
 # What are the key milestones you've achieved recently?
 milestones:
-- 
+-
 
 # Name of the main project repo if this is a sub-repo; name of the grouplet repo if this is a working group/guild subproject
 parent:
@@ -69,15 +118,15 @@ parent:
 #   text: Anchor text for the link
 #   category: Type of the link
 links:
-- 
+-
 
 # What tags does your organization's blog associate with your project? You can find a list of 18F blog tags here: https://18f.gsa.gov/tags/
 blogTag:
-- 
+-
 
 # What technologies are used in this project?
 stack:
-- 
+-
 
 # What are the services used to supply project status information?
 # Items:
@@ -86,15 +135,15 @@ stack:
 #   url: URL for detailed information
 #   badge: URL for the status badge
 services:
-- 
+-
 
 # Organizations or individuals who have adopted the project for their own use
 # Items:
 # - id: The name of the organization or individual
 #   url: A URL to the user's version of the project
 users:
-- 
+-
 
 # Tags that describe the project or aspects of the project
 tags:
-- 
+-
