@@ -89,7 +89,8 @@ partners:
 # - url: URL for the link
 #   text: Anchor text for the link
 contact:
--
+- url: https://github.com/18f/acquisitions.18f.gov/issues
+  text: "GitHub issues"
 
 # Who are the team members on your project? You can specify GitHub usernames, email addresses, or other organizational usernames. (required)
 # Items:
@@ -126,7 +127,8 @@ blogTag:
 
 # What technologies are used in this project?
 stack:
--
+- Django
+- Python
 
 # What are the services used to supply project status information?
 # Items:
