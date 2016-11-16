@@ -68,4 +68,4 @@ user-types:
     - deployment
     - engineering
 controls:
-- https://github.com/18f/acquisitions.18f.gov/blob/develop/compliance/component.yml
+- https://github.com/18f/acquisitions.18f.gov/blob/develop/compliance/component.yaml
