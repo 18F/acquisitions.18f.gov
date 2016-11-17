@@ -4,6 +4,7 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
+bandit==1.2.0
 click==6.6                # via pip-tools
 codeclimate-test-reporter==0.2.0
 coverage==4.2
@@ -15,10 +16,13 @@ djangorestframework==3.5.2
 factory-boy==2.7.0
 fake-factory==0.7.2       # via factory-boy
 first==2.0.1              # via pip-tools
+gitdb2==2.0.0             # via gitpython
+GitPython==2.1.0          # via bandit
 httmock==1.2.5
 jinja2==2.8               # via poirot
 markdown==2.6.7
 markupsafe==0.23          # via jinja2
+pbr==1.10.0               # via stevedore
 pillow==3.4.2
 pip-tools==1.7.0
 poirot==1.0.1
@@ -30,9 +34,12 @@ pytest-cov==2.4.0
 pytest-django==3.0.0
 pytest==3.0.3
 python-dateutil==2.5.3    # via fake-factory
+PyYAML==3.12              # via bandit
 regex==2016.10.22         # via poirot
 requests==2.11.1
-six==1.10.0               # via djangorestframework-csv, fake-factory, pip-tools, python-dateutil
+six==1.10.0               # via bandit, djangorestframework-csv, fake-factory, pip-tools, python-dateutil, stevedore
+smmap2==2.0.1             # via gitdb2
+stevedore==1.18.0         # via bandit
 tqdm==4.9.0               # via poirot
 unicodecsv==0.14.1        # via djangorestframework-csv
 whitenoise==3.2.2

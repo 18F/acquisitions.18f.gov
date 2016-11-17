@@ -31,6 +31,9 @@ testable: true
 #     name: Name of the license from the Software Package Data Exchange (SPDX): https://spdx.org/licenses/
 #     url: URL for the text of the license
 licenses:
+  bandit:
+    name: Apache-2.0
+    url: https://github.com/openstack/bandit/blob/master/LICENSE
   codeclimate-test-reporter:
     name: MIT
     url: https://github.com/codeclimate/python-test-reporter/blob/master/LICENSE.txt
