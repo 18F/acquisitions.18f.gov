@@ -41,7 +41,10 @@ class BuyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Buy
 
-    project = factory.SubFactory(ProjectFactory)
+    project = factory.SubFactory(
+        ProjectFactory,
+        public=factory.SelfAttribute('..public')
+    )
     description = factory.Faker('paragraph')
     name = factory.Faker('catch_phrase')
     public = factory.Faker('boolean')
