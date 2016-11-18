@@ -1,15 +1,11 @@
 import pytest
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import force_authenticate
-# from projects.views import ProjectList
 from team.views import TeammateList
-# from projects.models import Project
 from team.models import Teammate
-# from projects.factories import ProjectFactory
 from team.factories import TeammateFactory
-# from projects.factories import UserFactory
 from team.factories import UserFactory
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, Group
 from django.contrib.contenttypes.models import ContentType
 from rest_framework.authtoken.models import Token
 
@@ -25,7 +21,8 @@ def test_unauthenticated():
 
     assert len(response.data) == 10
     for t in response.data:
-        assert 'slack' not in t
+        with pytest.raises(KeyError):
+            assert t['slack']
 
 
 @pytest.mark.django_db
@@ -49,7 +46,7 @@ def test_authenticated():
 
     assert len(response.data) == 10
     for t in response.data:
-        assert 'slack' in t
+        assert t['slack']
 
 
 @pytest.mark.django_db
