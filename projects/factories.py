@@ -1,7 +1,7 @@
 import factory
 import string
 import factory.fuzzy
-from projects.models import IAA, Project
+from projects.models import IAA, Project, Buy
 from django.contrib.auth.models import User
 
 
@@ -32,6 +32,16 @@ class ProjectFactory(factory.django.DjangoModelFactory):
         model = Project
 
     iaa = factory.SubFactory(IAAFactory)
+    description = factory.Faker('paragraph')
+    name = factory.Faker('catch_phrase')
+    public = factory.Faker('boolean')
+
+
+class BuyFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Buy
+
+    project = factory.SubFactory(ProjectFactory)
     description = factory.Faker('paragraph')
     name = factory.Faker('catch_phrase')
     public = factory.Faker('boolean')

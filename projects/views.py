@@ -5,8 +5,8 @@ from rest_framework import status
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework.views import APIView
-from projects.models import IAA, Project
-from projects.serializers import IAASerializer, ProjectSerializer
+from projects.models import IAA, Project, Buy
+from projects.serializers import IAASerializer, ProjectSerializer, BuySerializer
 
 
 # Create your views here.
@@ -81,6 +81,43 @@ class ProjectDetail(mixins.RetrieveModelMixin,
             return Project.objects.filter(pk=self.kwargs['pk'])
         elif self.request.user.has_perm('projects.view_private'):
             return Project.objects.filter(pk=self.kwargs['pk'])
+        else:
+            raise Http404
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+
+class BuyList(mixins.ListModelMixin,
+              generics.GenericAPIView):
+    """
+    List all buys
+    """
+    serializer_class = BuySerializer
+
+    def get_queryset(self):
+        if self.request.user.has_perm('projects.view_private'):
+            return Buy.objects.all()
+        else:
+            return Buy.objects.filter(public=True)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class BuyDetail(mixins.RetrieveModelMixin,
+                generics.GenericAPIView):
+    """
+    Retrieve details of one buy
+    """
+    serializer_class = BuySerializer
+
+    def get_queryset(self):
+        buy = Buy.objects.get(pk=self.kwargs['pk'])
+        if buy.public is True:
+            return Buy.objects.filter(pk=self.kwargs['pk'])
+        elif self.request.user.has_perm('projects.view_private'):
+            return Buy.objects.filter(pk=self.kwargs['pk'])
         else:
             raise Http404
 

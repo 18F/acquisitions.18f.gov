@@ -119,7 +119,7 @@ class Buy(models.Model):
     )
     dollars = models.IntegerField(
         blank=False,
-        null=False
+        null=True
     )
     public = models.BooleanField(
         default=False,

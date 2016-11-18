@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from projects.models import IAA, Project
+from projects.models import IAA, Project, Buy
 
 
 class IAASerializer(serializers.HyperlinkedModelSerializer):
@@ -8,7 +8,7 @@ class IAASerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'id',
             'client',
-            )
+        )
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -17,5 +17,14 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = (
             'name',
             'project_type',
-            'description'
-            )
+            'description',
+        )
+
+
+class BuySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Buy
+        fields = (
+            'name',
+            'description',
+        )

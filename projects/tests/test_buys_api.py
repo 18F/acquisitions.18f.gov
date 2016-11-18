@@ -2,7 +2,7 @@ import pytest
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import force_authenticate
 from projects.views import BuyList
-from projects.models import Buy
+from projects.models import Buy, Project
 from projects.factories import BuyFactory
 from projects.factories import UserFactory
 from django.contrib.auth.models import Permission
@@ -12,8 +12,8 @@ from rest_framework.authtoken.models import Token
 
 @pytest.mark.django_db
 def test_unauthenticated():
-    Buy.create_batch(10, public=True)
-    Buy.create_batch(10, public=False)
+    BuyFactory.create_batch(10, public=True)
+    BuyFactory.create_batch(10, public=False)
     view = BuyList.as_view()
     factory = APIRequestFactory()
 
