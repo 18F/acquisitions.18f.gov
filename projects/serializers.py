@@ -17,6 +17,7 @@ class BuySerializer(serializers.ModelSerializer):
         fields = (
             'name',
             'description',
+            'public',
         )
 
 
@@ -30,4 +31,5 @@ class ProjectSerializer(serializers.ModelSerializer):
             'project_type',
             'description',
             'buys',
+            'public',
         )
