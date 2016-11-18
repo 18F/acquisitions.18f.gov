@@ -99,7 +99,7 @@ class BuyList(mixins.ListModelMixin,
         if self.request.user.has_perm('projects.view_private'):
             return Buy.objects.all()
         else:
-            return Buy.objects.filter(public=True)
+            return Buy.objects.select_related('project').filter(public=True, project__public=True)
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
