@@ -11,20 +11,23 @@ class IAASerializer(serializers.HyperlinkedModelSerializer):
         )
 
 
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = (
-            'name',
-            'project_type',
-            'description',
-        )
-
-
 class BuySerializer(serializers.ModelSerializer):
     class Meta:
         model = Buy
         fields = (
             'name',
             'description',
+        )
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    buys = BuySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Project
+        fields = (
+            'name',
+            'project_type',
+            'description',
+            'buys',
         )
