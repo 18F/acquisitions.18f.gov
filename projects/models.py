@@ -128,3 +128,9 @@ class Buy(models.Model):
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        if (not self.project.public == True) and (self.public == True):
+            raise ValidationError({
+                'public': 'May not be public if the associated project is not.'
+            })
