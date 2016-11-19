@@ -17,8 +17,8 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "acquisitions.settings")
 
 # Initialize New Relic monitoring if on Cloud Foundry
-if env.name:
-    new_relic = env.get_service('acquisitions-new-relic')
+new_relic = env.get_service(label='acquisitions-new-relic')
+if new_relic:
     new_relic_license = new_relic.credentials['NEW_RELIC_LICENSE_KEY']
     new_relic_app_name = os.environ.get('NEW_RELIC_APP_NAME')
     if new_relic_license and new_relic_app_name:
