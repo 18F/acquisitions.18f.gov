@@ -48,3 +48,7 @@ class BuyFactory(factory.django.DjangoModelFactory):
     description = factory.Faker('paragraph')
     name = factory.Faker('catch_phrase')
     public = factory.Faker('boolean')
+
+
+class AddBuyFactory(BuyFactory):
+    project = factory.Iterator(Project.objects.all())
