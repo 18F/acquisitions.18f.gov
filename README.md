@@ -109,6 +109,14 @@ Development branch: `develop`
 This project uses `pip-tools` to manage dependencies. As a result, developers
 should edit `requirements.in` and not `requirements.txt`.
 
+For example:
+
+```
+echo Django >> requirements.in
+pip-compile --output-file requirements.txt requirements.in
+pip-sync
+```
+
 ## Public domain
 
 This project is in the worldwide [public domain](LICENSE.md). As stated in [CONTRIBUTING](CONTRIBUTING.md):
