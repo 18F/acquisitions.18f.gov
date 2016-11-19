@@ -8,6 +8,7 @@ class IAASerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'id',
             'client',
+            'signed_on',
         )
 
 
