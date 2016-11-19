@@ -7,4 +7,10 @@ applications:
   - route: acquisitions-staging.fr.cloud.gov
   services:
   - acquisitions-staging-psql
+  - acquisitions-new-relic
   stack: cflinuxfs2
+  env:
+    NEW_RELIC_APP_NAME: "acquisitions.18f.gov (staging)"
+    NEW_RELIC_CONFIG_FILE: "newrelic.ini"
+    NEW_RELIC_ENV: "staging"
+    NEW_RELIC_LOG: "stdout"

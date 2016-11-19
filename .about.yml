@@ -34,6 +34,9 @@ licenses:
   bandit:
     name: Apache-2.0
     url: https://github.com/openstack/bandit/blob/master/LICENSE
+  cfenv:
+    name: MIT
+    url: https://github.com/jmcarp/py-cfenv/blob/master/LICENSE
   codeclimate-test-reporter:
     name: MIT
     url: https://github.com/codeclimate/python-test-reporter/blob/master/LICENSE.txt
@@ -64,6 +67,9 @@ licenses:
   markdown2:
     name: MIT
     url: https://github.com/trentm/python-markdown2/blob/master/LICENSE.txt
+  newrelic:
+    name: New Relic License agreement
+    url:
   Pillow:
     name: PIL (MIT)
     url: https://github.com/python-pillow/Pillow/blob/master/LICENSE

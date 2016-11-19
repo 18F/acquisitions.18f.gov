@@ -53,6 +53,10 @@ And then run the application:
 ./manage.py runserver
 ```
 
+## Deployment
+
+See [the deployment docs](./docs/deploy.md) for information on deploying the application.
+
 ## Elements
 
 ### Team API

@@ -1,4 +1,5 @@
 bandit
+cfenv
 codeclimate-test-reporter
 coverage
 dj-database-url
@@ -9,6 +10,7 @@ djangorestframework-csv
 factory_boy
 httmock
 markdown
+newrelic
 Pillow
 pip-tools
 poirot
