@@ -38,6 +38,7 @@ Optionally, populate the database with some fake data:
 ```
 ./manage.py create_team
 ./manage.py create_projects
+./manage.py create_buys --add
 ```
 
 Because of the authentication flow, a superuser should be created without a
@@ -65,9 +66,17 @@ than building it into the templates.
 ### Projects API
 
 This app includes information about the projects that the team is working on and
-provides an API for retrieving that information. In the interest of API-first
-development, information about the projects on the site is built by consuming
-that API rather than building it into the templates.
+provides an API for retrieving that information.
+
+This includes a few elements:
+
+- IAAs: A bundle of money authorized to be spent by a client on projects
+- Projects: A grouping of work around a common goal
+- Buys: The individual procurements in the service of completing the project
+goal.
+
+In the interest of API-first development, information about the projects on the
+site is built by consuming that API rather than building it into the templates.
 
 ### UAA Authentication
 

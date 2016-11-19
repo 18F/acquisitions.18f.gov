@@ -74,6 +74,7 @@ class Project(models.Model):
         IAA,
         on_delete=models.SET_NULL,
         blank=False,
+        # TODO: should null=False?
         null=True,
     )
     project_type = models.CharField(
@@ -89,6 +90,7 @@ class Project(models.Model):
     public = models.BooleanField(
         default=False,
     )
+    # TODO: should active status be determined by IAA status?
     active = models.BooleanField(
         default=True,
     )
@@ -97,3 +99,38 @@ class Project(models.Model):
         permissions = (
             ('view_private', 'Can view non-public projects'),
         )
+
+
+class Buy(models.Model):
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
+    )
+    description = models.TextField(
+        blank=False,
+        null=False,
+    )
+    project = models.ForeignKey(
+        Project,
+        related_name='buys',
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+    )
+    dollars = models.IntegerField(
+        blank=False,
+        null=True
+    )
+    public = models.BooleanField(
+        default=False,
+    )
+
+    def __str__(self):
+        return self.name
+
+    def clean(self):
+        if (not self.project.public == True) and (self.public == True):
+            raise ValidationError({
+                'public': 'May not be public if the associated project is not.'
+            })
