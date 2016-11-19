@@ -54,6 +54,10 @@ And then run the application:
 ./manage.py runserver
 ```
 
+## Deployment
+
+See [the deployment docs](./docs/deploy.md) for information on deploying the application.
+
 ## Elements
 
 ### Team API
@@ -113,6 +117,14 @@ Development branch: `develop`
 
 This project uses `pip-tools` to manage dependencies. As a result, developers
 should edit `requirements.in` and not `requirements.txt`.
+
+For example:
+
+```
+echo Django >> requirements.in
+pip-compile --output-file requirements.txt requirements.in
+pip-sync
+```
 
 ## Public domain
 

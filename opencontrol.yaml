@@ -1,0 +1,26 @@
+schema_version: "1.0.0"
+name: acquisitions.18f.gov
+metadata:
+  description: >
+    acquisitions.18f.gov is a homepage for the TTS Office of Acquisitions, as
+    well as a collection of tools to help members of the office perform their
+    functions and share information of interest to the public.
+  maintainers:
+    - steven.reilly@gsa.gov
+components:
+  - ./compliance
+certifications:
+  # paths
+standards:
+  # paths
+dependencies:
+  certifications:
+    # LATO
+    - url: https://github.com/18F/GSA-Certifications
+      revision: master
+  systems:
+    # Cloud.gov
+    - url: https://github.com/18F/cg-compliance
+      revision: master
+  standards:
+    # data
