@@ -37,7 +37,7 @@ class IAAList(mixins.ListModelMixin,
         if self.request.user.is_authenticated():
             return IAA.objects.all()
         else:
-            return IAA.objects.exclude(signed_on=null)
+            return IAA.objects.exclude(signed_on=None)
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)

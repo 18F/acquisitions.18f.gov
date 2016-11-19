@@ -24,6 +24,7 @@ class IAAFactory(factory.django.DjangoModelFactory):
         prefix='IAA',
         chars=string.digits,
         )
+    signed_on=None
     client = factory.Faker('company')
 
 
@@ -31,7 +32,10 @@ class ProjectFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Project
 
-    iaa = factory.SubFactory(IAAFactory)
+    iaa = factory.SubFactory(
+        IAAFactory,
+        signed_on=factory.Faker('date_time_this_month', before_now=True, after_now=False, tzinfo=None)
+    )
     description = factory.Faker('paragraph')
     name = factory.Faker('catch_phrase')
     public = factory.Faker('boolean')
