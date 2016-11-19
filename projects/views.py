@@ -5,6 +5,9 @@ from rest_framework import status
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from projects.models import IAA, Project, Buy
 from projects.serializers import IAASerializer, ProjectSerializer, BuySerializer
 
@@ -12,6 +15,15 @@ from projects.serializers import IAASerializer, ProjectSerializer, BuySerializer
 # Create your views here.
 def home(request):
     return render(request, "projects/index.html")
+
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'projects': reverse('projects:project-list', request=request, format=format),
+        'buys': reverse('projects:buy-list', request=request, format=format),
+        'iaas': reverse('projects:iaa-list', request=request, format=format)
+    })
 
 
 class IAAList(mixins.ListModelMixin,
