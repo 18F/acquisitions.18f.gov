@@ -13,12 +13,15 @@
   </section>
   <script type="text/javascript">
     function createProject(project) {
-      // Create a div element with information about the teammate
+      // Create a div element with information about the project
       let div = document.createElement('div');
       div.id = 'project-'+project.id;
       let projectName = document.createElement('h3');
+      let projectLink = document.createElement('a');
+      projectLink.href = '/projects/'+project.id;
       let nameContent = document.createTextNode(project.name);
-      projectName.appendChild(nameContent);
+      projectLink.appendChild(nameContent);
+      projectName.appendChild(projectLink);
       projectName.className = 'projectName';
       let projectDescription = document.createElement('div');
       let descriptionContent = document.createTextNode(project.description);
