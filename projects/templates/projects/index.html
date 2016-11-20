@@ -65,7 +65,7 @@
     document.addEventListener("DOMContentLoaded", function(event) {
       let current = document.getElementById('current');
       let r1 = new XMLHttpRequest();
-      r1.open("GET", "/projects/api/projects/", true);
+      r1.open("GET", "/api/projects/", true);
       r1.onreadystatechange = function () {
         if (r1.readyState != 4 || r1.status != 200) return;
         var jsonResponse = JSON.parse(r1.responseText);
@@ -82,7 +82,7 @@
       };
       r1.send();
       let r2 = new XMLHttpRequest();
-      r2.open("GET", "/projects/api/buys/", true);
+      r2.open("GET", "/api/buys/", true);
       r2.onreadystatechange = function () {
         if (r2.readyState != 4 || r2.status != 200) return;
         var jsonResponse = JSON.parse(r2.responseText);

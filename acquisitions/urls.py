@@ -22,12 +22,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
+api_patterns = projects_urls.api_patterns
+
+
 urlpatterns = [
     url(r'^$', web_views.index),
     url(r'^guides$', web_views.guides),
+    url(r'^api/', include(api_patterns, namespace='api')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^team/', include(team_urls, namespace='team')),
-    url(r'^projects/', include(projects_urls, namespace='projects')),
+    url(r'^projects/', include(projects_urls.urlpatterns, namespace='projects')),
     url(r'^profile/$', web_views.profile),
     url(r'^profile/refresh_token/$', web_views.refresh_token),
     url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
