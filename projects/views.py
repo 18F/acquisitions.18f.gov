@@ -15,7 +15,7 @@ from projects.serializers import IAASerializer, ProjectSerializer, BuySerializer
 
 # Create your views here.
 def projects(request):
-    return render(request, "projects/index.html")
+    return render(request, "projects/projects.html")
 
 
 def project(request, project):
