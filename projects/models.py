@@ -95,6 +95,9 @@ class Project(models.Model):
         default=True,
     )
 
+    def is_private(self):
+        return not self.public
+
     class Meta:
         permissions = (
             ('view_private', 'Can view non-public projects'),
@@ -128,6 +131,9 @@ class Buy(models.Model):
 
     def __str__(self):
         return self.name
+
+    def is_private(self):
+        return not self.public
 
     def clean(self):
         if (not self.project.public == True) and (self.public == True):

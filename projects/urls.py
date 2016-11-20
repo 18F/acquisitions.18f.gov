@@ -3,21 +3,30 @@ from projects import views
 from rest_framework.urlpatterns import format_suffix_patterns
 
 
-urlpatterns = [
-    url(r'^$', views.home, name='home'),
-    url(r'^api/$', views.api_root),
-    url(r'^api/projects/$', views.ProjectList.as_view(), name='project-list'),
-    url(r'^api/projects/(?P<pk>[0-9]+)$',
+api_patterns = [
+    # url(r'^api/$', views.api_root),
+    url(r'^projects/$', views.ProjectList.as_view(), name='project-list'),
+    url(r'^projects/(?P<pk>[0-9]+)$',
         views.ProjectDetail.as_view(),
         name='project-detail'),
-    url(r'^api/buys/$', views.BuyList.as_view(), name='buy-list'),
-    url(r'^api/buys/(?P<pk>[0-9]+)$',
+    url(r'^buys/$', views.BuyList.as_view(), name='buy-list'),
+    url(r'^buys/(?P<pk>[0-9]+)$',
         views.BuyDetail.as_view(),
         name='buy-detail'),
-    url(r'^api/iaas/$', views.IAAList.as_view(), name='iaa-list'),
-    url(r'^api/iaas/(?P<pk>[0-9]+)$',
+    url(r'^iaas/$', views.IAAList.as_view(), name='iaa-list'),
+    url(r'^iaas/(?P<pk>[0-9]+)$',
         views.IAADetail.as_view(),
-        name='iaa-detail')
+        name='iaa-detail'),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+project_patterns = [
+    url(r'^$', views.projects, name='projects'),
+    url(r'(?P<project>\w+)', views.project, name='project'),
+]
+
+buy_patterns = [
+    url(r'^$', views.buys, name='buys'),
+    url(r'(?P<buy>\w+)', views.buy, name='buy'),
+]
+
+api_patterns = format_suffix_patterns(api_patterns)

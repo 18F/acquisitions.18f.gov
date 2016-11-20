@@ -44,7 +44,7 @@
     document.addEventListener("DOMContentLoaded", function(event) {
       let team = document.getElementById('team');
       let r = new XMLHttpRequest();
-      r.open("GET", "/team/api/people/", true);
+      r.open("GET", "/api/team/", true);
       r.onreadystatechange = function () {
         if (r.readyState != 4 || r.status != 200) return;
         var jsonResponse = JSON.parse(r.responseText);

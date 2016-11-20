@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import Http404
 from rest_framework import viewsets
 from rest_framework import status
@@ -13,8 +14,34 @@ from projects.serializers import IAASerializer, ProjectSerializer, BuySerializer
 
 
 # Create your views here.
-def home(request):
-    return render(request, "projects/index.html")
+def projects(request):
+    return render(request, "projects/projects.html")
+
+
+def project(request, project):
+    # Since we only want to show a page if the project exists, this can't
+    # quite be an API-only thing. But most of the page is built via API.
+    project = get_object_or_404(Project, id=project)
+    if not project.public:
+        if request.user.has_perm('projects.view_private'):
+            return render(request, "projects/project.html", {"project": project})
+        else:
+            raise Http404
+    return render(request, "projects/project.html", {"project": project})
+
+
+def buys(request):
+    return render(request, "projects/buys.html")
+
+
+def buy(request, buy):
+    buy = get_object_or_404(Buy, id=buy)
+    if not buy.public:
+        if request.user.has_perm('projects.view_private'):
+            return render(request, "projects/buy.html", {"buy": buy})
+        else:
+            raise Http404
+    return render(request, "projects/buy.html", {"buy": buy})
 
 
 @api_view(['GET'])

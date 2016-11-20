@@ -1,0 +1,14 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>{{ buy.name }}</h1>
+    {% if buy.is_private %}<div>This buy is not yet public.</div>{% endif %}
+    <h2>Description</h2>
+    <div id="description">
+      {{ buy.description }}
+    </div>
+  </div>
+</section>
+{% endblock %}
