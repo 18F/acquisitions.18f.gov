@@ -132,6 +132,9 @@ class Buy(models.Model):
     def __str__(self):
         return self.name
 
+    def is_private(self):
+        return not self.public
+
     def clean(self):
         if (not self.project.public == True) and (self.public == True):
             raise ValidationError({
