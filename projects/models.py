@@ -95,6 +95,9 @@ class Project(models.Model):
         default=True,
     )
 
+    def is_private(self):
+        return not self.public
+
     class Meta:
         permissions = (
             ('view_private', 'Can view non-public projects'),
