@@ -1,23 +1,23 @@
 {% extends "web/base.html" %}
 
 {% block content %}
-  <section clas="usa-grid">
-    <div class="usa-width-one-full">
-      <h1>{{ user }}</h1>
-      <div id="api-token">
-        <h2>API Token</h2>
-        {% if user.auth_token %}
-        <div class="">
-          Token: {{ user.auth_token }}
-        </div>
-        <a class="usa-button" href="/profile/refresh_token/">Refresh token</a>
-        {% else %}
-        <div class="">
-          No API Token
-        </div>
-        <a class="usa-button" href="/profile/refresh_token/">Get a token</a>
-        {% endif %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>{{ user }}</h1>
+    <div id="api-token">
+      <h2>API Token</h2>
+      {% if user.auth_token %}
+      <div class="">
+        Token: {{ user.auth_token }}
       </div>
+      <a class="usa-button" href="/profile/refresh_token/">Refresh token</a>
+      {% else %}
+      <div class="">
+        No API Token
+      </div>
+      <a class="usa-button" href="/profile/refresh_token/">Get a token</a>
+      {% endif %}
     </div>
-  </section>
+  </div>
+</section>
 {% endblock %}
