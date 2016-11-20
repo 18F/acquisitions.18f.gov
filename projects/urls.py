@@ -19,9 +19,14 @@ api_patterns = [
         name='iaa-detail'),
 ]
 
-urlpatterns = [
-    url(r'^$', views.home, name='home'),
-    url(r'(?P<project>\w+)', views.project, name='project')
+project_patterns = [
+    url(r'^$', views.projects, name='projects'),
+    url(r'(?P<project>\w+)', views.project, name='project'),
+]
+
+buy_patterns = [
+    url(r'^$', views.buys, name='buys'),
+    url(r'(?P<buy>\w+)', views.buy, name='buy'),
 ]
 
 api_patterns = format_suffix_patterns(api_patterns)

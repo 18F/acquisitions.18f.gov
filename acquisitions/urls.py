@@ -31,7 +31,14 @@ urlpatterns = [
     url(r'^api/', include(api_patterns, namespace='api')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^team/', include(team_urls.urlpatterns, namespace='team')),
-    url(r'^projects/', include(projects_urls.urlpatterns, namespace='projects')),
+    url(
+        r'^projects/',
+        include(projects_urls.project_patterns, namespace='projects')
+    ),
+    url(
+        r'^buys/',
+        include(projects_urls.buy_patterns, namespace='buys')
+    ),
     url(r'^profile/$', web_views.profile),
     url(r'^profile/refresh_token/$', web_views.refresh_token),
     url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
