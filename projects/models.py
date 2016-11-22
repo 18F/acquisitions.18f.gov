@@ -50,6 +50,9 @@ class IAA(models.Model):
         null=True,
     )
 
+    def __str__(self):
+        return "{0} | {1}".format(self.client, self.id)
+
     def is_signed(self):
         return self.signed_on != null
 
@@ -95,6 +98,12 @@ class Project(models.Model):
         default=True,
     )
 
+    def __str__(self):
+        return "{0}".format(self.name)
+
+    def get_absolute_url(self):
+        return "/projects/{0}/".format(self.id)
+
     def is_private(self):
         return not self.public
 
@@ -121,22 +130,46 @@ class Buy(models.Model):
         blank=False,
         null=False,
     )
-    dollars = models.IntegerField(
+    dollars = models.PositiveIntegerField(
         blank=False,
         null=True
     )
     public = models.BooleanField(
         default=False,
     )
+    base_period_length = models.DurationField(
+        blank=True,
+        null=True,
+    )
+    option_periods = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        default=0,
+    )
+    option_period_length = models.DurationField(
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
-        return self.name
+        return "{0}".format(self.name)
+
+    def get_absolute_url(self):
+        return "/buys/{0}/".format(self.id)
 
     def is_private(self):
         return not self.public
 
     def clean(self):
-        if (not self.project.public == True) and (self.public == True):
+        # Check that buy is not public without associated project being public
+        if (self.project.public is not True) and (self.public is True):
             raise ValidationError({
                 'public': 'May not be public if the associated project is not.'
+            })
+
+        # Confirm option period existence if option period length is set
+        if option_period_length and (option_periods == 0):
+            raise ValidationError({
+                'option_period_length': 'The number of option periods must be '
+                'greater than 0 to set a length'
             })
