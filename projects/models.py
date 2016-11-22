@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.core.exceptions import ValidationError
 from datetime import date, timedelta
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -127,6 +128,25 @@ class Project(models.Model):
         )
 
 
+class ContractingOffice(models.Model):
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
+    )
+    program_manager = models.ForeignKey(
+        User,
+        blank=False,
+        null=False,
+    )
+
+    def __str__(self):
+        return "{0}".format(self.name)
+
+    class Meta:
+        pass
+
+
 class Buy(models.Model):
     PROCUREMENT_METHOD_CHOICES = (
         ('Agile BPA', 'Agile BPA'),
@@ -188,6 +208,11 @@ class Buy(models.Model):
         blank=True,
         null=True,
         unique=True,
+    )
+    contracting_office = models.ForeignKey(
+        ContractingOffice,
+        blank=True,
+        null=True,
     )
 
     def __str__(self):
