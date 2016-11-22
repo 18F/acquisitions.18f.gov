@@ -139,6 +139,11 @@ class Buy(models.Model):
         blank=False,
         null=False,
     )
+    contractual_history = models.TextField(
+        blank=False,
+        null=False,
+        default="This is the first contract for this functionality.",
+    )
     project = models.ForeignKey(
         Project,
         related_name='buys',
