@@ -62,6 +62,9 @@ class IAA(models.Model):
                 'signed_on': 'Date may not be in the future.'
             })
 
+    class Meta:
+        verbose_name = 'IAA'
+
 
 class Project(models.Model):
     name = models.CharField(
@@ -241,3 +244,6 @@ class Buy(models.Model):
                 raise ValidationError({
                     'dollars': 'Value can\'t exceed value of overall project'
                 })
+
+    class Meta:
+        pass
