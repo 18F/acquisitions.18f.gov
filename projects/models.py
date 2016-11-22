@@ -125,6 +125,11 @@ class Project(models.Model):
 
 
 class Buy(models.Model):
+    PROCUREMENT_METHOD_CHOICES = (
+        ('Agile BPA', 'Agile BPA'),
+        ('Micro-Purchase', 'Micro-Purchase'),
+    )
+
     name = models.CharField(
         max_length=100,
         blank=False,
@@ -162,6 +167,13 @@ class Buy(models.Model):
         max_length=100,
         blank=True,
         null=True,
+    )
+    procurement_method = models.CharField(
+        max_length=200,
+        choices=PROCUREMENT_METHOD_CHOICES,
+        default="To Be Determined",
+        blank=False,
+        null=False,
     )
 
     def __str__(self):
