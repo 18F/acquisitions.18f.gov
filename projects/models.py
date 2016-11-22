@@ -217,6 +217,11 @@ class Buy(models.Model):
         option = self._get_time_from_string(self.option_period_length)
         return base + (self.option_periods * option)
 
+    def acquistition_plan_status(self):
+        # TODO: This could return the status of the acquisitions plan based on
+        # the fields that have been completed.
+        pass
+
     def clean(self):
         # Check that buy is not public without associated project being public
         if (self.project.public is not True) and (self.public is True):
