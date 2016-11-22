@@ -90,6 +90,10 @@ class Project(models.Model):
         blank=False,
         null=False,
     )
+    dollars = models.IntegerField(
+        blank=True,
+        null=True,
+    )
     public = models.BooleanField(
         default=False,
     )
@@ -106,6 +110,13 @@ class Project(models.Model):
 
     def is_private(self):
         return not self.public
+
+    def clean(self):
+        if self.dollars:
+            if self.dollars > self.iaa.dollars:
+                raise ValidationError({
+                    'dollars': 'Value can\'t exceed value of authorizing IAA'
+                })
 
     class Meta:
         permissions = (
@@ -196,3 +207,9 @@ class Buy(models.Model):
                 'option_period_length': 'The number of option periods must be '
                 'greater than 0 to set a length'
             })
+
+        if self.dollars:
+            if self.dollars > self.project.dollars:
+                raise ValidationError({
+                    'dollars': 'Value can\'t exceed value of overall project'
+                })
