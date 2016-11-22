@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.core.exceptions import ValidationError
-from datetime import date
+from datetime import date, timedelta
 
 
 # Create your models here.
@@ -137,7 +137,8 @@ class Buy(models.Model):
     public = models.BooleanField(
         default=False,
     )
-    base_period_length = models.DurationField(
+    base_period_length = models.CharField(
+        max_length=100,
         blank=True,
         null=True,
     )
@@ -146,7 +147,8 @@ class Buy(models.Model):
         null=True,
         default=0,
     )
-    option_period_length = models.DurationField(
+    option_period_length = models.CharField(
+        max_length=100,
         blank=True,
         null=True,
     )
@@ -160,6 +162,27 @@ class Buy(models.Model):
     def is_private(self):
         return not self.public
 
+    def _get_time_from_string(self, length):
+        amount, units = length.split(' ')
+        amount = int(amount)
+        if units == 'days':
+            duration = timedelta(days=amount)
+        elif units == 'weeks':
+            duration = timedelta(weeks=amount)
+        else:
+            raise ValueError('Couldn\'t parse input length')
+        return duration
+
+    def period_of_performance(self):
+        # TODO: Come back and see if this makes sense
+        # The goal of this is to turn our string-based period of performance
+        # into something that can be manipulated and displayed in different
+        # ways. But for now, the strings are what's needed for templating
+        # and such.
+        base = self._get_time_from_string(self.base_period_length)
+        option = self._get_time_from_string(self.option_period_length)
+        return base + (self.option_periods * option)
+
     def clean(self):
         # Check that buy is not public without associated project being public
         if (self.project.public is not True) and (self.public is True):
@@ -168,7 +191,7 @@ class Buy(models.Model):
             })
 
         # Confirm option period existence if option period length is set
-        if option_period_length and (option_periods == 0):
+        if (self.option_period_length) and (self.option_periods == 0):
             raise ValidationError({
                 'option_period_length': 'The number of option periods must be '
                 'greater than 0 to set a length'
