@@ -23,9 +23,9 @@
       <h3>QASP</h3>
       <p>Status: {{ buy.qasp_status }}</p>
       {% if buy.qasp %}
-      <p><a href="{% url 'buys:qasp' buy.id %}">View</a> | <a href="{% url 'buys:qasp_download' buy.id %}">Download</a> | Regenerate</p>
+      <p><a href="{% url 'buys:qasp' buy.id %}">View</a> | <a href="{% url 'buys:qasp_download' buy.id %}">Download</a>{% if perms.project.view_private %} | Regenerate{% endif %}</p>
       {% else %}
-      <p>Generate</p>
+      {% if perms.project.view_private %}<p>Generate</p>{% endif %}
       {% endif %}
     </div>
   </div>
