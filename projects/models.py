@@ -366,15 +366,18 @@ class Buy(models.Model):
         return not self.public
 
     def _get_time_from_string(self, length):
-        amount, units = length.split(' ')
-        amount = int(amount)
-        if units == 'days':
-            duration = timedelta(days=amount)
-        elif units == 'weeks':
-            duration = timedelta(weeks=amount)
-        else:
-            raise ValueError('Couldn\'t parse input length')
-        return duration
+        try:
+            amount, units = length.split(' ')
+            amount = int(amount)
+            if units == 'days':
+                duration = timedelta(days=amount)
+            elif units == 'weeks':
+                duration = timedelta(weeks=amount)
+            else:
+                raise ValueError('Couldn\'t parse input length')
+            return duration
+        except Exception:
+            return None
 
     def period_of_performance(self):
         # TODO: Come back and see if this makes sense
@@ -382,9 +385,12 @@ class Buy(models.Model):
         # into something that can be manipulated and displayed in different
         # ways. But for now, the strings are what's needed for templating
         # and such.
-        base = self._get_time_from_string(self.base_period_length)
-        option = self._get_time_from_string(self.option_period_length)
-        return base + (self.option_periods * option)
+        try:
+            base = self._get_time_from_string(self.base_period_length)
+            option = self._get_time_from_string(self.option_period_length)
+            return base + (self.option_periods * option)
+        except Exception:
+            return None
 
     def acquistition_plan_status(self):
         # TODO: This could return the status of the acquisitions plan based on
