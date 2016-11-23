@@ -35,4 +35,7 @@ class BuySerializer(serializers.ModelSerializer):
             'description',
             'public',
             'project',
+            'procurement_method',
+            'set_aside',
+            'period_of_performance',
         )
