@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import admin
-from projects.models import IAA, Project, Buy
+from projects.models import IAA, Project, Buy, ContractingOffice, \
+                            ContractingSpecialist, ContractingOfficer
 from projects.widgets import DurationMultiWidget
 
 
@@ -16,6 +17,13 @@ class ProjectForm(forms.ModelForm):
 
 
 # Register your models here.
-@admin.register(IAA, Project, Buy)
+@admin.register(
+    IAA,
+    Project,
+    Buy,
+    ContractingOffice,
+    ContractingOfficer,
+    ContractingSpecialist,
+)
 class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm
