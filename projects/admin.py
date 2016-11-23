@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib import admin
 from projects.models import IAA, Project, Buy, ContractingOffice, \
-                            ContractingSpecialist, ContractingOfficer
+                            ContractingSpecialist, ContractingOfficer, \
+                            ContractingOfficerRepresentative
 from projects.widgets import DurationMultiWidget
 
 
@@ -24,6 +25,7 @@ class ProjectForm(forms.ModelForm):
     ContractingOffice,
     ContractingOfficer,
     ContractingSpecialist,
+    ContractingOfficerRepresentative,
 )
 class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm

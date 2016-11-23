@@ -2,7 +2,8 @@ import factory
 import string
 import factory.fuzzy
 from projects.models import IAA, Project, Buy, ContractingOffice, \
-                            ContractingSpecialist, ContractingOfficer
+                            ContractingSpecialist, ContractingOfficer, \
+                            ContractingOfficerRepresentative
 from django.contrib.auth.models import User
 
 
@@ -72,6 +73,20 @@ class ContractingOfficerFactory(factory.django.DjangoModelFactory):
 class ContractingSpecialistFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ContractingSpecialist
+
+    user = factory.SubFactory(
+        UserFactory
+    )
+    office = factory.SubFactory(
+        ContractingOfficeFactory
+    )
+
+
+class ContractingOfficerRepresentativeFactory(
+    factory.django.DjangoModelFactory
+):
+    class Meta:
+        model = ContractingOfficerRepresentative
 
     user = factory.SubFactory(
         UserFactory

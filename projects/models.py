@@ -191,6 +191,28 @@ class ContractingOfficer(models.Model):
         pass
 
 
+class ContractingOfficerRepresentative(models.Model):
+    user = models.ForeignKey(
+        User,
+        blank=False,
+        null=False,
+    )
+    office = models.ForeignKey(
+        ContractingOffice,
+        blank=False,
+        null=False,
+    )
+
+    def __str__(self):
+        return "{0} - {1}".format(self.user.get_full_name(), self.office.name)
+
+    def name(self):
+        return self.user.get_full_name()
+
+    class Meta:
+        pass
+
+
 class Buy(models.Model):
     PROCUREMENT_METHOD_CHOICES = (
         ('Agile BPA', 'Agile BPA'),
@@ -265,6 +287,11 @@ class Buy(models.Model):
     )
     contracting_officer = models.ForeignKey(
         ContractingOfficer,
+        blank=True,
+        null=True,
+    )
+    contracting_officer_representative = models.ForeignKey(
+        ContractingOfficerRepresentative,
         blank=True,
         null=True,
     )
