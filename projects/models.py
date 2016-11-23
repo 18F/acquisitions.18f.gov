@@ -1,9 +1,10 @@
 from __future__ import unicode_literals
 
+from datetime import date, timedelta
 from django.db import models
 from django.core.exceptions import ValidationError
-from datetime import date, timedelta
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
 
 
 # Create your models here.
@@ -323,17 +324,19 @@ class Buy(models.Model):
         blank=True,
         null=True,
     )
-    set_aside = models.CharField(
+    set_aside_status = models.CharField(
         max_length=200,
         choices=SET_ASIDE_CHOICES,
         blank=True,
         null=True,
+        verbose_name='Set-aside Status'
     )
     rfq_id = models.CharField(
         max_length=20,
         blank=True,
         null=True,
         unique=True,
+        verbose_name='RFQ ID'
     )
     contracting_office = models.ForeignKey(
         ContractingOffice,
@@ -352,6 +355,22 @@ class Buy(models.Model):
     )
     contracting_officer_representative = models.ForeignKey(
         ContractingOfficerRepresentative,
+        blank=True,
+        null=True,
+    )
+    github_repository = models.URLField(
+        blank=True,
+        null=True,
+    )
+
+    # Documents for the buy
+    # TODO: Consider using a MarkdownField() of some sort for in-app editing
+    qasp = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='QASP',
+    )
+    acquisition_plan = models.TextField(
         blank=True,
         null=True,
     )
@@ -392,10 +411,34 @@ class Buy(models.Model):
         except Exception:
             return None
 
+    def create_qasp(self):
+        # TODO: This may need mark_safe from django.utils.safestring
+        self.qasp = render_to_string(
+                'projects/markdown/qasp.md',
+                {'buy': self}
+            )
+        self.save(update_fields=['qasp'])
+
+    def create_acquisition_plan(self):
+        # TODO: This may need mark_safe from django.utils.safestring
+        self.acquisition_plan = render_to_string(
+                'projects/markdown/acquisition_plan.md',
+                {'buy': self}
+            )
+        self.save(update_fields=['acquisition_plan'])
+
     def acquistition_plan_status(self):
         # TODO: This could return the status of the acquisitions plan based on
         # the fields that have been completed.
+        # Additionally, the acquisition plan page can display the remaining
+        # unset fields at the top of the acquisition plan page
         pass
+
+    def qasp_status(self):
+        if self.name:
+            return 'Complete'
+        else:
+            return 'Incomplete'
 
     def clean(self):
         # Check that buy is not public without associated project being public
@@ -411,6 +454,7 @@ class Buy(models.Model):
                 'greater than 0 to set a length'
             })
 
+        # Confirm that buy cost doesn't exceed project value
         if self.dollars:
             if self.dollars > self.project.dollars:
                 raise ValidationError({
