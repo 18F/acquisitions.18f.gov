@@ -44,6 +44,19 @@ def buy(request, buy):
     return render(request, "projects/buy.html", {"buy": buy})
 
 
+def qasp(request, buy):
+    buy = get_object_or_404(Buy, id=buy)
+    if not buy.public:
+        if request.user.has_perm('projects.view_private'):
+            pass
+        else:
+            raise Http404
+    if buy.qasp:
+        return render(request, "projects/qasp.html", {"buy": buy})
+    else:
+        raise Http404
+
+
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({

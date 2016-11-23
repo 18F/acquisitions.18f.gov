@@ -1,0 +1,12 @@
+{% extends "web/base.html" %}
+{% load markdown_deux_tags %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    {% markdown %}
+    {{ buy.qasp }}
+    {% endmarkdown %}
+  </div>
+</section>
+{% endblock %}

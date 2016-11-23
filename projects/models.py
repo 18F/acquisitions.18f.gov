@@ -432,10 +432,17 @@ class Buy(models.Model):
         # the fields that have been completed.
         # Additionally, the acquisition plan page can display the remaining
         # unset fields at the top of the acquisition plan page
-        pass
+        if not self.acquisition_plan:
+            return 'Not yet generated'
+        else:
+            # TODO: Finish the acquisition plan template so that we can add
+            # a 'Complete' setting
+            return 'Incomplete'
 
     def qasp_status(self):
-        if self.name:
+        if self.name and not self.qasp:
+            return 'Not yet generated'
+        elif self.name and self.qasp:
             return 'Complete'
         else:
             return 'Incomplete'

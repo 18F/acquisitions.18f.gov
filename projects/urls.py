@@ -26,7 +26,8 @@ project_patterns = [
 
 buy_patterns = [
     url(r'^$', views.buys, name='buys'),
-    url(r'(?P<buy>\w+)', views.buy, name='buy'),
+    url(r'(?P<buy>\d+)/$', views.buy, name='buy'),
+    url(r'(?P<buy>\d+)/qasp/', views.qasp, name='qasp'),
 ]
 
 api_patterns = format_suffix_patterns(api_patterns)

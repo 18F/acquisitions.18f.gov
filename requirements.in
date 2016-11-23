@@ -5,6 +5,7 @@ coverage
 dj-database-url
 Django
 django-filter
+django-markdown-deux
 djangorestframework
 djangorestframework-csv
 factory_boy
