@@ -7,6 +7,40 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
+class Agency(models.Model):
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
+        unique=True,
+    )
+
+    def __str__(self):
+        return "{0}".format(self.name)
+
+    class Meta:
+        pass
+
+
+class AgencyOffice(models.Model):
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
+    )
+    agency = models.ForeignKey(
+        Agency,
+        blank=False,
+        null=False,
+    )
+
+    def __str__(self):
+        return "{0} - {1}".format(self.agency.name, self.name)
+
+    class Meta:
+        unique_together = ('name', 'agency')
+
+
 class IAA(models.Model):
     id = models.CharField(
         max_length=20,
@@ -14,8 +48,8 @@ class IAA(models.Model):
         blank=False,
         null=False,
     )
-    client = models.CharField(
-        max_length=100,
+    client = models.ForeignKey(
+        AgencyOffice,
         blank=False,
         null=False,
     )

@@ -3,7 +3,8 @@ import string
 import factory.fuzzy
 from projects.models import IAA, Project, Buy, ContractingOffice, \
                             ContractingSpecialist, ContractingOfficer, \
-                            ContractingOfficerRepresentative
+                            ContractingOfficerRepresentative, Agency, \
+                            AgencyOffice
 from django.contrib.auth.models import User
 
 
@@ -18,6 +19,24 @@ class UserFactory(factory.django.DjangoModelFactory):
     is_superuser = False
 
 
+class AgencyFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Agency
+
+    # TODO: Create a Faker provider for agency names
+    name = factory.Faker('company')
+
+
+class AgencyOfficeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = AgencyOffice
+
+    name = factory.Faker('company')
+    agency = factory.SubFactory(
+        AgencyFactory
+    )
+
+
 class IAAFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = IAA
@@ -27,7 +46,7 @@ class IAAFactory(factory.django.DjangoModelFactory):
         chars=string.digits,
         )
     signed_on = None
-    client = factory.Faker('company')
+    client = factory.SubFactory(AgencyOfficeFactory)
 
 
 class ProjectFactory(factory.django.DjangoModelFactory):
