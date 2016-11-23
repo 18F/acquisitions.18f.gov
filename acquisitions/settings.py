@@ -166,3 +166,15 @@ REST_FRAMEWORK = {
         'rest_framework_csv.renderers.CSVRenderer',
     ),
 }
+
+
+# Markdown Deux
+MARKDOWN_DEUX_STYLES = {
+    "default": {
+        "extras": {
+            "code-friendly": None,
+            "tables": None
+        },
+        "safe_mode": "escape",
+    }
+}

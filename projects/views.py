@@ -1,6 +1,8 @@
+import markdown
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework import mixins
@@ -53,6 +55,25 @@ def qasp(request, buy):
             raise Http404
     if buy.qasp:
         return render(request, "projects/qasp.html", {"buy": buy})
+    else:
+        raise Http404
+
+
+def qasp_download(request, buy, format='markdown'):
+    buy = get_object_or_404(Buy, id=buy)
+    if not buy.public:
+        if request.user.has_perm('projects.view_private'):
+            pass
+        else:
+            raise Http404
+    if buy.qasp:
+        if format == 'markdown':
+            response = HttpResponse(buy.qasp, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="{0} QASP.md"'.format(buy.name)
+
+            return response
+        elif format == 'docx':
+            pass
     else:
         raise Http404
 
