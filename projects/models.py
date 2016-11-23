@@ -259,6 +259,20 @@ class Buy(models.Model):
         ('Agile BPA', 'Agile BPA'),
         ('Micro-Purchase', 'Micro-Purchase'),
     )
+    SET_ASIDE_CHOICES = (
+        ("AbilityOne", "AbilityOne"),
+        ("HUBZone Small Business", "HUBZone Small Business"),
+        ("Multiple Small Business Categories",
+            "Multiple Small Business Categories"),
+        ("Other Than Small", "Other Than Small"),
+        ("Service Disabled Veteran-owned Small Business",
+            "Service Disabled Veteran-owned Small Business"),
+        ("Small Business", "Small Business"),
+        ("Small Disadvantaged Business (includes Section 8a)",
+            "Small Disadvantaged Business (includes Section 8a)"),
+        ("Veteran-Owned Small Business", "Veteran-Owned Small Business"),
+        ("Woman-Owned Small Business", "Woman-Owned Small Business"),
+    )
 
     name = models.CharField(
         max_length=100,
@@ -306,9 +320,14 @@ class Buy(models.Model):
     procurement_method = models.CharField(
         max_length=200,
         choices=PROCUREMENT_METHOD_CHOICES,
-        default="To Be Determined",
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
+    )
+    set_aside = models.CharField(
+        max_length=200,
+        choices=SET_ASIDE_CHOICES,
+        blank=True,
+        null=True,
     )
     rfq_id = models.CharField(
         max_length=20,
