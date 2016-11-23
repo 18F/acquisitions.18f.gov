@@ -136,8 +136,9 @@ class ContractingOffice(models.Model):
     )
     program_manager = models.ForeignKey(
         User,
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
 
     def __str__(self):
@@ -148,15 +149,17 @@ class ContractingOffice(models.Model):
 
 
 class ContractingSpecialist(models.Model):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User,
         blank=False,
         null=False,
+        on_delete=models.CASCADE,
     )
     office = models.ForeignKey(
         ContractingOffice,
         blank=False,
         null=False,
+        on_delete=models.CASCADE,
     )
 
     def __str__(self):
@@ -170,15 +173,17 @@ class ContractingSpecialist(models.Model):
 
 
 class ContractingOfficer(models.Model):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User,
         blank=False,
         null=False,
+        on_delete=models.CASCADE,
     )
     office = models.ForeignKey(
         ContractingOffice,
         blank=False,
         null=False,
+        on_delete=models.CASCADE,
     )
 
     def __str__(self):
@@ -192,15 +197,17 @@ class ContractingOfficer(models.Model):
 
 
 class ContractingOfficerRepresentative(models.Model):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User,
         blank=False,
         null=False,
+        on_delete=models.CASCADE,
     )
     office = models.ForeignKey(
         ContractingOffice,
         blank=False,
         null=False,
+        on_delete=models.CASCADE,
     )
 
     def __str__(self):
