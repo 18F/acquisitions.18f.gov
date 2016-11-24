@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from projects.models import IAA, Project, Buy
 from projects.serializers import IAASerializer, ProjectSerializer, BuySerializer
+from projects.forms import QASPForm
 
 
 # Create your views here.
@@ -38,23 +39,31 @@ def buys(request):
 
 def buy(request, buy):
     buy = get_object_or_404(Buy, id=buy)
+    qasp_form = QASPForm(request.POST or None, buy=buy)
+    if qasp_form.is_valid():
+        buy.create_qasp()
+        # Get a new QASPForm since the buy's properties changed
+        qasp_form = QASPForm(request.POST or None, buy=buy)
     if not buy.public:
         if request.user.has_perm('projects.view_private'):
-            return render(request, "projects/buy.html", {"buy": buy})
+            return render(request, "projects/buy.html", {"buy": buy, "qasp_form": qasp_form})
         else:
             raise Http404
-    return render(request, "projects/buy.html", {"buy": buy})
+    return render(request, "projects/buy.html", {"buy": buy, "qasp_form": qasp_form})
 
 
 def qasp(request, buy):
     buy = get_object_or_404(Buy, id=buy)
+    qasp_form = QASPForm(request.POST or None, buy=buy)
+    if qasp_form.is_valid():
+        buy.create_qasp()
     if not buy.public:
         if request.user.has_perm('projects.view_private'):
             pass
         else:
             raise Http404
     if buy.qasp:
-        return render(request, "projects/qasp.html", {"buy": buy})
+        return render(request, "projects/qasp.html", {"buy": buy, "qasp_form": qasp_form})
     else:
         raise Http404
 
@@ -73,6 +82,7 @@ def qasp_download(request, buy, format='markdown'):
 
             return response
         elif format == 'docx':
+            # TODO: is this possible without leaving python?
             pass
     else:
         raise Http404

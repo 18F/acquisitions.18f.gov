@@ -23,9 +23,11 @@
       <h3>QASP</h3>
       <p>Status: {{ buy.qasp_status }}</p>
       {% if buy.qasp %}
-      <p><a href="{% url 'buys:qasp' buy.id %}">View</a> | <a href="{% url 'buys:qasp_download' buy.id %}">Download</a>{% if perms.project.view_private %} | Regenerate{% endif %}</p>
+      <p><a class="usa-button" href="{% url 'buys:qasp' buy.id %}">View</a><a class="usa-button" href="{% url 'buys:qasp_download' buy.id %}">Download</a></p>
+      <hr />
+      {% if perms.project.view_private %}{% include "projects/includes/qasp_form.html" %}{% endif %}
       {% else %}
-      {% if perms.project.view_private %}<p>Generate</p>{% endif %}
+      {% if perms.project.view_private %}{% include "projects/includes/qasp_form.html" %}{% endif %}
       {% endif %}
     </div>
   </div>
