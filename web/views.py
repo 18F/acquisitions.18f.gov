@@ -1,12 +1,15 @@
+from datetime import datetime
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
+from news.models import News
 
 
 # Create your views here.
 def index(request):
-    return render(request, 'web/index.html')
+    news = News.objects.get(draft=False, publication_date__lte=datetime.now())
+    return render(request, 'web/index.html', {'news': news})
 
 
 def guides(request):
