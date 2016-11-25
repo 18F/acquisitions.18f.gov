@@ -42,12 +42,12 @@ def buy(request, buy):
     buy = get_object_or_404(Buy, id=buy)
     if request.method == 'POST':
         if 'generate_qasp' in request.POST:
-            qasp_form = QASPForm(request.POST or None, buy=buy)
+            qasp_form = QASPForm(request.POST, buy=buy)
             if qasp_form.is_valid():
                 buy.create_qasp()
                 return redirect('buys:qasp', buy.id)
         if 'generate_acquisition_plan' in request.POST:
-            acquisition_plan_form = AcquisitionPlanForm(request.POST or None, buy=buy)
+            acquisition_plan_form = AcquisitionPlanForm(request.POST, buy=buy)
             if acquisition_plan_form.is_valid():
                 buy.create_acquisition_plan()
                 return redirect('buys:acquisition_plan', buy.id)
