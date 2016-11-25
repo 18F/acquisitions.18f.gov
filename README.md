@@ -97,12 +97,10 @@ buy's documents to be customized away from the template if necessary.
 
 Templates are currently stored within [the `projects` app](./projects/templates/projects/markdown/), though it may make sense for them to get their own app at some point.
 
-In creating new templates, there are a couple things to know:
-
-- The top-level header should use the underline style rather than hashtags. For
-whatever reason, the Markdown renderer doesn't seem to pick up a header in the
-first line, and Django won't allow a blank first line for the field.
-- blockquotes don't seem to work right now
+In creating new templates, note that the top-level header should use the
+underline style rather than hashtags. For whatever reason, the Markdown renderer
+doesn't seem to pick up a header in the first line, and Django won't allow a
+blank first line for the field.
 
 ### UAA Authentication
 

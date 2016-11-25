@@ -6,7 +6,7 @@
   <div class="usa-width-one-full">
     <p><a href="{{ buy.get_absolute_url }}">Back</a></p>
     {% markdown %}
-    {{ buy.acquisition_plan }}
+    {{ buy.acquisition_plan | safe }}
     {% endmarkdown %}
   </div>
 </section>
