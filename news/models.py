@@ -10,7 +10,7 @@ class News(models.Model):
         blank=False,
         null=False,
     )
-    update = models.TextField(
+    content = models.TextField(
         blank=False,
         null=False,
     )
