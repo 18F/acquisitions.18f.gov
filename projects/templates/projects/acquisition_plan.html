@@ -1,0 +1,13 @@
+{% extends "web/base.html" %}
+{% load markdown_deux_tags %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <p><a href="{{ buy.get_absolute_url }}">Back</a></p>
+    {% markdown %}
+    {{ buy.acquisition_plan | safe }}
+    {% endmarkdown %}
+  </div>
+</section>
+{% endblock %}

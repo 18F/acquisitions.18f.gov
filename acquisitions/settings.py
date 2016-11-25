@@ -43,6 +43,9 @@ INSTALLED_APPS = (
 
     'rest_framework',
     'rest_framework.authtoken',
+    'markdown_deux',
+    'floppyforms',
+
     'projects',
     'team',
     'web',
@@ -163,4 +166,16 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework_csv.renderers.CSVRenderer',
     ),
+}
+
+
+# Markdown Deux
+MARKDOWN_DEUX_STYLES = {
+    "default": {
+        "extras": {
+            "code-friendly": None,
+            "tables": None
+        },
+        "safe_mode": "escape",
+    }
 }

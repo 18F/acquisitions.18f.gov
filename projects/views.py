@@ -1,6 +1,9 @@
+import markdown
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework import mixins
@@ -11,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from projects.models import IAA, Project, Buy
 from projects.serializers import IAASerializer, ProjectSerializer, BuySerializer
+from projects.forms import QASPForm, AcquisitionPlanForm
 
 
 # Create your views here.
@@ -36,12 +40,106 @@ def buys(request):
 
 def buy(request, buy):
     buy = get_object_or_404(Buy, id=buy)
+    if request.method == 'POST':
+        if 'generate_qasp' in request.POST:
+            qasp_form = QASPForm(request.POST, buy=buy)
+            if qasp_form.is_valid():
+                buy.create_qasp()
+                return redirect('buys:qasp', buy.id)
+        if 'generate_acquisition_plan' in request.POST:
+            acquisition_plan_form = AcquisitionPlanForm(request.POST, buy=buy)
+            if acquisition_plan_form.is_valid():
+                buy.create_acquisition_plan()
+                return redirect('buys:acquisition_plan', buy.id)
+    else:
+        qasp_form = QASPForm(buy=buy)
+        acquisition_plan_form = AcquisitionPlanForm(buy=buy)
     if not buy.public:
         if request.user.has_perm('projects.view_private'):
-            return render(request, "projects/buy.html", {"buy": buy})
+            pass
         else:
             raise Http404
-    return render(request, "projects/buy.html", {"buy": buy})
+    return render(
+        request,
+        "projects/buy.html",
+        {
+            "buy": buy,
+            "qasp_form": qasp_form,
+            "acquisition_plan_form": acquisition_plan_form
+        }
+    )
+
+
+def qasp(request, buy):
+    buy = get_object_or_404(Buy, id=buy)
+    qasp_form = QASPForm(request.POST or None, buy=buy)
+    if qasp_form.is_valid():
+        buy.create_qasp()
+    if not buy.public:
+        if request.user.has_perm('projects.view_private'):
+            pass
+        else:
+            raise Http404
+    if buy.qasp:
+        return render(request, "projects/qasp.html", {"buy": buy, "qasp_form": qasp_form})
+    else:
+        raise Http404
+
+
+def qasp_download(request, buy, format='markdown'):
+    buy = get_object_or_404(Buy, id=buy)
+    if not buy.public:
+        if request.user.has_perm('projects.view_private'):
+            pass
+        else:
+            raise Http404
+    if buy.qasp:
+        if format == 'markdown':
+            response = HttpResponse(buy.qasp, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="{0} QASP.md"'.format(buy.name)
+
+            return response
+        elif format == 'docx':
+            # TODO: is this possible without leaving python?
+            pass
+    else:
+        raise Http404
+
+
+def acquisition_plan(request, buy):
+    buy = get_object_or_404(Buy, id=buy)
+    acquisition_plan_form = AcquisitionPlanForm(request.POST or None, buy=buy)
+    if acquisition_plan_form.is_valid():
+        buy.create_acquisition_plan()
+    if not buy.public:
+        if request.user.has_perm('projects.view_private'):
+            pass
+        else:
+            raise Http404
+    if buy.acquisition_plan:
+        return render(request, "projects/acquisition_plan.html", {"buy": buy, "acquisition_plan_form": acquisition_plan_form})
+    else:
+        raise Http404
+
+
+def acquisition_plan_download(request, buy, format='markdown'):
+    buy = get_object_or_404(Buy, id=buy)
+    if not buy.public:
+        if request.user.has_perm('projects.view_private'):
+            pass
+        else:
+            raise Http404
+    if buy.acquisition_plan:
+        if format == 'markdown':
+            response = HttpResponse(buy.acquisition_plan, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="{0} Acquisition Plan.md"'.format(buy.name)
+
+            return response
+        elif format == 'docx':
+            # TODO: is this possible without leaving python?
+            pass
+    else:
+        raise Http404
 
 
 @api_view(['GET'])
