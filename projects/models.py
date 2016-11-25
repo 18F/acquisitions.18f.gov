@@ -426,6 +426,7 @@ class Buy(models.Model):
                 {'buy': self}
             )
         self.save(update_fields=['acquisition_plan'])
+        print('acq plan updated')
 
     def acquistition_plan_status(self):
         # TODO: This could return the status of the acquisitions plan based on

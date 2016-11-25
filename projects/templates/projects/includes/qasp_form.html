@@ -2,7 +2,7 @@
 
 <form class="" action="" method="post">
   {% csrf_token %}
-  <input type="submit" name="" value={% if buy.qasp %}"Regenerate"{% else %}"Generate"{% endif %}>
+  <input type="submit" name="generate_qasp" value={% if buy.qasp %}"Regenerate"{% else %}"Generate"{% endif %}>
   {% form qasp_form using %}
   {% if buy.qasp %}
   {% formfield form.agree %}

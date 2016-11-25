@@ -15,9 +15,12 @@
         <h3>Acquisition Plan</h3>
         <p>Status: {{ buy.acquistition_plan_status }}</p>
         {% if buy.acquisition_plan %}
-        <p>View | Download | Regenerate</p>
+        <p><a class="usa-button" href="{% url 'buys:acquisition_plan' buy.id %}">View</a><a class="usa-button" href="{% url 'buys:acquisition_plan_download' buy.id %}">Download</a></p>
+        <hr />
+        <p>Regenerate the Acquisition Plan from template:</p>
+        {% if perms.project.view_private %}{% include "projects/includes/acquisition_plan_form.html" %}{% endif %}
         {% else %}
-        <p>Generate</p>
+        {% if perms.project.view_private %}{% include "projects/includes/acquisition_plan_form.html" %}{% endif %}
         {% endif %}
       </div>
       <div class="usa-width-one-half" id="qasp">

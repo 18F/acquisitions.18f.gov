@@ -1,4 +1,5 @@
-# Acquisition Plan For {{ buy.name }} {{ date }}
+Acquisition Plan For {{ buy.name }} {{ date }}
+==============================================
 
 
 | Plan ID            | {{ id }}     |
