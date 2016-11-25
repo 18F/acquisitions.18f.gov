@@ -1,5 +1,6 @@
 import markdown
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.http import HttpResponse
@@ -44,10 +45,12 @@ def buy(request, buy):
             qasp_form = QASPForm(request.POST or None, buy=buy)
             if qasp_form.is_valid():
                 buy.create_qasp()
+                return redirect('buys:qasp', buy.id)
         if 'generate_acquisition_plan' in request.POST:
             acquisition_plan_form = AcquisitionPlanForm(request.POST or None, buy=buy)
             if acquisition_plan_form.is_valid():
                 buy.create_acquisition_plan()
+                return redirect('buys:acquisition_plan', buy.id)
     if not buy.public:
         if request.user.has_perm('projects.view_private'):
             pass
