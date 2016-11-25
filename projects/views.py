@@ -51,13 +51,14 @@ def buy(request, buy):
             if acquisition_plan_form.is_valid():
                 buy.create_acquisition_plan()
                 return redirect('buys:acquisition_plan', buy.id)
+    else:
+        qasp_form = QASPForm(buy=buy)
+        acquisition_plan_form = AcquisitionPlanForm(buy=buy)
     if not buy.public:
         if request.user.has_perm('projects.view_private'):
             pass
         else:
             raise Http404
-    qasp_form = QASPForm(buy=buy)
-    acquisition_plan_form = AcquisitionPlanForm(buy=buy)
     return render(
         request,
         "projects/buy.html",

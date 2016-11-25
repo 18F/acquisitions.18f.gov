@@ -4,7 +4,9 @@
 
 # acquisitions.18f.gov
 
-This is the homepage for the TTS Office of Acquisitions. Its goal is to be a public-facing site for the office's efforts, as well as an internal site for coordinating and tracking work.
+This is the homepage for the TTS Office of Acquisitions. Its goal is to be a
+public-facing site for the office's efforts, as well as an internal site for
+coordinating and tracking work.
 
 ## Installation
 
@@ -81,6 +83,26 @@ goal.
 
 In the interest of API-first development, information about the projects on the
 site is built by consuming that API rather than building it into the templates.
+
+### Templated documents
+
+Since many projects will require the same documents, the app includes some
+templates that can be filled in automatically with data from the database.
+
+Because the documents need to be frozen at some point in time, but we'd like to
+be able to update the templates iteratively, the documents are generated and the
+raw Markdown is saved as part of a buy's data. This means that later document
+regeneration may be necessary, but also prevents surprise changes and allows a
+buy's documents to be customized away from the template if necessary.
+
+Templates are currently stored within [the `projects` app](./projects/templates/projects/markdown/), though it may make sense for them to get their own app at some point.
+
+In creating new templates, there are a couple things to know:
+
+- The top-level header should use the underline style rather than hashtags. For
+whatever reason, the Markdown renderer doesn't seem to pick up a header in the
+first line, and Django won't allow a blank first line for the field.
+- blockquotes don't seem to work right now
 
 ### UAA Authentication
 
