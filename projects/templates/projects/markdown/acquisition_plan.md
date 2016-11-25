@@ -28,8 +28,6 @@ Acquisition Plan For {{ buy.name }} {{ date }}
 
 > **FAR guidance:** Introduce the plan by a brief statement of need. Summarize the technical and contractual history of the acquisition. Discuss feasible acquisition alternatives, the impact of prior acquisitions on those alternatives, and any related in-house effort.
 
-### Statement of Need
-
 {{ buy.description }}
 
 ### Technical History
