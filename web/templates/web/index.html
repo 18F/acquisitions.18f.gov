@@ -12,7 +12,16 @@
 </section>
 <section class="usa-grid">
   <div class="usa-width-one-full">
-    <h1>Acquisitions!</h1>
+    <h1>The Latest</h1>
+    {% for new in news %}
+    <h2>{{ new.title }}</h2>
+    <p class="publication-date">
+      <small>Posted on {{ new.publication_date }}</small>
+    </p>
+    <div class="">
+      {{ new.content }}
+    </div>
+    {% endfor %}
   </div>
 </section>
 {% endblock %}
