@@ -23,6 +23,8 @@
     <div class="">
       {{ new.content }}
     </div>
+    {% empty %}
+    <p>No updates yet, but stay tuned!</p>
     {% endfor %}
   </div>
 </section>
