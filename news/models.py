@@ -1,6 +1,8 @@
 from datetime import datetime
+from dateutil.tz import tzlocal
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -9,6 +11,10 @@ class News(models.Model):
         max_length=100,
         blank=False,
         null=False,
+    )
+    authors = models.ManyToManyField(
+        User,
+        blank=False,
     )
     content = models.TextField(
         blank=False,
@@ -33,10 +39,6 @@ class News(models.Model):
         if not self.draft and self.publication_date is None:
             raise ValidationError({
                 'publication_date': 'Please set a publication date'
-            })
-        if self.publication_date < datetime.now():
-            raise ValidationError({
-                'publication_date': 'Publication date may not be in the past'
             })
 
     class Meta:

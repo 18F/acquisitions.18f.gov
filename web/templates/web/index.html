@@ -16,7 +16,9 @@
     {% for new in news %}
     <h2>{{ new.title }}</h2>
     <p class="publication-date">
-      <small>Posted on {{ new.publication_date }}</small>
+      <small>Posted on {{ new.publication_date }}<br>by {% for author in new.authors.all %}
+        {{ author.get_full_name }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}</small>
     </p>
     <div class="">
       {{ new.content }}
