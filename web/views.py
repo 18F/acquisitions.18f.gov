@@ -8,7 +8,10 @@ from news.models import News
 
 # Create your views here.
 def index(request):
-    news = News.objects.get(draft=False, publication_date__lte=datetime.now())
+    news = News.objects.get(
+        draft=False,
+        publication_date__lte=datetime.now()
+    ).order_by('publication_date')[:5]
     return render(request, 'web/index.html', {'news': news})
 
 
