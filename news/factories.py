@@ -2,7 +2,7 @@ import factory
 from datetime import datetime, timedelta, tzinfo
 from dateutil.tz import tzlocal
 from django.contrib.auth.models import User
-from news.models import News
+from news.models import Post
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -20,7 +20,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 class NewsFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = News
+        model = Post
 
     title = factory.Faker('catch_phrase')
     content = factory.Faker('paragraph')

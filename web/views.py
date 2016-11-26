@@ -3,16 +3,16 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
-from news.models import News
+from news.models import Post
 
 
 # Create your views here.
 def index(request):
-    news = News.objects.filter(
+    posts = Post.objects.filter(
         draft=False,
         publication_date__lte=datetime.now()
     ).order_by('publication_date')[:5]
-    return render(request, 'web/index.html', {'news': news})
+    return render(request, 'web/index.html', {'posts': posts})
 
 
 def guides(request):
