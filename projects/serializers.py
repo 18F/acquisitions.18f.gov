@@ -3,7 +3,7 @@ from projects.models import IAA, Project, Buy
 
 
 class IAASerializer(serializers.ModelSerializer):
-    client = serializers.PrimaryKeyRelatedField(read_only=True)
+    client = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = IAA
