@@ -38,7 +38,7 @@ class Post(models.Model):
         return "{0} | {1}".format(self.title, self.publication_date)
 
     def get_absolute_url(self):
-        return reverse('news:post', self.slug)
+        return reverse('news:post', args=[self.slug])
 
     def clean(self):
         if self.draft and self.publication_date is not None:
