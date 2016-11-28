@@ -29,6 +29,7 @@ api_patterns = projects_urls.api_patterns + team_urls.api_patterns
 urlpatterns = [
     url(r'^$', web_views.index),
     url(r'^guides$', web_views.guides),
+    url(r'^api/$', web_views.api),
     url(r'^api/', include(api_patterns, namespace='api')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^team/', include(team_urls.urlpatterns, namespace='team')),
