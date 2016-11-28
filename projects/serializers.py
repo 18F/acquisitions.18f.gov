@@ -2,7 +2,9 @@ from rest_framework import serializers
 from projects.models import IAA, Project, Buy
 
 
-class IAASerializer(serializers.HyperlinkedModelSerializer):
+class IAASerializer(serializers.ModelSerializer):
+    client = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = IAA
         fields = (
