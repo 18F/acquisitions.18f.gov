@@ -1,0 +1,23 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>All updates</h1>
+    {% for post in posts %}
+    <h2>{{ post.title }}</h2>
+    <p class="post-publication-info">
+      <small>Posted on {{ post.publication_date }}<br>by {% for author in post.authors.all %}
+        {{ author.get_full_name }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}</small>
+    </p>
+    <div class="post-content">
+      {{ post.content }}
+      <p><small><a href="{% url 'news:post' post.slug %}">Permalink</a></small></p>
+    </div>
+    {% empty %}
+    <p>No updates yet, but stay tuned!</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

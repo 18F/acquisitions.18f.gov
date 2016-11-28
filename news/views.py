@@ -11,6 +11,7 @@ def posts(request):
         draft=False,
         publication_date__lte=datetime.now(tzlocal())
     ).order_by('publication_date')
+    return render(request, "news/posts.html", {"posts": posts})
 
 
 def post(request, slug):
