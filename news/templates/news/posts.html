@@ -1,18 +1,9 @@
 {% extends "web/base.html" %}
 
 {% block content %}
-<section class="usa-hero astronaut">
-  <div class="usa-grid">
-    <div class="usa-hero-callout usa-section-dark">
-      <h2><span class="usa-hero-callout-alt">Agile Delivery Services BPA:</span> Making Procurements Joyful</h2>
-      {# <a class="usa-hero-link" href="https://pages.18f.gov/ads-bpa">Current BPA orders</a>#}
-      <a class="usa-button usa-button-big usa-button-secondary" href="https://pages.18f.gov/ads-bpa">See current task orders</a>
-    </div>
-  </div>
-</section>
 <section class="usa-grid">
   <div class="usa-width-one-full">
-    <h1>The Latest</h1>
+    <h1>All updates</h1>
     {% for post in posts %}
     <h2>{{ post.title }}</h2>
     <p class="post-publication-info">
@@ -27,6 +18,22 @@
     {% empty %}
     <p>No updates yet, but stay tuned!</p>
     {% endfor %}
+    <hr />
+    <div class="pagination">
+      <span class="step-links">
+        {% if posts.has_previous %}
+        <a href="?page={{ posts.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+          Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+        </span>
+
+        {% if posts.has_next %}
+        <a href="?page={{ posts.next_page_number }}">next</a>
+        {% endif %}
+      </span>
+    </div>
   </div>
 </section>
 {% endblock %}

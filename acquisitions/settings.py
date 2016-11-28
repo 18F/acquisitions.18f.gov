@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'team',
     'web',
     'uaa_client',
+    'news',
     'acquisitions',
 )
 

@@ -1,12 +1,19 @@
+from datetime import datetime, tzinfo
+from dateutil.tz import tzlocal
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
+from news.models import Post
 
 
 # Create your views here.
 def index(request):
-    return render(request, 'web/index.html')
+    posts = Post.objects.filter(
+        draft=False,
+        publication_date__lte=datetime.now(tzlocal())
+    ).order_by('publication_date')[:5]
+    return render(request, 'web/index.html', {'posts': posts})
 
 
 def guides(request):

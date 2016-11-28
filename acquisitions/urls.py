@@ -18,6 +18,7 @@ from django.contrib import admin
 from web import views as web_views
 from team import urls as team_urls
 from projects import urls as projects_urls
+from news import urls as news_urls
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -38,6 +39,10 @@ urlpatterns = [
     url(
         r'^buys/',
         include(projects_urls.buy_patterns, namespace='buys')
+    ),
+    url(
+        r'^news/',
+        include(news_urls.urlpatterns, namespace='news')
     ),
     url(r'^profile/$', web_views.profile),
     url(r'^profile/refresh_token/$', web_views.refresh_token),
