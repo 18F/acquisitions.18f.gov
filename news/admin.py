@@ -3,6 +3,8 @@ from news.models import Post
 
 
 # Register your models here.
-@admin.register(Post)
-class NewsAdmin(admin.ModelAdmin):
-    pass
+# @admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("title",)}
+
+admin.site.register(Post, PostAdmin)

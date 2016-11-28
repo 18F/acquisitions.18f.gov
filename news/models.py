@@ -3,6 +3,7 @@ from dateutil.tz import tzlocal
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 # Create your models here.
@@ -11,6 +12,11 @@ class Post(models.Model):
         max_length=100,
         blank=False,
         null=False,
+    )
+    slug = models.SlugField(
+        max_length=50,
+        blank=True,
+        null=True,
     )
     authors = models.ManyToManyField(
         User,
@@ -30,6 +36,9 @@ class Post(models.Model):
 
     def __str__(self):
         return "{0} | {1}".format(self.title, self.publication_date)
+
+    def get_absolute_url(self):
+        return reverse('news:post', self.slug)
 
     def clean(self):
         if self.draft and self.publication_date is not None:

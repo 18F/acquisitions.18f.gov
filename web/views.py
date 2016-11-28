@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, tzinfo
+from dateutil.tz import tzlocal
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
@@ -10,7 +11,7 @@ from news.models import Post
 def index(request):
     posts = Post.objects.filter(
         draft=False,
-        publication_date__lte=datetime.now()
+        publication_date__lte=datetime.now(tzlocal())
     ).order_by('publication_date')[:5]
     return render(request, 'web/index.html', {'posts': posts})
 

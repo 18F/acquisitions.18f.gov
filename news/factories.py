@@ -23,6 +23,7 @@ class NewsFactory(factory.django.DjangoModelFactory):
         model = Post
 
     title = factory.Faker('catch_phrase')
+    slug = factory.Faker('slug')
     content = factory.Faker('paragraph')
     authors = factory.RelatedFactory(UserFactory)
     publication_date = factory.Faker(
