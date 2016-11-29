@@ -10,7 +10,7 @@
       {{ buy.description }}
     </div>
     <h2>Documents</h2>
-    <div id="documents" class="usa-grid-full">
+    <div class="usa-grid-full acq-documents">
       <div class="usa-width-one-half" id="acquisition-plan">
         <h3>Acquisition Plan</h3>
         <p>Status: {{ buy.acquistition_plan_status }}</p>
@@ -35,6 +35,22 @@
         {% if perms.project.view_private %}{% include "projects/includes/qasp_form.html" %}{% endif %}
         {% endif %}
       </div>
+    </div>
+    <div class="usa-grid-full acq-documents">
+      <div class="usa-width-one-half" id="market-research">
+        <h3>Market Research Report</h3>
+        <p>Status: {{ buy.market_research_status }}</p>
+        {% if buy.market_research %}
+        <p><a class="usa-button" href="{% url 'buys:market_research' buy.id %}">View</a><a class="usa-button" href="{% url 'buys:market_research_download' buy.id %}">Download</a></p>
+        <hr />
+        <p>Regenerate the Acquisition Plan from template:</p>
+        {% if perms.project.view_private %}{% include "projects/includes/market_research_form.html" %}{% endif %}
+        {% else %}
+        {% if perms.project.view_private %}{% include "projects/includes/market_research_form.html" %}{% endif %}
+        {% endif %}
+      </div>
+      <div class="usa-width-one-half" id="qasp">
+        <h3>Another Document</h3>
     </div>
   </div>
 </section>
