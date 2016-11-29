@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from projects.models import IAA, Project, Buy
 from projects.serializers import IAASerializer, ProjectSerializer, BuySerializer
-from projects.forms import QASPForm, AcquisitionPlanForm
+from projects.forms import QASPForm, AcquisitionPlanForm, MarketResearchForm
 
 
 # Create your views here.
@@ -51,9 +51,15 @@ def buy(request, buy):
             if acquisition_plan_form.is_valid():
                 buy.create_acquisition_plan()
                 return redirect('buys:acquisition_plan', buy.id)
+        if 'generate_market_research' in request.POST:
+            market_research_form = MarketResearchForm(request.POST, buy=buy)
+            if market_research_form.is_valid():
+                buy.create_market_research()
+                return redirect('buys:market_research', buy.id)
     else:
         qasp_form = QASPForm(buy=buy)
         acquisition_plan_form = AcquisitionPlanForm(buy=buy)
+        market_research_form = MarketResearchForm(buy=buy)
     if not buy.public:
         if request.user.has_perm('projects.view_private'):
             pass
@@ -65,7 +71,8 @@ def buy(request, buy):
         {
             "buy": buy,
             "qasp_form": qasp_form,
-            "acquisition_plan_form": acquisition_plan_form
+            "acquisition_plan_form": acquisition_plan_form,
+            "market_research_form": market_research_form
         }
     )
 
@@ -97,6 +104,42 @@ def qasp_download(request, buy, format='markdown'):
         if format == 'markdown':
             response = HttpResponse(buy.qasp, content_type='text/plain')
             response['Content-Disposition'] = 'attachment; filename="{0} QASP.md"'.format(buy.name)
+
+            return response
+        elif format == 'docx':
+            # TODO: is this possible without leaving python?
+            pass
+    else:
+        raise Http404
+
+
+def market_research(request, buy):
+    buy = get_object_or_404(Buy, id=buy)
+    market_research_form = MarketResearchForm(request.POST or None, buy=buy)
+    if market_research_form.is_valid():
+        buy.create_market_research()
+    if not buy.public:
+        if request.user.has_perm('projects.view_private'):
+            pass
+        else:
+            raise Http404
+    if buy.market_research:
+        return render(request, "projects/market_research.html", {"buy": buy, "market_research_form": market_research_form})
+    else:
+        raise Http404
+
+
+def market_research_download(request, buy, format='markdown'):
+    buy = get_object_or_404(Buy, id=buy)
+    if not buy.public:
+        if request.user.has_perm('projects.view_private'):
+            pass
+        else:
+            raise Http404
+    if buy.market_research:
+        if format == 'markdown':
+            response = HttpResponse(buy.market_research, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="{0} Market Research.md"'.format(buy.name)
 
             return response
         elif format == 'docx':

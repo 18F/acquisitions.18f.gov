@@ -374,6 +374,10 @@ class Buy(models.Model):
         blank=True,
         null=True,
     )
+    market_research = models.TextField(
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return "{0}".format(self.name)
@@ -411,6 +415,7 @@ class Buy(models.Model):
         except Exception:
             return None
 
+    # TODO: this document generation seems to involve repeated logic
     def create_qasp(self):
         # TODO: This may need mark_safe from django.utils.safestring
         self.qasp = render_to_string(
@@ -428,6 +433,14 @@ class Buy(models.Model):
         self.save(update_fields=['acquisition_plan'])
         print('acq plan updated')
 
+    def create_market_research(self):
+        # TODO: This may need mark_safe from django.utils.safestring
+        self.market_research = render_to_string(
+            'projects/markdown/market_research.md',
+            {'buy': self}
+        )
+        self.save(update_fields=['market_research'])
+
     def acquistition_plan_status(self):
         # TODO: This could return the status of the acquisitions plan based on
         # the fields that have been completed.
@@ -444,6 +457,14 @@ class Buy(models.Model):
         if self.name and not self.qasp:
             return 'Not yet generated'
         elif self.name and self.qasp:
+            return 'Complete'
+        else:
+            return 'Incomplete'
+
+    def market_research_status(self):
+        if self.name and not self.market_research:
+            return 'Not yet generated'
+        elif self.name and self.market_research:
             return 'Complete'
         else:
             return 'Incomplete'
