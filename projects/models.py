@@ -375,6 +375,16 @@ class Buy(models.Model):
         null=True,
     )
 
+    # Milestone dates
+    issue_date = models.DateField(
+        blank=True,
+        null=True,
+    )
+    award_date = models.DateField(
+        blank=True,
+        null=True,
+    )
+
     def __str__(self):
         return "{0}".format(self.name)
 
@@ -468,6 +478,12 @@ class Buy(models.Model):
                 raise ValidationError({
                     'dollars': 'Value can\'t exceed value of overall project'
                 })
+
+        # Don't allow award date without issue date
+        if self.award_date and not self.issue_date:
+            raise ValidationError({
+                'award_date': 'Please set an issue date first'
+            })
 
     class Meta:
         pass
