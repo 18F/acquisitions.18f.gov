@@ -433,22 +433,37 @@ class Buy(models.Model):
         # TODO: This may need mark_safe from django.utils.safestring
         self.acquisition_plan = render_to_string(
                 'projects/markdown/acquisition_plan.md',
-                {'buy': self}
+                {'buy': self, 'date': date.today()}
             )
         self.save(update_fields=['acquisition_plan'])
         print('acq plan updated')
 
-    def acquistition_plan_status(self):
-        # TODO: This could return the status of the acquisitions plan based on
-        # the fields that have been completed.
-        # Additionally, the acquisition plan page can display the remaining
-        # unset fields at the top of the acquisition plan page
+    def acquisition_plan_status(self):
+        required_fields = [
+            self.name,
+            self.description,
+            self.contractual_history,
+            self.project,
+            self.contracting_office,
+            self.contracting_officer,
+            self.contracting_specialist,
+            self.base_period_length,
+            self.option_periods,
+            self.option_period_length,
+            self.dollars,
+            self.rfq_id,
+            self.procurement_method,
+            self.set_aside_status,
+        ]
         if not self.acquisition_plan:
             return 'Not yet generated'
         else:
-            # TODO: Finish the acquisition plan template so that we can add
-            # a 'Complete' setting
-            return 'Incomplete'
+            incomplete_fields = []
+            for field in required_fields:
+                if field is None:
+                    incomplete_fields.append(field)
+            percentage = (len(incomplete_fields) / len(required_fields)) * 100
+            return '{0:.2f}% Complete'.format(percentage)
 
     def qasp_status(self):
         if self.name and not self.qasp:

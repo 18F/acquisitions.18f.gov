@@ -1,11 +1,11 @@
-Acquisition Plan For {{ buy.name }} {{ date }}
+Acquisition Plan for {{ buy.name }} | {{ date }}
 ==============================================
 
 
 | Plan ID            | {{ id }}     |
 |--------------------|-------------------------|
 | Project Title      | {{ buy.name }}          |
-| Plan Status        | {{ buy.acquistition_plan_status }}   |
+| Plan Status        | {{ buy.acquisition_plan_status }}   |
 | Project Number(s)  | {{ buy.id }}            |
 | Solicitation Number| {{ buy.rfq_id }}         |
 | Estimated Dollar Value | {{ buy.dollars }}     |
@@ -16,7 +16,7 @@ Acquisition Plan For {{ buy.name }} {{ date }}
 | High Risk?         | No                      |
 | Small Business Set-aside? | {{ buy.set_aside_status }} |
 | General Counsel Participation Needed? | No      |
-| Level of Competition | buy.competitionType |
+| Level of Competition | {{ buy.competition_type }} |
 
 [*Review GSAM 507.105 Contents of acquisition plans.*](http://farsite.hill.af.mil/vfgsara.htm)
 
