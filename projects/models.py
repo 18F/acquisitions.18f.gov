@@ -335,7 +335,6 @@ class Buy(models.Model):
         max_length=20,
         blank=True,
         null=True,
-        unique=True,
         verbose_name='RFQ ID'
     )
     contracting_office = models.ForeignKey(
@@ -439,6 +438,7 @@ class Buy(models.Model):
         print('acq plan updated')
 
     def acquisition_plan_status(self):
+        # TODO: find a way to display the incomplete fields on the page
         required_fields = [
             self.name,
             self.description,
