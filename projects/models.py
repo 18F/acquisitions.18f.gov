@@ -458,6 +458,52 @@ class Buy(models.Model):
         else:
             return 'Incomplete'
 
+    def ready_to_issue(self):
+        required_fields = [
+            self.name,
+            self.description,
+            self.contractual_history,
+            self.project,
+            self.contracting_office,
+            self.contracting_officer,
+            self.contracting_specialist,
+            self.base_period_length,
+            self.option_periods,
+            self.option_period_length,
+            self.acquisition_plan,
+            self.qasp,
+            self.dollars,
+            self.public,
+            self.rfq_id,
+            self.procurement_method,
+            self.set_aside_status,
+            self.github_repository,
+        ]
+        if None in required_fields:
+            return False
+        else:
+            return True
+
+    def locked_fields(self):
+        if self.award_date:
+            locked = [
+                'qasp',
+                'acquisition_plan',
+                'rfq_id',
+                'contracting_office',
+                'contracting_officer',
+                'contracting_specialist',
+                'set_aside_status',
+                'procurement_method',
+                'base_period_length',
+                'option_periods',
+                'option_period_length',
+                'dollars'
+            ]
+        else:
+            locked = []
+        return locked
+
     def clean(self):
         # Check that buy is not public without associated project being public
         if (self.project.public is not True) and (self.public is True):
@@ -478,6 +524,8 @@ class Buy(models.Model):
                 raise ValidationError({
                     'dollars': 'Value can\'t exceed value of overall project'
                 })
+
+        # Don't allow issue date without a lot of other stuff
 
         # Don't allow award date without issue date
         if self.award_date and not self.issue_date:

@@ -32,3 +32,6 @@ class ProjectForm(forms.ModelForm):
 )
 class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm
+
+    def get_readonly_fields(self, request, obj=None):
+        return obj.locked_fields()
