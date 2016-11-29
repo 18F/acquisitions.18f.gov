@@ -1,6 +1,7 @@
 import factory
 import string
 import factory.fuzzy
+import random
 from projects.models import IAA, Project, Buy, ContractingOffice, \
                             ContractingSpecialist, ContractingOfficer, \
                             ContractingOfficerRepresentative, Agency, \
@@ -45,6 +46,7 @@ class IAAFactory(factory.django.DjangoModelFactory):
         prefix='IAA',
         chars=string.digits,
         )
+    dollars = factory.fuzzy.FuzzyInteger(1000, 999999)
     signed_on = None
     client = factory.SubFactory(AgencyOfficeFactory)
 
@@ -65,6 +67,12 @@ class ProjectFactory(factory.django.DjangoModelFactory):
     description = factory.Faker('paragraph')
     name = factory.Faker('catch_phrase')
     public = factory.Faker('boolean')
+
+    @factory.lazy_attribute
+    def dollars(self):
+        min = 1000
+        max = self.iaa.dollars
+        return random.randint(min, max)
 
 
 class ContractingOfficeFactory(factory.django.DjangoModelFactory):
@@ -126,6 +134,12 @@ class BuyFactory(factory.django.DjangoModelFactory):
     description = factory.Faker('paragraph')
     name = factory.Faker('catch_phrase')
     public = factory.Faker('boolean')
+
+    @factory.lazy_attribute
+    def dollars(self):
+        min = 500
+        max = self.project.dollars
+        return random.randint(min, max)
 
 
 class AddBuyFactory(BuyFactory):
