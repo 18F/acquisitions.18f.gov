@@ -442,7 +442,6 @@ class Buy(models.Model):
                 {'buy': self, 'date': date.today()}
             )
         self.save(update_fields=['acquisition_plan'])
-        print('acq plan updated')
 
     def acquisition_plan_status(self):
         # TODO: find a way to display the incomplete fields on the page

@@ -2,12 +2,16 @@ import pytest
 from datetime import date
 from django.core.exceptions import ValidationError
 from projects.models import Buy, Project
-from projects.factories import BuyFactory
+from projects.factories import BuyFactory, UserFactory, ProjectFactory, \
+                               ContractingOfficeFactory, \
+                               ContractingOfficerFactory, \
+                               ContractingSpecialistFactory
 
 
 @pytest.mark.django_db
 def test_cannot_issue():
-    buy = BuyFactory()
+    project = ProjectFactory(public=True)
+    buy = BuyFactory(project=project)
     assert not buy.ready_to_issue()
     with pytest.raises(ValidationError):
         buy.issue_date = date.today()
@@ -17,8 +21,22 @@ def test_cannot_issue():
 
 @pytest.mark.django_db
 def test_can_issue():
-    buy = BuyFactory()
-    # do a bunch of buy data stuff here
+    project = ProjectFactory(public=True)
+    buy = BuyFactory(project=project)
+    buy.contracting_office = ContractingOfficeFactory()
+    buy.contracting_officer = ContractingOfficerFactory()
+    buy.contracting_specialist = ContractingSpecialistFactory()
+    buy.base_period_length = '3 months'
+    buy.option_periods = 3
+    buy.option_period_length = '3 months'
+    buy.dollars = 1234
+    buy.public = True
+    buy.rfq_id = 'abc12345678'
+    buy.procurement_method = 'Agile BPA'
+    buy.set_aside_status = 'Small Business'
+    buy.github_repository = 'https://github.com/18f/wow_such_repo/'
+    buy.qasp = '# QASP'
+    buy.acquisition_plan = '# ACQ PLAN'
     assert buy.ready_to_issue()
     buy.issue_date = date.today()
     buy.full_clean()
@@ -28,8 +46,8 @@ def test_can_issue():
 
 @pytest.mark.django_db
 def test_locked_after_issuance():
-    buy = BuyFactory()
-    # do a bunch of buy data stuff here
+    project = ProjectFactory(public=True)
+    buy = BuyFactory(project=project)
     buy.issue_date = date.today()
     buy.save()
     with pytest.raises(ValidationError):
@@ -40,8 +58,23 @@ def test_locked_after_issuance():
 
 @pytest.mark.django_db
 def test_can_award():
-    buy = BuyFactory()
-    # do a bunch of buy data stuff here
+    project = ProjectFactory(public=True)
+    buy = BuyFactory(project=project)
+    buy.contracting_office = ContractingOfficeFactory()
+    buy.contracting_officer = ContractingOfficerFactory()
+    buy.contracting_specialist = ContractingSpecialistFactory()
+    buy.base_period_length = '3 months'
+    buy.option_periods = 3
+    buy.option_period_length = '3 months'
+    buy.dollars = 1234
+    buy.public = True
+    buy.rfq_id = 'abc12345678'
+    buy.procurement_method = 'Agile BPA'
+    buy.set_aside_status = 'Small Business'
+    buy.github_repository = 'https://github.com/18f/wow_such_repo/'
+    buy.qasp = '# QASP'
+    buy.acquisition_plan = '# ACQ PLAN'
+    buy.issue_date = date.today()
     buy.award_date = date.today()
     buy.full_clean()
     buy.save()
