@@ -27,10 +27,11 @@ def project(request, project):
     # quite be an API-only thing. But most of the page is built via API.
     project = get_object_or_404(Project, id=project)
     if not project.public:
-        if request.user.has_perm('projects.view_private'):
-            return render(request, "projects/project.html", {"project": project})
-        else:
-            raise Http404
+        if not request.user.has_perm('projects.view_private'):
+            return render(request,
+                          "projects/private-page.html",
+                          {"project": project}
+                          )
     return render(request, "projects/project.html", {"project": project})
 
 

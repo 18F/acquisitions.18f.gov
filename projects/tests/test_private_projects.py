@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Permission, AnonymousUser, User
+from django.contrib.auth.models import Permission, User
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase, Client
 from django.shortcuts import reverse
@@ -21,9 +21,9 @@ class TestPrivateProjects(TestCase):
         )
         self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
-        response = self.client.get(reverse('projects:project', args=[1]))
+        response = self.client.get(reverse('projects:project', args=[self.project.id]))
         self.assertTemplateUsed(response, 'projects/project.html')
 
     def test_without_permission(self):
-        response = self.client.get(reverse('projects:project', args=[1]))
+        response = self.client.get(reverse('projects:project', args=[self.project.id]))
         self.assertTemplateUsed(response, 'projects/private-page.html')
