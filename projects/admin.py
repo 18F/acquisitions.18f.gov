@@ -7,22 +7,10 @@ from projects.models import IAA, Project, Buy, ContractingOffice, \
 from projects.widgets import DurationMultiWidget
 
 
-class ProjectForm(forms.ModelForm):
-
-    class Meta:
-        model = Project
-        exclude = ()
-        widgets = {
-            'base_period_length': DurationMultiWidget(),
-            'option_period_length': DurationMultiWidget(),
-        }
-
-
 # Register your models here.
 @admin.register(
     IAA,
     Project,
-    Buy,
     ContractingOffice,
     ContractingOfficer,
     ContractingSpecialist,
@@ -31,7 +19,22 @@ class ProjectForm(forms.ModelForm):
     AgencyOffice,
 )
 class ProjectAdmin(admin.ModelAdmin):
-    form = ProjectForm
+    pass
+
+
+class BuyForm(forms.ModelForm):
+    class Meta:
+        model = Buy
+        fields = '__all__'
+        widgets = {
+            'base_period_length': DurationMultiWidget(),
+            'option_period_length': DurationMultiWidget(),
+        }
+
+
+@admin.register(Buy)
+class BuyAdmin(admin.ModelAdmin):
+    form = BuyForm
 
     def get_readonly_fields(self, request, obj=None):
         return obj.locked_fields()
