@@ -13,7 +13,7 @@
     <div class="usa-grid-full acq-documents">
       <div class="usa-width-one-half" id="acquisition-plan">
         <h3>Acquisition Plan</h3>
-        <p>Status: {{ buy.acquistition_plan_status }}</p>
+        <p>Status: {{ buy.acquisition_plan_status }}</p>
         {% if buy.acquisition_plan %}
         <p><a class="usa-button" href="{% url 'buys:acquisition_plan' buy.id %}">View</a><a class="usa-button" href="{% url 'buys:acquisition_plan_download' buy.id %}">Download</a></p>
         <hr />

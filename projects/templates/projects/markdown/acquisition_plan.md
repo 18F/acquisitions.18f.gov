@@ -1,22 +1,22 @@
-Acquisition Plan For {{ buy.name }} {{ date }}
+Acquisition Plan for {{ buy.name | default:"[[ ELEMENT MISSING ]]" }} | {{ date | default:"[[ ELEMENT MISSING ]]" }}
 ==============================================
 
 
-| Plan ID            | {{ id }}     |
+| Plan ID            | {{ id | default:"[[ ELEMENT MISSING ]]" }}     |
 |--------------------|-------------------------|
-| Project Title      | {{ buy.name }}          |
-| Plan Status        | {{ buy.acquistition_plan_status }}   |
-| Project Number(s)  | {{ buy.id }}            |
-| Solicitation Number| {{ buy.rfq_id }}         |
-| Estimated Dollar Value | {{ buy.dollars }}     |
-| Nature of Action   | {{ buy.procurement_method }}  |
+| Project Title      | {{ buy.name | default:"[[ ELEMENT MISSING ]]" }}          |
+| Plan Status        | {{ buy.acquisition_plan_status | default:"[[ ELEMENT MISSING ]]" }}   |
+| Project Number(s)  | {{ buy.id | default:"[[ ELEMENT MISSING ]]" }}            |
+| Solicitation Number| {{ buy.rfq_id | default:"[[ ELEMENT MISSING ]]" }}         |
+| Estimated Dollar Value | {{ buy.dollars | default:"[[ ELEMENT MISSING ]]" }}     |
+| Nature of Action   | {{ buy.procurement_method | default:"[[ ELEMENT MISSING ]]" }}  |
 | Region             | Central Office<br />Service Central Office - General Services Administration<br />Office of Citizen Services and Communications   |
-| Requiring Agency   | {{ buy.project.iaa.client.agency }}   |
-| Bureau             | {{ buy.project.iaa.client.name }} |
+| Requiring Agency   | {{ buy.project.iaa.client.agency | default:"[[ ELEMENT MISSING ]]" }}   |
+| Bureau             | {{ buy.project.iaa.client.name | default:"[[ ELEMENT MISSING ]]" }} |
 | High Risk?         | No                      |
-| Small Business Set-aside? | {{ buy.set_aside_status }} |
+| Small Business Set-aside? | {{ buy.set_aside_status | default:"[[ ELEMENT MISSING ]]" }} |
 | General Counsel Participation Needed? | No      |
-| Level of Competition | buy.competitionType |
+| Level of Competition | {{ buy.competition_type | default:"[[ ELEMENT MISSING ]]" }} |
 
 [*Review GSAM 507.105 Contents of acquisition plans.*](http://farsite.hill.af.mil/vfgsara.htm)
 
@@ -28,7 +28,7 @@ Acquisition Plan For {{ buy.name }} {{ date }}
 
 > **FAR guidance:** Introduce the plan by a brief statement of need. Summarize the technical and contractual history of the acquisition. Discuss feasible acquisition alternatives, the impact of prior acquisitions on those alternatives, and any related in-house effort.
 
-{{ buy.description }}
+{{ buy.description | default:"[[ ELEMENT MISSING ]]" }}
 
 ### Technical History
 
@@ -36,12 +36,12 @@ Acquisition Plan For {{ buy.name }} {{ date }}
 
 ### Contractual History
 
-{{ buy.contractual_history }}
+{{ buy.contractual_history | default:"[[ ELEMENT MISSING ]]" }}
 
 ### Acquisition Alternatives
 
 There are no existing government efforts to perform same or similar work with
-in-house employees. It is not feasible for {{ buy.project.iaa.client }} to perform this effort in-house
+in-house employees. It is not feasible for {{ buy.project.iaa.client | default:"[[ ELEMENT MISSING ]]" }} to perform this effort in-house
 with government employees, nor is it feasible to perform this effort under an
 agreement with another government agency.
 
@@ -98,8 +98,8 @@ There are no significant conditions affecting this procurement.
 >
 > 3.  Application of should-cost. Describe the application of should-cost analysis to the acquisition (see 15.407-4).
 
-The total estimated cost is {{ buy.dollars }}. This acquisition will have period
-of performance of {{ buy.period_of_performance }}.
+The total estimated cost is {{ buy.dollars | default:"[[ ELEMENT MISSING ]]" }}. This acquisition will have period
+of performance of {{ buy.period_of_performance | default:"[[ ELEMENT MISSING ]]" }}.
 
 The Independent Government Cost Estimate (IGCE) was created by using the
 pre-established competitive prices under the GSA Schedule 70, MOBIS, and
@@ -138,11 +138,11 @@ description of vendor measurement.
 
 ### Period of performance
 
-Period of performance shall be {{ buy.period_of_performance }}. The period of
+Period of performance shall be {{ buy.period_of_performance | default:"[[ ELEMENT MISSING ]]" }}. The period of
 performance was determined based on the needs of the project.
 
 The period of performance is expected to begin within 10 calendar days after
-award; anticipated award date is {{ buy.award_date }}.
+award; anticipated award date is {{ buy.award_date | default:"[[ ELEMENT MISSING ]]" }}.
 
 ### Place of performance
 
@@ -209,19 +209,19 @@ needed.
 
 ### Industry Involvement Plan
 
-This program has not been specifically designated by {{ buy.project.iaa.client.name }} as a
+This program has not been specifically designated by {{ buy.project.iaa.client.name | default:"[[ ELEMENT MISSING ]]" }} as a
 program that is subject to acquisition streamlining. Therefore, an industry
 involvement plan is not required.
 
 ### Selection and Tailoring of Requirements Plan
 
-This program has not been specifically designated by {{ buy.project.iaa.client.name }} as a
+This program has not been specifically designated by {{ buy.project.iaa.client.name | default:"[[ ELEMENT MISSING ]]" }} as a
 program that is subject to acquisition streamlining. Therefore, selection
 and tailoring of requirements plan is not required.
 
 ### Timeframe for Finalizing Mandatory Requirements
 
-This program has not been specifically designated by {{ buy.project.iaa.client.name }} as a
+This program has not been specifically designated by {{ buy.project.iaa.client.name | default:"[[ ELEMENT MISSING ]]" }} as a
 program that is subject to acquisition streamlining. The mandatory requirements
 will be finalized prior to release of the solicitation to the contractor.
 
@@ -317,7 +317,7 @@ This requirement will be a competitive acquisition. Due to the nature of the
 requirement, the timeframe for submission of quotations is 14 calendar days
 which provides enough time for potential vendors to submit quotations. Questions
 and/or comments regarding this RFQ shall be submitted as issues within the
-GitHub repository at {{ buy.github_repository }} within 5 calendar days
+GitHub repository at {{ buy.github_repository | default:"[[ ELEMENT MISSING ]]" }} within 5 calendar days
 of RFQ posting, to allow the Government sufficient time to respond. All
 questions and comments will be publicly available. Interested vendors shall
 subscribe to the repository for changes and comments. Questions or comments
@@ -332,9 +332,9 @@ Chairperson: TBD, GSA
 
 The Technical Evaluation Panel will consist of the following members:
 
-1. {{ buy.productOwner.name }}, voting member
-1. {{ buy.technicalLead.name }}, voting member
-1. {{ buy.productLead.name }}, voting member
+1. {{ buy.productOwner.name | default:"[[ ELEMENT MISSING ]]" }}, voting member
+1. {{ buy.technicalLead.name | default:"[[ ELEMENT MISSING ]]" }}, voting member
+1. {{ buy.productLead.name | default:"[[ ELEMENT MISSING ]]" }}, voting member
 
 The Government will evaluate technical Quotes based on the criteria
 shown below. The TEP will evaluate the submissions to arrive at a rating
@@ -444,12 +444,12 @@ Assurance Surveillance Plan (QASP).
 
 The following individuals will monitor contractor performance:
 
-- Client Technical Point of Contact: {{ buy.productLead.name }}
-- {{ buy.contracting_office.name }} Program Manager: {{ buy.contracting_office.program_manager.name }}
-- {{ buy.contracting_office.name }} Contracting Specialist(s): {{ buy.contracting_specialist.name }}
-- {{ buy.contracting_office.name }} Contracting Officer: {{ buy.contracting_officer.name }}
+- Client Technical Point of Contact: {{ buy.productLead.name | default:"[[ ELEMENT MISSING ]]" }}
+- {{ buy.contracting_office.name | default:"[[ ELEMENT MISSING ]]" }} Program Manager: {{ buy.contracting_office.program_manager.name | default:"[[ ELEMENT MISSING ]]" }}
+- {{ buy.contracting_office.name | default:"[[ ELEMENT MISSING ]]" }} Contracting Specialist(s): {{ buy.contracting_specialist.name | default:"[[ ELEMENT MISSING ]]" }}
+- {{ buy.contracting_office.name | default:"[[ ELEMENT MISSING ]]" }} Contracting Officer: {{ buy.contracting_officer.name | default:"[[ ELEMENT MISSING ]]" }}
 
-{{ buy.contracting_officer_representative.name }} will perform all Contracting Officer's
+{{ buy.contracting_officer_representative.name | default:"[[ ELEMENT MISSING ]]" }} will perform all Contracting Officer's
 Representative (COR) responsibilities for the resulting contract.  The COR
 responsibilities will be described in a COR Letter of Appointment.  The COR and
 Technical Point of Contact (TPOC) will be responsible for quality assurance
@@ -464,23 +464,23 @@ Performance based elements will be used to the maximum extent practicable.
 
 > **FAR guidance:** Include budget estimates, explain how they were derived, and discuss the schedule for obtaining adequate funds at the time they are required (see subpart 32.7).
 
-The estimated cost of this acquisition is {{ buy.dollars }} based on the
+The estimated cost of this acquisition is {{ buy.dollars | default:"[[ ELEMENT MISSING ]]" }} based on the
 Independent Government Cost Estimate (IGCE). This acquisition will have
-a period of performance lasting up to {{ buy.period_of_performance }}.
+a period of performance lasting up to {{ buy.period_of_performance | default:"[[ ELEMENT MISSING ]]" }}.
 
 The IGCE was developed using median labor rates for aBPA labor rates for the
 types of labor categories needed to support this acquisition.
 
 Services to be provided under this task order are severable. Funds have been
 designated for the base and option periods under Interagency Agreement No.
-{{ buy.project.iaa.id }} in the amount of {{ buy.project.dollars }}.
+{{ buy.project.iaa.id | default:"[[ ELEMENT MISSING ]]" }} in the amount of {{ buy.project.dollars | default:"[[ ELEMENT MISSING ]]" }}.
 
 
 ## 7.105(b)(7) Product or Service Descriptions
 
 > **FAR guidance:** Explain the choice of product or service description types (including performance-based acquisition descriptions) to be used in the acquisition.
 
-{{ buy.description }}
+{{ buy.description | default:"[[ ELEMENT MISSING ]]" }}
 
 Please see the attached PWS for a full description of the requirements for the
 solution.
@@ -748,11 +748,11 @@ shall meet these requirements.
 
 Contract administration will be performed by the following individuals:
 
-- Client Technical Point of Contact: {{ buy.productLead.name }}
-- Contracting Officer Representative: {{ buy.contracting_officer_representative.name }}
-- {{ buy.contracting_office.name }} Program Manager: {{ buy.contracting_office.program_manager.name }}
-- {{ buy.contracting_office.name }} Contracting Specialist(s): {{ buy.contracting_specialist.name }}
-- {{ buy.contracting_office.name }} Contracting Officer: {{ buy.contracting_officer.name }}
+- Client Technical Point of Contact: {{ buy.productLead.name | default:"[[ ELEMENT MISSING ]]" }}
+- Contracting Officer Representative: {{ buy.contracting_officer_representative.name | default:"[[ ELEMENT MISSING ]]" }}
+- {{ buy.contracting_office.name | default:"[[ ELEMENT MISSING ]]" }} Program Manager: {{ buy.contracting_office.program_manager.name | default:"[[ ELEMENT MISSING ]]" }}
+- {{ buy.contracting_office.name | default:"[[ ELEMENT MISSING ]]" }} Contracting Specialist(s): {{ buy.contracting_specialist.name | default:"[[ ELEMENT MISSING ]]" }}
+- {{ buy.contracting_office.name | default:"[[ ELEMENT MISSING ]]" }} Contracting Officer: {{ buy.contracting_officer.name | default:"[[ ELEMENT MISSING ]]" }}
 
 ## 7.105(b)(20) Other Considerations
 
@@ -890,20 +890,20 @@ Requiring Office Planner
 
 
 __________________________________ 	            ______________		
-{{ buy.contracting_office.program_manager.name }}                   Date
-{{ buy.contracting_office.program_manager.email }}
+{{ buy.contracting_office.program_manager.name | default:"[[ ELEMENT MISSING ]]" }}                   Date
+{{ buy.contracting_office.program_manager.email | default:"[[ ELEMENT MISSING ]]" }}
 
 
 
 ________________________________________   	______________
-{{ buy.contracting_specialist.name }}                 	 Date
-{{ buy.contracting_specialist.email }}
+{{ buy.contracting_specialist.name | default:"[[ ELEMENT MISSING ]]" }}                 	 Date
+{{ buy.contracting_specialist.email | default:"[[ ELEMENT MISSING ]]" }}
 
 
 
 ________________________________________   	______________
-{{ buy.contracting_officer.name }}, Contracting Officer       Date
-{{ buy.contracting_officer.email }}
+{{ buy.contracting_officer.name | default:"[[ ELEMENT MISSING ]]" }}, Contracting Officer       Date
+{{ buy.contracting_officer.email | default:"[[ ELEMENT MISSING ]]" }}
 
 
 ## Approval Information
@@ -917,8 +917,8 @@ Approval Authority - Contracting Officer
 
 
 ________________________________________   	______________
-{{ buy.contracting_officer.name }}, Contracting Officer       Date
-{{ buy.contracting_officer.email }}
+{{ buy.contracting_officer.name | default:"[[ ELEMENT MISSING ]]" }}, Contracting Officer       Date
+{{ buy.contracting_officer.email | default:"[[ ELEMENT MISSING ]]" }}
 
 
 Approval Authority - One Level above the Contracting Officer
@@ -926,10 +926,10 @@ Approval Authority - One Level above the Contracting Officer
 
 
 ________________________________________   	______________
-{{ buy.contractingSupervisor.name }}    		      Date
-{{ buy.contractingSupervisor.email }}
+{{ buy.contractingSupervisor.name | default:"[[ ELEMENT MISSING ]]" }}    		      Date
+{{ buy.contractingSupervisor.email | default:"[[ ELEMENT MISSING ]]" }}
 
-Plan Status Approval Status    {{ buy.acquisitionPlanStatus }}
+Plan Status Approval Status    {{ buy.acquisitionPlanStatus | default:"[[ ELEMENT MISSING ]]" }}
 
 ## File Attachments
 

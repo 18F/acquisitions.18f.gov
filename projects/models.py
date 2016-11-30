@@ -20,7 +20,7 @@ class Agency(models.Model):
         return "{0}".format(self.name)
 
     class Meta:
-        pass
+        verbose_name = 'Agencies'
 
 
 class AgencyOffice(models.Model):
@@ -335,7 +335,6 @@ class Buy(models.Model):
         max_length=20,
         blank=True,
         null=True,
-        unique=True,
         verbose_name='RFQ ID'
     )
     contracting_office = models.ForeignKey(
@@ -362,6 +361,13 @@ class Buy(models.Model):
         blank=True,
         null=True,
     )
+    # Locking doesn't do anything on its own, but should be used as an
+    # indicator of when the user shouldn't be able to edit the data. Initially,
+    # this was tied to award_date, but using a separate field should allow the
+    # entry to be unlocked for editing if necessary.
+    locked = models.BooleanField(
+        default=False
+    )
 
     # Documents for the buy
     # TODO: Consider using a MarkdownField() of some sort for in-app editing
@@ -375,6 +381,16 @@ class Buy(models.Model):
         null=True,
     )
     market_research = models.TextField(
+        blank=True,
+        null=True,
+    )
+
+    # Milestone dates
+    issue_date = models.DateField(
+        blank=True,
+        null=True,
+    )
+    award_date = models.DateField(
         blank=True,
         null=True,
     )
@@ -428,10 +444,45 @@ class Buy(models.Model):
         # TODO: This may need mark_safe from django.utils.safestring
         self.acquisition_plan = render_to_string(
                 'projects/markdown/acquisition_plan.md',
-                {'buy': self}
+                {'buy': self, 'date': date.today()}
             )
         self.save(update_fields=['acquisition_plan'])
-        print('acq plan updated')
+
+    def acquisition_plan_status(self):
+        # TODO: find a way to display the incomplete fields on the page
+        required_fields = [
+            self.name,
+            self.description,
+            self.contractual_history,
+            self.project,
+            self.contracting_office,
+            self.contracting_officer,
+            self.contracting_specialist,
+            self.base_period_length,
+            self.option_periods,
+            self.option_period_length,
+            self.dollars,
+            self.rfq_id,
+            self.procurement_method,
+            self.set_aside_status,
+        ]
+        if not self.acquisition_plan:
+            return 'Not yet generated'
+        else:
+            incomplete_fields = []
+            for field in required_fields:
+                if field is None:
+                    incomplete_fields.append(field)
+            percentage = (len(incomplete_fields) / len(required_fields)) * 100
+            return '{0:.2f}% Complete'.format(percentage)
+
+    def qasp_status(self):
+        if self.name and not self.qasp:
+            return 'Not yet generated'
+        elif self.name and self.qasp:
+            return 'Complete'
+        else:
+            return 'Incomplete'
 
     def create_market_research(self):
         # TODO: This may need mark_safe from django.utils.safestring
@@ -441,25 +492,56 @@ class Buy(models.Model):
         )
         self.save(update_fields=['market_research'])
 
-    def acquistition_plan_status(self):
-        # TODO: This could return the status of the acquisitions plan based on
-        # the fields that have been completed.
-        # Additionally, the acquisition plan page can display the remaining
-        # unset fields at the top of the acquisition plan page
-        if not self.acquisition_plan:
-            return 'Not yet generated'
+    def ready_to_issue(self):
+        required_fields = [
+            self.name,
+            self.description,
+            self.contractual_history,
+            self.project,
+            self.contracting_office,
+            self.contracting_officer,
+            self.contracting_specialist,
+            self.contracting_officer_representative,
+            self.base_period_length,
+            self.option_periods,
+            self.option_period_length,
+            self.acquisition_plan,
+            self.qasp,
+            self.dollars,
+            self.public,
+            self.rfq_id,
+            self.procurement_method,
+            self.set_aside_status,
+            self.github_repository,
+        ]
+        if None in required_fields:
+            return False
         else:
-            # TODO: Finish the acquisition plan template so that we can add
-            # a 'Complete' setting
-            return 'Incomplete'
+            return True
 
-    def qasp_status(self):
-        if self.name and not self.qasp:
-            return 'Not yet generated'
-        elif self.name and self.qasp:
-            return 'Complete'
+    def locked_fields(self):
+        if self.locked:
+            fields = [
+                'project',
+                'public',
+                'qasp',
+                'acquisition_plan',
+                'contractual_history',
+                'rfq_id',
+                'contracting_office',
+                'contracting_officer',
+                'contracting_specialist',
+                'contracting_officer_representative',
+                'set_aside_status',
+                'procurement_method',
+                'base_period_length',
+                'option_periods',
+                'option_period_length',
+                'dollars'
+            ]
         else:
-            return 'Incomplete'
+            fields = []
+        return fields
 
     def market_research_status(self):
         if self.name and not self.market_research:
@@ -489,6 +571,18 @@ class Buy(models.Model):
                 raise ValidationError({
                     'dollars': 'Value can\'t exceed value of overall project'
                 })
+
+        # Don't allow issue date without a lot of other stuff
+        if self.issue_date and not self.ready_to_issue():
+            raise ValidationError({
+                'issue_date': 'This buy is not yet ready to be issued'
+            })
+
+        # Don't allow award date without issue date
+        if self.award_date and not self.issue_date:
+            raise ValidationError({
+                'award_date': 'Please set an issue date first'
+            })
 
     class Meta:
         pass
