@@ -488,6 +488,7 @@ class Buy(models.Model):
             self.contracting_office,
             self.contracting_officer,
             self.contracting_specialist,
+            self.contracting_officer_representative,
             self.base_period_length,
             self.option_periods,
             self.option_period_length,
@@ -508,12 +509,16 @@ class Buy(models.Model):
     def locked_fields(self):
         if self.locked:
             fields = [
+                'project',
+                'public',
                 'qasp',
                 'acquisition_plan',
+                'contractual_history',
                 'rfq_id',
                 'contracting_office',
                 'contracting_officer',
                 'contracting_specialist',
+                'contracting_officer_representative',
                 'set_aside_status',
                 'procurement_method',
                 'base_period_length',
