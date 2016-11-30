@@ -1,4 +1,5 @@
 {% extends "web/base.html" %}
+{% load static from staticfiles %}
 
 {% block content %}
 <section class="usa-grid">
@@ -33,6 +34,9 @@
         <a href="?page={{ posts.next_page_number }}">next</a>
         {% endif %}
       </span>
+    </div>
+    <div class="rss-feed">
+      <p><a href="{% url 'news:rss' %}">RSS Feed <img width=20 src="{% static "img/social-icons/svg/rss25.svg" %}" alt="rss icon"></a></p>
     </div>
   </div>
 </section>
