@@ -541,6 +541,10 @@ class Buy(models.Model):
                 })
 
         # Don't allow issue date without a lot of other stuff
+        if self.issue_date and not self.ready_to_issue():
+            raise ValidationError({
+                'issue_date': 'This buy is not yet ready to be issued'
+            })
 
         # Don't allow award date without issue date
         if self.award_date and not self.issue_date:

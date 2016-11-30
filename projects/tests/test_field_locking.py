@@ -8,7 +8,7 @@ from projects.factories import BuyFactory
 @pytest.mark.django_db
 def test_cannot_issue():
     buy = BuyFactory()
-    assert buy.ready_to_issue()
+    assert not buy.ready_to_issue()
     with pytest.raises(ValidationError):
         buy.issue_date = date.today()
         buy.full_clean()
