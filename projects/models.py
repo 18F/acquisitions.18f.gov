@@ -380,6 +380,10 @@ class Buy(models.Model):
         blank=True,
         null=True,
     )
+    market_research = models.TextField(
+        blank=True,
+        null=True,
+    )
 
     # Milestone dates
     issue_date = models.DateField(
@@ -427,6 +431,7 @@ class Buy(models.Model):
         except Exception:
             return None
 
+    # TODO: this document generation seems to involve repeated logic
     def create_qasp(self):
         # TODO: This may need mark_safe from django.utils.safestring
         self.qasp = render_to_string(
@@ -479,6 +484,14 @@ class Buy(models.Model):
         else:
             return 'Incomplete'
 
+    def create_market_research(self):
+        # TODO: This may need mark_safe from django.utils.safestring
+        self.market_research = render_to_string(
+            'projects/markdown/market_research.md',
+            {'buy': self}
+        )
+        self.save(update_fields=['market_research'])
+
     def ready_to_issue(self):
         required_fields = [
             self.name,
@@ -529,6 +542,14 @@ class Buy(models.Model):
         else:
             fields = []
         return fields
+
+    def market_research_status(self):
+        if self.name and not self.market_research:
+            return 'Not yet generated'
+        elif self.name and self.market_research:
+            return 'Complete'
+        else:
+            return 'Incomplete'
 
     def clean(self):
         # Check that buy is not public without associated project being public

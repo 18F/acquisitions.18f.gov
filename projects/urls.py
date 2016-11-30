@@ -31,6 +31,8 @@ buy_patterns = [
     url(r'(?P<buy>\d+)/qasp/download/$', views.qasp_download, name='qasp_download'),
     url(r'(?P<buy>\d+)/acquisition_plan/$', views.acquisition_plan, name='acquisition_plan'),
     url(r'(?P<buy>\d+)/acquisition_plan/download/$', views.acquisition_plan_download, name='acquisition_plan_download'),
+    url(r'(?P<buy>\d+)/market_research/$', views.market_research, name='market_research'),
+    url(r'(?P<buy>\d+)/market_research/download/$', views.market_research_download, name='market_research_download'),
 ]
 
 api_patterns = format_suffix_patterns(api_patterns)
