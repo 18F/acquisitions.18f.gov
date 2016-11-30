@@ -2,22 +2,11 @@ import factory
 import string
 import factory.fuzzy
 import random
+from acquisitions.factories import UserFactory
 from projects.models import IAA, Project, Buy, ContractingOffice, \
                             ContractingSpecialist, ContractingOfficer, \
                             ContractingOfficerRepresentative, Agency, \
                             AgencyOffice
-from django.contrib.auth.models import User
-
-
-class UserFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = User
-
-    username = factory.Faker('user_name')
-    email = factory.Faker('safe_email')
-    is_active = True
-    is_staff = False
-    is_superuser = False
 
 
 class AgencyFactory(factory.django.DjangoModelFactory):

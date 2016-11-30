@@ -1,18 +1,6 @@
 import factory
 from team.models import Teammate, Role
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
-
-
-class UserFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = User
-
-    username = factory.Faker('user_name')
-    email = factory.Faker('safe_email')
-    is_active = True
-    is_staff = False
-    is_superuser = False
+from acquisitions.factories import UserFactory
 
 
 class RoleFactory(factory.django.DjangoModelFactory):
