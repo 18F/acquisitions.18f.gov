@@ -2,10 +2,11 @@ import pytest
 from datetime import date
 from django.core.exceptions import ValidationError
 from projects.models import Buy, Project
-from projects.factories import BuyFactory, UserFactory, ProjectFactory, \
+from projects.factories import BuyFactory, ProjectFactory, \
                                ContractingOfficeFactory, \
                                ContractingOfficerFactory, \
-                               ContractingSpecialistFactory
+                               ContractingSpecialistFactory, \
+                               ContractingOfficerRepresentativeFactory
 
 
 class TestLocking:
@@ -22,6 +23,7 @@ class TestLocking:
         buy.contracting_office = ContractingOfficeFactory()
         buy.contracting_officer = ContractingOfficerFactory()
         buy.contracting_specialist = ContractingSpecialistFactory()
+        buy.contracting_officer_representative = ContractingOfficerRepresentativeFactory()
         buy.base_period_length = '3 months'
         buy.option_periods = 3
         buy.option_period_length = '3 months'
