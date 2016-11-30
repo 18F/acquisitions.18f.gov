@@ -20,7 +20,7 @@ class Agency(models.Model):
         return "{0}".format(self.name)
 
     class Meta:
-        pass
+        verbose_name = 'Agencies'
 
 
 class AgencyOffice(models.Model):
