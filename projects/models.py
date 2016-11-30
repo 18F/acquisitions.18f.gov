@@ -361,6 +361,13 @@ class Buy(models.Model):
         blank=True,
         null=True,
     )
+    # Locking doesn't do anything on its own, but should be used as an
+    # indicator of when the user shouldn't be able to edit the data. Initially,
+    # this was tied to award_date, but using a separate field should allow the
+    # entry to be unlocked for editing if necessary.
+    locked = models.BooleanField(
+        default=False
+    )
 
     # Documents for the buy
     # TODO: Consider using a MarkdownField() of some sort for in-app editing
@@ -500,8 +507,8 @@ class Buy(models.Model):
             return True
 
     def locked_fields(self):
-        if self.award_date:
-            locked = [
+        if self.locked:
+            fields = [
                 'qasp',
                 'acquisition_plan',
                 'rfq_id',
@@ -516,8 +523,8 @@ class Buy(models.Model):
                 'dollars'
             ]
         else:
-            locked = []
-        return locked
+            fields = []
+        return fields
 
     def clean(self):
         # Check that buy is not public without associated project being public
