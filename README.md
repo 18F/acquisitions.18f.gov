@@ -41,6 +41,7 @@ Optionally, populate the database with some fake data:
 ./manage.py create_team
 ./manage.py create_projects
 ./manage.py create_buys --add
+./manage.py create_content
 ```
 
 Because of the authentication flow, a superuser should be created without a
@@ -101,6 +102,14 @@ In creating new templates, note that the top-level header should use the
 underline style rather than hashtags. For whatever reason, the Markdown renderer
 doesn't seem to pick up a header in the first line, and Django won't allow a
 blank first line for the field.
+
+### News
+
+Since this is designed to be public-facing, there's a small CMS inside of [the
+`news` app](./news/) to create posts and share updates and information publicly.
+Posts that are not drafts and have a publication date in the past are shown on
+the front page (for a few recent ones) and each gets permalink. A blog,
+basically. There's an accompanying RSS feed for the latest 20 posts, as well.
 
 ### UAA Authentication
 
