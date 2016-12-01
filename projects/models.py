@@ -160,6 +160,7 @@ class Project(models.Model):
     class Meta:
         permissions = (
             ('view_project', 'Can view non-public projects'),
+            ('sign_nda', 'Can sign an NDA, either blanket or specific')
         )
 
 
