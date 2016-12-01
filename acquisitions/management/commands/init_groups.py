@@ -23,10 +23,6 @@ class Command(BaseCommand):
                 codename='view_project',
                 content_type=content_type,
             ),
-            Permission.objects.get(codename='add_iaa'),
-            Permission.objects.get(codename='change_iaa'),
-            Permission.objects.get(codename='add_project'),
-            Permission.objects.get(codename='change_project')
         ]
         group.save()
 
@@ -43,9 +39,5 @@ class Command(BaseCommand):
                 codename='view_private',
                 content_type=content_type,
             ),
-            Permission.objects.get(codename='add_iaa'),
-            Permission.objects.get(codename='change_iaa'),
-            Permission.objects.get(codename='add_project'),
-            Permission.objects.get(codename='change_project')
         ]
         group.save()
