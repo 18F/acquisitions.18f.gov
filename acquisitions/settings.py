@@ -132,7 +132,7 @@ MEDIA_URL = '/media/'
 
 
 # Cloud.gov UAA
-UAA_AUTH_URL = 'https://login.cloud.gov/oauth/authorize'
+UAA_AUTH_URL = 'https://login.fr.cloud.gov/oauth/authorize'
 
 UAA_TOKEN_URL = 'https://uaa.cloud.gov/oauth/token'
 
