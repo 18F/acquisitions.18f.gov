@@ -10,7 +10,7 @@ from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 
 
-TOKEN_EXPIRATION = timedelta(hours=1)
+TOKEN_EXPIRATION = timedelta(hours=6)
 
 
 def expect(a, b):
