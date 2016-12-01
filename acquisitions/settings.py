@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'markdown_deux',
     'floppyforms',
+    'guardian',
 
     'projects',
     'team',

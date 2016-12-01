@@ -6,6 +6,7 @@ dj-database-url
 Django
 django-filter
 django-floppyforms
+django-guardian
 django-markdown-deux
 djangorestframework
 djangorestframework-csv
