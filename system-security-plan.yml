@@ -1,0 +1,71 @@
+---
+name: acquisitions.18f.gov
+uniqueID:
+version: 0.1
+# descriptions:
+# https://18f.gsa.gov/dashboard/
+phase: alpha
+# `D26 Civilian Operations` is most common for 18F projects.
+# http://csrc.nist.gov/publications/nistpubs/800-60-rev1/SP800-60_Vol1-Rev1.pdf#page=23
+information-types:
+- D26 Civilian Operations
+
+# https://pages.18f.gov/before-you-ship/ato/levels/
+confidentiality: low
+integrity: low
+availability: low
+security-baseline: low
+
+system-type: minor
+level-of-identity-assurance: https://compliance.cloud.gov/
+staff:
+  authorizing-official:
+    name: Noah Kunin
+    title: TTS Infrastructure Director
+    org: General Services Administration
+    unit: TTS
+    email: devops@gsa.gov
+  system-owner:
+    name: Noah Kunin
+    title: TTS Infrastructure Director
+    org: General Services Administration
+    unit: TTS
+    email: devops@gsa.gov
+  system-management:
+    name: Noah Kunin
+    title: TTS Infrastructure Director
+    org: General Services Administration
+    unit: TTS
+    email: devops@gsa.gov
+  system-security-officer:
+    name: Noah Kunin
+    title: TTS Infrastructure Director
+    org: General Services Administration
+    unit: TTS
+    email: devops@gsa.gov
+  technical-lead:
+    name: Steven Reilly
+    title: Technical Lead
+    org: General Services Administration
+    unit: 18F
+    email: steven.reilly@gsa.gov
+leveraged-authorizations:
+- https://www.fedramp.gov/marketplace/compliant-systems/amazon-web-services-aws-eastwest-us-public-cloud/
+purpose: https://github.com/18f/acquisitions.18f.gov
+components:
+- https://github.com/18f/acquisitions.18f.gov
+
+# these will be the same unless your architecture is especially complex
+system-diagram: https://docs.google.com/drawings/d/1k46ab0xqvIIqICkHdqSShaXugrwjSM_e4yHs0PTjGTo/edit
+network-diagram: https://docs.google.com/drawings/d/1k46ab0xqvIIqICkHdqSShaXugrwjSM_e4yHs0PTjGTo/edit
+
+environments:
+- Cloud Foundry
+- Amazon Web Services GovCloud
+user-types:
+  developer:
+    functions:
+    - deployment
+    - engineering
+controls:
+- https://github.com/18f/acquisitions.18f.gov/blob/develop/compliance/component.yaml

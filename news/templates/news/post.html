@@ -1,0 +1,12 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+  <section class="usa-grid">
+    <div class="usa-width-one-full">
+      <h1>{{ post.title }}</h1>
+      <div class="post-content">
+        {{ post.content }}
+      </div>
+    </div>
+  </section>
+{% endblock %}

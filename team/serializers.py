@@ -33,4 +33,4 @@ class TeammatePlusSerializer(serializers.HyperlinkedModelSerializer):
 class RoleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Role
-        fields = ('title',)
+        fields = ('name',)

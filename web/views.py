@@ -1,16 +1,37 @@
+from datetime import datetime, tzinfo
+from dateutil.tz import tzlocal
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework.decorators import api_view
+from news.models import Post
 
 
 # Create your views here.
 def index(request):
-    return render(request, 'web/index.html')
+    posts = Post.objects.filter(
+        draft=False,
+        publication_date__lte=datetime.now(tzlocal())
+    ).order_by('publication_date')[:5]
+    return render(request, 'web/index.html', {'posts': posts})
 
 
 def guides(request):
     return render(request, 'web/guides.html')
+
+
+@api_view(['GET'])
+def api(request, format=None):
+    return Response({
+        'projects': reverse('api:project-list', request=request, format=format),
+        'buys': reverse('api:buy-list', request=request, format=format),
+        'iaas': reverse('api:iaa-list', request=request, format=format),
+        'team': reverse('api:team-list', request=request, format=format),
+        'roles': reverse('api:role-list', request=request, format=format),
+    })
 
 
 @login_required

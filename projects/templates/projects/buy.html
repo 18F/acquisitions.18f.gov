@@ -1,0 +1,57 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>{{ buy.name }}</h1>
+    {% if buy.is_private %}<div>This buy is not yet public.</div>{% endif %}
+    <h2>Description</h2>
+    <div id="description">
+      {{ buy.description }}
+    </div>
+    <h2>Documents</h2>
+    <div class="usa-grid-full acq-documents">
+      <div class="usa-width-one-half" id="acquisition-plan">
+        <h3>Acquisition Plan</h3>
+        <p>Status: {{ buy.acquisition_plan_status }}</p>
+        {% if buy.acquisition_plan %}
+        <p><a class="usa-button" href="{% url 'buys:acquisition_plan' buy.id %}">View</a><a class="usa-button" href="{% url 'buys:acquisition_plan_download' buy.id %}">Download</a></p>
+        <hr />
+        <p>Regenerate the Acquisition Plan from template:</p>
+        {% if perms.project.view_private %}{% include "projects/includes/acquisition_plan_form.html" %}{% endif %}
+        {% else %}
+        {% if perms.project.view_private %}{% include "projects/includes/acquisition_plan_form.html" %}{% endif %}
+        {% endif %}
+      </div>
+      <div class="usa-width-one-half" id="qasp">
+        <h3>QASP</h3>
+        <p>Status: {{ buy.qasp_status }}</p>
+        {% if buy.qasp %}
+        <p><a class="usa-button" href="{% url 'buys:qasp' buy.id %}">View</a><a class="usa-button" href="{% url 'buys:qasp_download' buy.id %}">Download</a></p>
+        <hr />
+        <p>Regenerate the QASP from template:</p>
+        {% if perms.project.view_private %}{% include "projects/includes/qasp_form.html" %}{% endif %}
+        {% else %}
+        {% if perms.project.view_private %}{% include "projects/includes/qasp_form.html" %}{% endif %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="usa-grid-full acq-documents">
+      <div class="usa-width-one-half" id="market-research">
+        <h3>Market Research Report</h3>
+        <p>Status: {{ buy.market_research_status }}</p>
+        {% if buy.market_research %}
+        <p><a class="usa-button" href="{% url 'buys:market_research' buy.id %}">View</a><a class="usa-button" href="{% url 'buys:market_research_download' buy.id %}">Download</a></p>
+        <hr />
+        <p>Regenerate the Acquisition Plan from template:</p>
+        {% if perms.project.view_private %}{% include "projects/includes/market_research_form.html" %}{% endif %}
+        {% else %}
+        {% if perms.project.view_private %}{% include "projects/includes/market_research_form.html" %}{% endif %}
+        {% endif %}
+      </div>
+      <div class="usa-width-one-half" id="qasp">
+        <h3>Another Document</h3>
+    </div>
+  </div>
+</section>
+{% endblock %}

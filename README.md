@@ -4,7 +4,9 @@
 
 # acquisitions.18f.gov
 
-This is the homepage for the TTS Office of Acquisitions. Its goal is to be a public-facing site for the office's efforts, as well as an internal site for coordinating and tracking work.
+This is the homepage for the TTS Office of Acquisitions. Its goal is to be a
+public-facing site for the office's efforts, as well as an internal site for
+coordinating and tracking work.
 
 ## Installation
 
@@ -38,6 +40,8 @@ Optionally, populate the database with some fake data:
 ```
 ./manage.py create_team
 ./manage.py create_projects
+./manage.py create_buys --add
+./manage.py create_content
 ```
 
 Because of the authentication flow, a superuser should be created without a
@@ -53,6 +57,10 @@ And then run the application:
 ./manage.py runserver
 ```
 
+## Deployment
+
+See [the deployment docs](./docs/deploy.md) for information on deploying the application.
+
 ## Elements
 
 ### Team API
@@ -65,9 +73,43 @@ than building it into the templates.
 ### Projects API
 
 This app includes information about the projects that the team is working on and
-provides an API for retrieving that information. In the interest of API-first
-development, information about the projects on the site is built by consuming
-that API rather than building it into the templates.
+provides an API for retrieving that information.
+
+This includes a few elements:
+
+- IAAs: A bundle of money authorized to be spent by a client on projects
+- Projects: A grouping of work around a common goal
+- Buys: The individual procurements in the service of completing the project
+goal.
+
+In the interest of API-first development, information about the projects on the
+site is built by consuming that API rather than building it into the templates.
+
+### Templated documents
+
+Since many projects will require the same documents, the app includes some
+templates that can be filled in automatically with data from the database.
+
+Because the documents need to be frozen at some point in time, but we'd like to
+be able to update the templates iteratively, the documents are generated and the
+raw Markdown is saved as part of a buy's data. This means that later document
+regeneration may be necessary, but also prevents surprise changes and allows a
+buy's documents to be customized away from the template if necessary.
+
+Templates are currently stored within [the `projects` app](./projects/templates/projects/markdown/), though it may make sense for them to get their own app at some point.
+
+In creating new templates, note that the top-level header should use the
+underline style rather than hashtags. For whatever reason, the Markdown renderer
+doesn't seem to pick up a header in the first line, and Django won't allow a
+blank first line for the field.
+
+### News
+
+Since this is designed to be public-facing, there's a small CMS inside of [the
+`news` app](./news/) to create posts and share updates and information publicly.
+Posts that are not drafts and have a publication date in the past are shown on
+the front page (for a few recent ones) and each gets permalink. A blog,
+basically. There's an accompanying RSS feed for the latest 20 posts, as well.
 
 ### UAA Authentication
 
@@ -104,6 +146,14 @@ Development branch: `develop`
 
 This project uses `pip-tools` to manage dependencies. As a result, developers
 should edit `requirements.in` and not `requirements.txt`.
+
+For example:
+
+```
+echo Django >> requirements.in
+pip-compile --output-file requirements.txt requirements.in
+pip-sync
+```
 
 ## Public domain
 

@@ -1,13 +1,15 @@
 #! /usr/bin/env python3
 from django.core.management.base import BaseCommand, CommandError
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group, Permission, ContentType
 from projects.models import Project
+from team.models import Teammate
 
 
 class Command(BaseCommand):
     help = 'Initialize groups'
 
     def handle(self, *args, **options):
+
         try:
             group = Group.objects.get(name='NDA Signed')
         except Group.DoesNotExist:
@@ -15,10 +17,11 @@ class Command(BaseCommand):
                 name='NDA Signed'
             )
             group.save()
+        content_type = ContentType.objects.get_for_model(Project)
         group.permissions = [
             Permission.objects.get(
                 codename='view_private',
-                content_type=9,
+                content_type=content_type,
             ),
             Permission.objects.get(codename='add_iaa'),
             Permission.objects.get(codename='change_iaa'),
@@ -34,10 +37,11 @@ class Command(BaseCommand):
                 name='Teammates'
             )
             group.save()
+        content_type = ContentType.objects.get_for_model(Teammate)
         group.permissions = [
             Permission.objects.get(
                 codename='view_private',
-                content_type=11,
+                content_type=content_type,
             ),
             Permission.objects.get(codename='add_iaa'),
             Permission.objects.get(codename='change_iaa'),

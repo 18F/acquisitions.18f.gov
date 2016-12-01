@@ -4,6 +4,8 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
+bandit==1.2.0
+cfenv==0.5.2
 click==6.6                # via pip-tools
 codeclimate-test-reporter==0.2.0
 coverage==4.2
@@ -17,24 +19,34 @@ djangorestframework==3.5.2
 factory-boy==2.7.0
 fake-factory==0.7.2       # via factory-boy
 first==2.0.1              # via pip-tools
+furl==0.5.6               # via cfenv
+gitdb2==2.0.0             # via gitpython
+GitPython==2.1.0          # via bandit
 httmock==1.2.5
 jinja2==2.8               # via poirot
 markdown2==2.3.1          # via django-markdown-deux
+markdown==2.6.7
 markupsafe==0.23          # via jinja2
-pep8==1.7.0
+newrelic==2.74.0.54
+orderedmultidict==0.7.11  # via furl
+pbr==1.10.0               # via stevedore
 pillow==3.4.2
 pip-tools==1.7.0
 poirot==1.0.1
 psycopg2==2.6.2
 py==1.4.31                # via pytest
+pycodestyle==2.2.0
 pyjwt==1.4.2
 pytest-cov==2.4.0
 pytest-django==3.0.0
 pytest==3.0.3
 python-dateutil==2.5.3    # via fake-factory
+PyYAML==3.12              # via bandit
 regex==2016.10.22         # via poirot
 requests==2.11.1
-six==1.10.0               # via djangorestframework-csv, fake-factory, pip-tools, python-dateutil
+six==1.10.0               # via bandit, djangorestframework-csv, fake-factory, furl, orderedmultidict, pip-tools, python-dateutil, stevedore
+smmap2==2.0.1             # via gitdb2
+stevedore==1.18.0         # via bandit
 tqdm==4.9.0               # via poirot
 unicodecsv==0.14.1        # via djangorestframework-csv
 whitenoise==3.2.2

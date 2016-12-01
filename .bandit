@@ -1,0 +1,2 @@
+[bandit]
+exclude: team/tests,/projects/tests,/nda/tests,uaa_auth/tests,/projects/factories.py

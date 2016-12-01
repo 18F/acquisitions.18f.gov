@@ -1,0 +1,14 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>{{ project.name }}</h1>
+    {% if project.is_private %}<div>This project is not yet public.</div>{% endif %}
+    <h2>Description</h2>
+    <div id="description">
+      {{ project.description }}
+    </div>
+  </div>
+</section>
+{% endblock %}

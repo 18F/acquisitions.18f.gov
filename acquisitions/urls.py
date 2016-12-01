@@ -19,16 +19,33 @@ from web import views as web_views
 from nda import views as nda_views
 from team import urls as team_urls
 from projects import urls as projects_urls
+from news import urls as news_urls
 from django.conf import settings
 from django.conf.urls.static import static
+
+
+api_patterns = projects_urls.api_patterns + team_urls.api_patterns
 
 
 urlpatterns = [
     url(r'^$', web_views.index),
     url(r'^guides$', web_views.guides),
+    url(r'^api/$', web_views.api),
+    url(r'^api/', include(api_patterns, namespace='api')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^team/', include(team_urls, namespace='team')),
-    url(r'^projects/', include(projects_urls, namespace='projects')),
+    url(r'^team/', include(team_urls.urlpatterns, namespace='team')),
+    url(
+        r'^projects/',
+        include(projects_urls.project_patterns, namespace='projects')
+    ),
+    url(
+        r'^buys/',
+        include(projects_urls.buy_patterns, namespace='buys')
+    ),
+    url(
+        r'^news/',
+        include(news_urls.urlpatterns, namespace='news')
+    ),
     url(r'^profile/$', web_views.profile),
     url(r'^profile/refresh_token/$', web_views.refresh_token),
     url(r'^profile/sign_nda/$', nda_views.sign_nda),

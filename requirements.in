@@ -1,3 +1,5 @@
+bandit
+cfenv
 codeclimate-test-reporter
 coverage
 dj-database-url
@@ -9,11 +11,13 @@ djangorestframework
 djangorestframework-csv
 factory_boy
 httmock
-pep8
+markdown
+newrelic
 Pillow
 pip-tools
 poirot
 psycopg2
+pycodestyle
 PyJWT
 pytest
 pytest-cov

@@ -7,4 +7,11 @@ applications:
   - route: acquisitions.fr.cloud.gov
   services:
   - acquisitions-psql
+  - acquisitions-new-relic
   stack: cflinuxfs2
+  env:
+    DEBUG: "False"
+    NEW_RELIC_APP_NAME: "acquisitions.18f.gov (production)"
+    NEW_RELIC_CONFIG_FILE: "newrelic.ini"
+    NEW_RELIC_ENV: "production"
+    NEW_RELIC_LOG: "stdout"

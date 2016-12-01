@@ -1,19 +1,30 @@
 import factory
 import string
 import factory.fuzzy
-from projects.models import IAA, Project
-from django.contrib.auth.models import User
+import random
+from acquisitions.factories import UserFactory
+from projects.models import IAA, Project, Buy, ContractingOffice, \
+                            ContractingSpecialist, ContractingOfficer, \
+                            ContractingOfficerRepresentative, Agency, \
+                            AgencyOffice
 
 
-class UserFactory(factory.django.DjangoModelFactory):
+class AgencyFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = User
+        model = Agency
 
-    username = factory.Faker('user_name')
-    email = factory.Faker('safe_email')
-    is_active = True
-    is_staff = False
-    is_superuser = False
+    # TODO: Create a Faker provider for agency names
+    name = factory.Faker('company')
+
+
+class AgencyOfficeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = AgencyOffice
+
+    name = factory.Faker('company')
+    agency = factory.SubFactory(
+        AgencyFactory
+    )
 
 
 class IAAFactory(factory.django.DjangoModelFactory):
@@ -24,14 +35,101 @@ class IAAFactory(factory.django.DjangoModelFactory):
         prefix='IAA',
         chars=string.digits,
         )
-    client = factory.Faker('company')
+    dollars = factory.fuzzy.FuzzyInteger(1000, 999999)
+    signed_on = None
+    client = factory.SubFactory(AgencyOfficeFactory)
 
 
 class ProjectFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Project
 
-    iaa = factory.SubFactory(IAAFactory)
+    iaa = factory.SubFactory(
+        IAAFactory,
+        signed_on=factory.Faker(
+                        'date_time_this_month',
+                        before_now=True,
+                        after_now=False,
+                        tzinfo=None
+                    )
+    )
     description = factory.Faker('paragraph')
     name = factory.Faker('catch_phrase')
     public = factory.Faker('boolean')
+
+    @factory.lazy_attribute
+    def dollars(self):
+        min = 1000
+        max = self.iaa.dollars
+        return random.randint(min, max)
+
+
+class ContractingOfficeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ContractingOffice
+
+    name = factory.Faker('company')
+    program_manager = factory.SubFactory(
+        UserFactory
+    )
+
+
+class ContractingOfficerFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ContractingOfficer
+
+    user = factory.SubFactory(
+        UserFactory
+    )
+    office = factory.SubFactory(
+        ContractingOfficeFactory
+    )
+
+
+class ContractingSpecialistFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ContractingSpecialist
+
+    user = factory.SubFactory(
+        UserFactory
+    )
+    office = factory.SubFactory(
+        ContractingOfficeFactory
+    )
+
+
+class ContractingOfficerRepresentativeFactory(
+    factory.django.DjangoModelFactory
+):
+    class Meta:
+        model = ContractingOfficerRepresentative
+
+    user = factory.SubFactory(
+        UserFactory
+    )
+    office = factory.SubFactory(
+        ContractingOfficeFactory
+    )
+
+
+class BuyFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Buy
+
+    project = factory.SubFactory(
+        ProjectFactory,
+        public=factory.SelfAttribute('..public')
+    )
+    description = factory.Faker('paragraph')
+    name = factory.Faker('catch_phrase')
+    public = factory.Faker('boolean')
+
+    @factory.lazy_attribute
+    def dollars(self):
+        min = 500
+        max = self.project.dollars
+        return random.randint(min, max)
+
+
+class AddBuyFactory(BuyFactory):
+    project = factory.Iterator(Project.objects.all())

@@ -1,0 +1,43 @@
+{% extends "web/base.html" %}
+{% load static from staticfiles %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>All updates</h1>
+    {% for post in posts %}
+    <h2>{{ post.title }}</h2>
+    <p class="post-publication-info">
+      <small>Posted on {{ post.publication_date }}<br>by {% for author in post.authors.all %}
+        {{ author.get_full_name }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}</small>
+    </p>
+    <div class="post-content">
+      {{ post.content }}
+      <p><small><a href="{% url 'news:post' post.slug %}">Permalink</a></small></p>
+    </div>
+    {% empty %}
+    <p>No updates yet, but stay tuned!</p>
+    {% endfor %}
+    <hr />
+    <div class="pagination">
+      <span class="step-links">
+        {% if posts.has_previous %}
+        <a href="?page={{ posts.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+          Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+        </span>
+
+        {% if posts.has_next %}
+        <a href="?page={{ posts.next_page_number }}">next</a>
+        {% endif %}
+      </span>
+    </div>
+    <div class="rss-feed">
+      <p><a href="{% url 'news:rss' %}">RSS Feed <img width=20 src="{% static "img/social-icons/svg/rss25.svg" %}" alt="rss icon"></a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}
