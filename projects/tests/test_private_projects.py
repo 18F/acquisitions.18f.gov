@@ -16,7 +16,7 @@ class TestPrivateProjects(TestCase):
     def test_with_permission(self):
         content_type = ContentType.objects.get_for_model(Project)
         permission = Permission.objects.get(
-            codename='view_private',
+            codename='view_project',
             content_type=content_type,
         )
         self.user.user_permissions.add(permission)

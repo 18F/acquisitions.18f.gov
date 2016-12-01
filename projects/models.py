@@ -159,7 +159,7 @@ class Project(models.Model):
 
     class Meta:
         permissions = (
-            ('view_private', 'Can view non-public projects'),
+            ('view_project', 'Can view non-public projects'),
         )
 
 

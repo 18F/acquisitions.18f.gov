@@ -20,7 +20,7 @@ class Command(BaseCommand):
         content_type = ContentType.objects.get_for_model(Project)
         group.permissions = [
             Permission.objects.get(
-                codename='view_private',
+                codename='view_project',
                 content_type=content_type,
             ),
             Permission.objects.get(codename='add_iaa'),

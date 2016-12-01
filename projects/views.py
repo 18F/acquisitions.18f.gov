@@ -27,7 +27,7 @@ def project(request, project):
     # quite be an API-only thing. But most of the page is built via API.
     project = get_object_or_404(Project, id=project)
     if not project.public:
-        if not request.user.has_perm('projects.view_private'):
+        if not request.user.has_perm('projects.view_project'):
             return render(request, "projects/private-page.html")
     return render(request, "projects/project.html", {"project": project})
 
@@ -39,7 +39,7 @@ def buys(request):
 def buy(request, buy):
     buy = get_object_or_404(Buy, id=buy)
     if not buy.public:
-        if not request.user.has_perm('projects.view_private'):
+        if not request.user.has_perm('projects.view_project'):
             return render(request, "projects/private-page.html")
     if request.method == 'POST':
         if 'generate_qasp' in request.POST:
@@ -79,7 +79,7 @@ def qasp(request, buy):
     if qasp_form.is_valid():
         buy.create_qasp()
     if not buy.public:
-        if request.user.has_perm('projects.view_private'):
+        if request.user.has_perm('projects.view_project'):
             pass
         else:
             raise Http404
@@ -92,7 +92,7 @@ def qasp(request, buy):
 def qasp_download(request, buy, format='markdown'):
     buy = get_object_or_404(Buy, id=buy)
     if not buy.public:
-        if request.user.has_perm('projects.view_private'):
+        if request.user.has_perm('projects.view_project'):
             pass
         else:
             raise Http404
@@ -115,7 +115,7 @@ def market_research(request, buy):
     if market_research_form.is_valid():
         buy.create_market_research()
     if not buy.public:
-        if request.user.has_perm('projects.view_private'):
+        if request.user.has_perm('projects.view_project'):
             pass
         else:
             raise Http404
@@ -128,7 +128,7 @@ def market_research(request, buy):
 def market_research_download(request, buy, format='markdown'):
     buy = get_object_or_404(Buy, id=buy)
     if not buy.public:
-        if request.user.has_perm('projects.view_private'):
+        if request.user.has_perm('projects.view_project'):
             pass
         else:
             raise Http404
@@ -151,7 +151,7 @@ def acquisition_plan(request, buy):
     if acquisition_plan_form.is_valid():
         buy.create_acquisition_plan()
     if not buy.public:
-        if request.user.has_perm('projects.view_private'):
+        if request.user.has_perm('projects.view_project'):
             pass
         else:
             raise Http404
@@ -164,7 +164,7 @@ def acquisition_plan(request, buy):
 def acquisition_plan_download(request, buy, format='markdown'):
     buy = get_object_or_404(Buy, id=buy)
     if not buy.public:
-        if request.user.has_perm('projects.view_private'):
+        if request.user.has_perm('projects.view_project'):
             pass
         else:
             raise Http404
@@ -235,7 +235,7 @@ class ProjectList(mixins.ListModelMixin,
     serializer_class = ProjectSerializer
 
     def get_queryset(self):
-        if self.request.user.has_perm('projects.view_private'):
+        if self.request.user.has_perm('projects.view_project'):
             return Project.objects.all()
         else:
             return Project.objects.filter(public=True)
@@ -255,7 +255,7 @@ class ProjectDetail(mixins.RetrieveModelMixin,
         project = Project.objects.get(pk=self.kwargs['pk'])
         if project.public is True:
             return Project.objects.filter(pk=self.kwargs['pk'])
-        elif self.request.user.has_perm('projects.view_private'):
+        elif self.request.user.has_perm('projects.view_project'):
             return Project.objects.filter(pk=self.kwargs['pk'])
         else:
             raise Http404
@@ -272,7 +272,7 @@ class BuyList(mixins.ListModelMixin,
     serializer_class = BuySerializer
 
     def get_queryset(self):
-        if self.request.user.has_perm('projects.view_private'):
+        if self.request.user.has_perm('projects.view_project'):
             return Buy.objects.all()
         else:
             return Buy.objects.select_related('project').filter(public=True, project__public=True)
@@ -292,7 +292,7 @@ class BuyDetail(mixins.RetrieveModelMixin,
         buy = Buy.objects.get(pk=self.kwargs['pk'])
         if buy.public is True:
             return Buy.objects.filter(pk=self.kwargs['pk'])
-        elif self.request.user.has_perm('projects.view_private'):
+        elif self.request.user.has_perm('projects.view_project'):
             return Buy.objects.filter(pk=self.kwargs['pk'])
         else:
             raise Http404
