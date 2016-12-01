@@ -27,10 +27,8 @@ def project(request, project):
     # quite be an API-only thing. But most of the page is built via API.
     project = get_object_or_404(Project, id=project)
     if not project.public:
-        if request.user.has_perm('projects.view_private'):
-            return render(request, "projects/project.html", {"project": project})
-        else:
-            raise Http404
+        if not request.user.has_perm('projects.view_private'):
+            return render(request, "projects/private-page.html")
     return render(request, "projects/project.html", {"project": project})
 
 
@@ -40,6 +38,9 @@ def buys(request):
 
 def buy(request, buy):
     buy = get_object_or_404(Buy, id=buy)
+    if not buy.public:
+        if not request.user.has_perm('projects.view_private'):
+            return render(request, "projects/private-page.html")
     if request.method == 'POST':
         if 'generate_qasp' in request.POST:
             qasp_form = QASPForm(request.POST, buy=buy)
@@ -60,11 +61,6 @@ def buy(request, buy):
         qasp_form = QASPForm(buy=buy)
         acquisition_plan_form = AcquisitionPlanForm(buy=buy)
         market_research_form = MarketResearchForm(buy=buy)
-    if not buy.public:
-        if request.user.has_perm('projects.view_private'):
-            pass
-        else:
-            raise Http404
     return render(
         request,
         "projects/buy.html",
