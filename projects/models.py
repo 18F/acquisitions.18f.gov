@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from datetime import date, timedelta
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.template.loader import render_to_string
 
 
@@ -112,10 +112,11 @@ class Project(models.Model):
         blank=False,
         null=False,
     )
-    # If finer-grained control is needed here, limit_choices_to could be useful
     team_members = models.ManyToManyField(
         User,
+        help_text='You may select from users who have signed the blanket NDA.',
         blank=False,
+        limit_choices_to=models.Q(groups__name = 'NDA Signed'),
     )
     iaa = models.ForeignKey(
         IAA,
