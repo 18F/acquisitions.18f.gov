@@ -112,6 +112,11 @@ class Project(models.Model):
         blank=False,
         null=False,
     )
+    # If finer-grained control is needed here, limit_choices_to could be useful
+    team_members = models.ManyToManyField(
+        User,
+        blank=False,
+    )
     iaa = models.ForeignKey(
         IAA,
         on_delete=models.SET_NULL,
