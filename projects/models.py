@@ -368,6 +368,12 @@ class Buy(models.Model):
         blank=True,
         null=True,
     )
+
+    technical_evaluation_panel = models.ManyToManyField(
+        User,
+        blank=True,
+    )
+
     # Locking doesn't do anything on its own, but should be used as an
     # indicator of when the user shouldn't be able to edit the data. Initially,
     # this was tied to award_date, but using a separate field should allow the

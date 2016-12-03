@@ -51,6 +51,7 @@ class BuyForm(forms.ModelForm):
 @admin.register(Buy)
 class BuyAdmin(admin.ModelAdmin):
     form = BuyForm
+    filter_horizontal = ('technical_evaluation_panel',)
 
     def get_readonly_fields(self, request, obj=None):
         return obj.locked_fields()

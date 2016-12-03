@@ -332,9 +332,11 @@ Chairperson: TBD, GSA
 
 The Technical Evaluation Panel will consist of the following members:
 
-1. {{ buy.productOwner.name | default:"[[ ELEMENT MISSING ]]" }}, voting member
-1. {{ buy.technicalLead.name | default:"[[ ELEMENT MISSING ]]" }}, voting member
-1. {{ buy.productLead.name | default:"[[ ELEMENT MISSING ]]" }}, voting member
+{% for panelist in buy.technical_evaluation_panel.all %}
+1. {{ panelist.get_full_name }}, voting member
+{% empty %}
+[[ ELEMENT MISSING: NO PANELISTS SET ]]
+{% endfor %}
 
 The Government will evaluate technical Quotes based on the criteria
 shown below. The TEP will evaluate the submissions to arrive at a rating
