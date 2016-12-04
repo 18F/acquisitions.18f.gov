@@ -511,7 +511,17 @@ class Buy(models.Model):
         )
         self.save(update_fields=['market_research'])
 
-    def ready_to_issue(self):
+    def all_nda_signed(self):
+        panelists = self.technical_evaluation_panel.all()
+        signers = self.nda_signed.all()
+        unsigned = [i for i in panelists if i not in signers]
+        # TODO: Could also return the names of those who need to sign
+        if len(unsigned) > 0:
+            return False
+        else:
+            return True
+
+    def required_fields(self):
         required_fields = [
             self.name,
             self.description,
@@ -533,7 +543,10 @@ class Buy(models.Model):
             self.set_aside_status,
             self.github_repository,
         ]
-        if None in required_fields:
+        return required_fields
+
+    def ready_to_issue(self):
+        if None in self.required_fields() or not self.all_nda_signed():
             return False
         else:
             return True
