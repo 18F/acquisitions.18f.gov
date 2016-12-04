@@ -41,7 +41,7 @@ class ProjectAdmin(admin.ModelAdmin):
 class BuyForm(forms.ModelForm):
     class Meta:
         model = Buy
-        fields = '__all__'
+        exclude = ('nda_signed',)
         widgets = {
             'base_period_length': DurationMultiWidget(),
             'option_period_length': DurationMultiWidget(),

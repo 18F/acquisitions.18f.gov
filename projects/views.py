@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework import mixins
@@ -15,6 +16,7 @@ from rest_framework.reverse import reverse
 from projects.models import IAA, Project, Buy
 from projects.serializers import IAASerializer, ProjectSerializer, BuySerializer
 from projects.forms import QASPForm, AcquisitionPlanForm, MarketResearchForm
+from nda.forms import NDAForm
 
 
 # Create your views here.
@@ -71,6 +73,18 @@ def buy(request, buy):
             "market_research_form": market_research_form
         }
     )
+
+
+@login_required
+def buy_nda(request, buy):
+    if buy is None:
+        return redirect(reverse('buys:buys'))
+    buy = Buy.objects.get(id=buy)
+    nda_form = NDAForm(request.POST or None)
+    if nda_form.is_valid():
+        buy.nda_signed.add(request.user)
+        return redirect(reverse('buys:buy', args=[buy.id]))
+    return render(request, "nda/buy_nda.html", {"buy": buy, "nda_form": nda_form})
 
 
 def qasp(request, buy):

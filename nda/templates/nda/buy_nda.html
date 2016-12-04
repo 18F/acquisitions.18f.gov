@@ -1,0 +1,21 @@
+{% extends "web/base.html" %}
+{% load floppyforms %}
+{% load markdown_deux_tags %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    {% markdown %}
+    {% include "nda/markdown/buy_nda.md" %}
+    {% endmarkdown %}
+    <form class="" method="post">
+      {% csrf_token %}
+      {% form nda_form using %}
+      {% formfield form.agree %}
+      <label for="id_agree">I agree</label>
+      {% endform %}
+      <p><input type="submit" value="Submit"></p>
+    </form>
+  </div>
+</section>
+{% endblock %}

@@ -1,6 +1,14 @@
 {% extends "web/base.html" %}
 
 {% block content %}
+{% if user in buy.technical_evaluation_panel.all and not user in buy.nda_signed.all %}
+<div class="usa-alert usa-alert-warning">
+  <div class="usa-alert-body">
+    <h3 class="usa-alert-heading">You need to sign the NDA</h3>
+    <p class="usa-alert-text">As a member of the technical evaluation panel, you'll need to sign the NDA before this buy can be issued. <a href="{% url 'buys:buy_nda' buy.id %}">Sign the NDA here</a>.</p>
+  </div>
+</div>
+{% endif %}
 <section class="usa-grid">
   <div class="usa-width-one-full">
     <h1>{{ buy.name }}</h1>

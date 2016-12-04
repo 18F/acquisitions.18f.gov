@@ -372,6 +372,12 @@ class Buy(models.Model):
     technical_evaluation_panel = models.ManyToManyField(
         User,
         blank=True,
+        related_name='panels',
+    )
+    nda_signed = models.ManyToManyField(
+        User,
+        blank=True,
+        related_name='ndas',
     )
 
     # Locking doesn't do anything on its own, but should be used as an
