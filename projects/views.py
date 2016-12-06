@@ -284,6 +284,9 @@ class BuyList(mixins.ListModelMixin,
     List all buys
     """
     serializer_class = BuySerializer
+    # TODO: fancier filterset:
+    # http://www.django-rest-framework.org/api-guide/filtering/#specifying-a-filterset
+    filter_fields = ('name',)
 
     def get_queryset(self):
         if self.request.user.has_perm('projects.view_project'):
