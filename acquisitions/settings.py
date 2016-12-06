@@ -45,7 +45,6 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'markdown_deux',
     'floppyforms',
-    'guardian',
 
     'projects',
     'team',
@@ -69,7 +68,6 @@ MIDDLEWARE_CLASSES = (
 
 AUTHENTICATION_BACKENDS = (
     'uaa_client.authentication.UaaBackend',
-    'guardian.backends.ObjectPermissionBackend',
 )
 
 ROOT_URLCONF = 'acquisitions.urls'
