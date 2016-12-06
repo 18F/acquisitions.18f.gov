@@ -44,6 +44,10 @@ urlpatterns = [
         include(projects_urls.buy_patterns, namespace='buys')
     ),
     url(
+        r'^iaas/',
+        include(projects_urls.iaa_patterns, namespace='iaas')
+    ),
+    url(
         r'^news/',
         include(news_urls.urlpatterns, namespace='news')
     ),

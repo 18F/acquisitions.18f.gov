@@ -1,0 +1,102 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>IAAs</h1>
+    {% if perms.iaas.view_iaa %}<p>Showing: <strong>Signed</strong> and <strong>unsigned</strong> IAAs</p>{% endif %}
+    <p class="">
+      An IAA is the authorizing document allowing one agency to transfer funds to another.
+    </p>
+    <h2>Current</h2>
+    <div id="current">
+
+    </div>
+  </div>
+</section>
+<script type="text/javascript">
+  function createIAA(iaa) {
+    // Create a div element with information about the iaa
+    let div = document.createElement('div');
+    div.id = 'iaa-'+iaa.id;
+    let iaaName = document.createElement('h3');
+    let iaaLink = document.createElement('a');
+    iaaLink.href = '/iaas/'+iaa.id;
+    let nameContent = document.createTextNode(iaa.client);
+    iaaLink.appendChild(nameContent);
+    iaaName.appendChild(iaaLink);
+    iaaName.className = 'iaaName';
+    // let iaaDescription = document.createElement('div');
+    // let descriptionContent = document.createTextNode(iaa.description);
+    // iaaDescription.appendChild(descriptionContent);
+    // iaaDescription.className = 'iaaDescription';
+    div.appendChild(iaaName);
+    // div.appendChild(iaaDescription);
+    return div
+  }
+  function createProject(project) {
+    // Check for iaa project wrapper div
+    let wrapper = document.getElementById('iaa-'+project.iaa.id+'-project-wrapper');
+    let iaa = document.getElementById('iaa-'+project.iaa.id)
+    if (!wrapper) {
+      wrapper = document.createElement('div');
+      wrapper.id = 'iaa-'+project.iaa.id+'-project-wrapper';
+      wrapper.className = 'usa-grid';
+      let sidebarWrapper = document.createElement('div');
+      sidebarWrapper.className = 'usa-width-one-sixth';
+      let sidebar = document.createElement('div');
+      let sidebarTitle = document.createElement('h4');
+      let sidebarContent = document.createTextNode('Projects');
+      sidebarTitle.appendChild(sidebarContent);
+      sidebar.appendChild(sidebarTitle);
+      sidebarWrapper.appendChild(sidebar);
+      let main = document.createElement('div');
+      main.className = 'usa-width-five-sixths';
+      wrapper.appendChild(sidebarWrapper);
+      wrapper.appendChild(main);
+      iaa.appendChild(wrapper);
+    }
+    // Create project div
+    let projectDiv = document.createElement('div');
+    let projectName = document.createElement('h5');
+    let nameContent = document.createTextNode(project.name);
+    projectName.appendChild(nameContent);
+    let projectDescription = document.createElement('div');
+    let descriptionContent = document.createTextNode(project.description);
+    projectDescription.appendChild(descriptionContent);
+    projectDiv.appendChild(projectName);
+    projectDiv.appendChild(projectDescription);
+    wrapper.childNodes[1].appendChild(projectDiv);
+  }
+  document.addEventListener("DOMContentLoaded", function(event) {
+    let current = document.getElementById('current');
+    let r1 = new XMLHttpRequest();
+    r1.open("GET", "/api/iaas/", true);
+    r1.onreadystatechange = function () {
+      if (r1.readyState != 4 || r1.status != 200) return;
+      var jsonResponse = JSON.parse(r1.responseText);
+      if (jsonResponse.length > 0) {
+        for (const iaa of jsonResponse) {
+          current.appendChild(createIAA(iaa));
+        }
+      } else {
+        let div = document.createElement("div");
+        let content = document.createTextNode("No public iaas");
+        div.appendChild(content);
+        current.appendChild(div);
+      }
+    };
+    r1.send();
+    let r2 = new XMLHttpRequest();
+    r2.open("GET", "/api/projects/", true);
+    r2.onreadystatechange = function () {
+      if (r2.readyState != 4 || r2.status != 200) return;
+      var jsonResponse = JSON.parse(r2.responseText);
+      for (const project of jsonResponse) {
+        createProject(project);
+      }
+    }
+    r2.send();
+  });
+</script>
+{% endblock %}

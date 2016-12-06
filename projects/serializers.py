@@ -15,6 +15,8 @@ class IAASerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    iaa = IAASerializer()
+
     class Meta:
         model = Project
         fields = (
@@ -23,6 +25,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             'project_type',
             'description',
             'public',
+            'iaa',
         )
 
 

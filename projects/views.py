@@ -25,6 +25,20 @@ from nda.forms import NDAForm
 
 
 # Create your views here.
+def iaas(request):
+    return render(request, "projects/iaas.html")
+
+
+def iaa(request, iaa):
+    # Since we only want to show a page if the project exists, this can't
+    # quite be an API-only thing. But most of the page is built via API.
+    iaa = get_object_or_404(IAA, id=iaa)
+    if not iaa.is_signed():
+        if not request.user.has_perm('projects.view_project'):
+            return render(request, "projects/private-page.html")
+    return render(request, "projects/iaa.html", {"iaa": iaa})
+
+
 def projects(request):
     return render(request, "projects/projects.html")
 

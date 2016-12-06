@@ -91,7 +91,7 @@ class IAA(models.Model):
         return "{0} | {1}".format(self.client, self.id)
 
     def is_signed(self):
-        return self.signed_on != null
+        return self.signed_on is None
 
     def clean(self):
         if self.signed_on > date.today():

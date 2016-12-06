@@ -19,6 +19,11 @@ api_patterns = [
         name='iaa-detail'),
 ]
 
+iaa_patterns = [
+    url(r'^$', views.iaas, name='iaas'),
+    url(r'(?P<iaa>\w+)', views.iaa, name='iaa'),
+]
+
 project_patterns = [
     url(r'^$', views.projects, name='projects'),
     url(r'(?P<project>\w+)', views.project, name='project'),

@@ -1,0 +1,14 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>{{ iaa.client }}</h1>
+    {% if iaa.is_signed %}<div>This IAA is not yet signed.</div>{% endif %}
+    <h2>Signed On</h2>
+    <div id="signed_on">
+      {{ iaa.signed_on }}
+    </div>
+  </div>
+</section>
+{% endblock %}
