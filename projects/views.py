@@ -14,9 +14,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from projects.models import IAA, Project, Buy
-from projects.serializers import IAASerializer, ProjectSerializer, BuySerializer
+from projects.serializers import (
+    IAASerializer,
+    ProjectSerializer,
+    BuySerializer,
+)
 from projects.forms import QASPForm, AcquisitionPlanForm, MarketResearchForm
-from projects.filters import BuyFilter
+from projects.filters import BuyFilter, ProjectFilter
 from nda.forms import NDAForm
 
 
@@ -248,6 +252,7 @@ class ProjectList(mixins.ListModelMixin,
     List all projects
     """
     serializer_class = ProjectSerializer
+    filter_class = ProjectFilter
 
     def get_queryset(self):
         if self.request.user.has_perm('projects.view_project'):
