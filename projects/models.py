@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from datetime import date, timedelta
 from django.db import models
+from django.shortcuts import reverse
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User, Group
 from django.template.loader import render_to_string
@@ -116,7 +117,7 @@ class Project(models.Model):
         User,
         help_text='You may select from users who have signed the blanket NDA.',
         blank=False,
-        limit_choices_to=models.Q(groups__name = 'NDA Signed'),
+        limit_choices_to=models.Q(groups__name='NDA Signed'),
     )
     iaa = models.ForeignKey(
         IAA,
@@ -142,7 +143,9 @@ class Project(models.Model):
     public = models.BooleanField(
         default=False,
     )
-    # TODO: should active status be determined by IAA status?
+    # TODO: should active status be determined by IAA status? Probably not
+    # directly, but it would make sense to check that projects don't outlast
+    # the underlying IAA
     active = models.BooleanField(
         default=True,
     )
@@ -151,10 +154,16 @@ class Project(models.Model):
         return "{0}".format(self.name)
 
     def get_absolute_url(self):
-        return "/projects/{0}/".format(self.id)
+        return reverse('projects:project', args=[self.id])
 
     def is_private(self):
         return not self.public
+
+    def budget_remaining(self):
+        budget = self.dollars
+        for buy in self.buys.all():
+            budget -= buy.dollars
+        return budget
 
     def clean(self):
         if self.dollars:
