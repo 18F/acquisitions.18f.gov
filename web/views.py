@@ -23,17 +23,6 @@ def guides(request):
     return render(request, 'web/guides.html')
 
 
-@api_view(['GET'])
-def api(request, format=None):
-    return Response({
-        'projects': reverse('api:project-list', request=request, format=format),
-        'buys': reverse('api:buy-list', request=request, format=format),
-        'iaas': reverse('api:iaa-list', request=request, format=format),
-        'team': reverse('api:team-list', request=request, format=format),
-        'roles': reverse('api:role-list', request=request, format=format),
-    })
-
-
 @login_required
 def profile(request):
     return render(request, 'web/profile.html')
