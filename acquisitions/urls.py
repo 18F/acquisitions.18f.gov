@@ -22,6 +22,7 @@ from projects import urls as projects_urls
 from news import urls as news_urls
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_docs.views import DRFDocsView
 
 
 api_patterns = projects_urls.api_patterns + team_urls.api_patterns
@@ -30,7 +31,7 @@ api_patterns = projects_urls.api_patterns + team_urls.api_patterns
 urlpatterns = [
     url(r'^$', web_views.index),
     url(r'^guides$', web_views.guides),
-    url(r'^api/$', web_views.api),
+    url(r'^api/$', DRFDocsView.as_view(), name='api_docs'),
     url(r'^api/', include(api_patterns, namespace='api')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^team/', include(team_urls.urlpatterns, namespace='team')),
