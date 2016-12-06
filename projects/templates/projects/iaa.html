@@ -4,10 +4,20 @@
 <section class="usa-grid">
   <div class="usa-width-one-full">
     <h1>{{ iaa.client }}</h1>
-    {% if iaa.is_signed %}<div>This IAA is not yet signed.</div>{% endif %}
+    {% if not iaa.is_signed %}<div>This IAA is not yet signed.</div>
+    {% else %}
     <h2>Signed On</h2>
     <div id="signed_on">
       {{ iaa.signed_on }}
+    </div>
+    <h2>Expires On</h2>
+    <div id="expires_on">
+      {{ iaa.expires_on }}
+    </div>
+    {% endif %}
+    <h2>Value</h2>
+    <div id="value">
+      $ {{ iaa.dollars | floatformat:2 }}
     </div>
   </div>
 </section>
