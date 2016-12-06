@@ -16,6 +16,7 @@ from rest_framework.reverse import reverse
 from projects.models import IAA, Project, Buy
 from projects.serializers import IAASerializer, ProjectSerializer, BuySerializer
 from projects.forms import QASPForm, AcquisitionPlanForm, MarketResearchForm
+from projects.filters import BuyFilter
 from nda.forms import NDAForm
 
 
@@ -284,9 +285,7 @@ class BuyList(mixins.ListModelMixin,
     List all buys
     """
     serializer_class = BuySerializer
-    # TODO: fancier filterset:
-    # http://www.django-rest-framework.org/api-guide/filtering/#specifying-a-filterset
-    filter_fields = ('name',)
+    filter_class = BuyFilter
 
     def get_queryset(self):
         if self.request.user.has_perm('projects.view_project'):
