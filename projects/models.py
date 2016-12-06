@@ -608,9 +608,10 @@ class Buy(models.Model):
 
         # Confirm that buy cost doesn't exceed project value
         if self.dollars:
-            if self.dollars > self.project.dollars:
+            if self.dollars > self.project.budget_remaining():
                 raise ValidationError({
-                    'dollars': 'Value can\'t exceed value of overall project'
+                    'dollars': 'Value can\'t exceed project\'s remaining '
+                               'budget'
                 })
 
         # Don't allow issue date without a lot of other stuff
