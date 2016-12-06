@@ -41,12 +41,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'rest_framework',
-    'rest_framework.authtoken',
-    'markdown_deux',
-    'floppyforms',
-    'rest_framework_swagger',
-
     'projects',
     'team',
     'web',
@@ -54,6 +48,11 @@ INSTALLED_APPS = (
     'uaa_client',
     'news',
     'acquisitions',
+
+    'rest_framework',
+    'rest_framework.authtoken',
+    'markdown_deux',
+    'floppyforms',
     'rest_framework_docs',
 )
 
