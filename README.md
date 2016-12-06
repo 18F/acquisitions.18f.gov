@@ -6,7 +6,8 @@
 
 This is the homepage for the TTS Office of Acquisitions. Its goal is to be a
 public-facing site for the office's efforts, as well as an internal site for
-coordinating and tracking work.
+coordinating and tracking work. See [the elements below](#elements) for more
+about what's included.
 
 ## Installation
 
@@ -88,7 +89,8 @@ site is built by consuming that API rather than building it into the templates.
 ### Templated documents
 
 Since many projects will require the same documents, the app includes some
-templates that can be filled in automatically with data from the database.
+templates that can be filled in automatically with data from the database. This
+ends up being a light contract-writing system.
 
 Because the documents need to be frozen at some point in time, but we'd like to
 be able to update the templates iteratively, the documents are generated and the
