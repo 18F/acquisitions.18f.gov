@@ -39,5 +39,7 @@ class BuySerializer(serializers.ModelSerializer):
             'project',
             'procurement_method',
             'set_aside_status',
+            'rfq_id',
             'period_of_performance',
+            'github_repository',
         )
