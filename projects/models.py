@@ -633,3 +633,36 @@ class AgileBPA(Buy):
 
     class Meta:
         verbose_name = 'Agile BPA Order'
+
+
+class Micropurchase(Buy):
+    def clean(self):
+        # Check that buy is not public without associated project being public
+        if (self.project.public is not True) and (self.public is True):
+            raise ValidationError({
+                'public': 'May not be public if the associated project is not.'
+            })
+
+        if self.dollars:
+            # Confirm that buy cost doesn't exceed project value
+            if self.dollars > self.project.budget_remaining():
+                raise ValidationError({
+                    'dollars': 'Value can\'t exceed project\'s remaining '
+                               'budget'
+                })
+
+            # Confirm that buy isn't over micro-purchase threshold
+            if self.dollars > 3500:
+                raise ValidationError({
+                    'dollars': 'Value can\'t exceed the micro-purchase '
+                               'threshold of $3500'
+                })
+
+        # Don't allow award date without issue date
+        if self.award_date and not self.issue_date:
+            raise ValidationError({
+                'award_date': 'Please set an issue date first'
+            })
+
+    class Meta:
+        verbose_name = 'Micro-purchase'
