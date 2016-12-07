@@ -163,7 +163,7 @@ class Project(models.Model):
 
     def budget_remaining(self):
         budget = self.dollars
-        for buy in self.buys.all():
+        for buy in self.agilebpa.all():
             budget -= buy.dollars
         return budget
 
