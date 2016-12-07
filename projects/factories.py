@@ -3,10 +3,18 @@ import string
 import factory.fuzzy
 import random
 from acquisitions.factories import UserFactory
-from projects.models import IAA, Project, AgileBPA, ContractingOffice, \
-                            ContractingSpecialist, ContractingOfficer, \
-                            ContractingOfficerRepresentative, Agency, \
-                            AgencyOffice
+from projects.models import (
+    IAA,
+    Project,
+    AgileBPA,
+    Micropurchase,
+    ContractingOffice,
+    ContractingSpecialist,
+    ContractingOfficer,
+    ContractingOfficerRepresentative,
+    Agency,
+    AgencyOffice,
+)
 
 
 class AgencyFactory(factory.django.DjangoModelFactory):
