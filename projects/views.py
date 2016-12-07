@@ -304,14 +304,38 @@ class BuyList(MultipleModelAPIView):
     """
     List all buys
     """
+
     flat = True
     sorting_field = 'id'
     add_model_type = False
-    
-    queryList = [
-        (AgileBPA.objects.all(), AgileBPASerializer),
-        (Micropurchase.objects.all(), MicropurchaseSerializer),
-    ]
+
+    def get_queryList(self):
+        if self.request.user.has_perm('projects.view_project'):
+            queryList = (
+                (
+                    AgileBPA.objects.all(),
+                    AgileBPASerializer
+                ),
+                (
+                    Micropurchase.objects.all(),
+                    MicropurchaseSerializer
+                )
+            )
+            return queryList
+        else:
+            queryList = (
+                (
+                    AgileBPA.objects.select_related('project').filter(
+                        public=True, project__public=True
+                    ),
+                    AgileBPASerializer),
+                (
+                    Micropurchase.objects.select_related('project').filter(
+                        public=True, project__public=True),
+                    MicropurchaseSerializer
+                )
+            )
+            return queryList
 
 
 class AgileBPAList(mixins.ListModelMixin,

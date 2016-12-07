@@ -61,10 +61,14 @@
     let buyName = document.createElement('h5');
     let nameContent = document.createTextNode(buy.name);
     buyName.appendChild(nameContent);
+    let buyType = document.createElement('p');
+    let typeContent = document.createTextNode('Type: '+buy.procurement_method)
+    buyType.appendChild(typeContent);
     let buyDescription = document.createElement('div');
     let descriptionContent = document.createTextNode(buy.description);
     buyDescription.appendChild(descriptionContent);
     buyDiv.appendChild(buyName);
+    buyDiv.appendChild(buyType);
     buyDiv.appendChild(buyDescription);
     wrapper.childNodes[1].appendChild(buyDiv);
   }

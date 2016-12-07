@@ -23,11 +23,15 @@
     buyLink.appendChild(nameContent);
     buyName.appendChild(buyLink);
     buyName.className = 'buyName';
-    let buyDescription = document.createElement('div');
+    let buyType = document.createElement('p');
+    let typeContent = document.createTextNode('Type: '+buy.procurement_method)
+    buyType.appendChild(typeContent);
+    let buyDescription = document.createElement('p');
     let descriptionContent = document.createTextNode(buy.description);
     buyDescription.appendChild(descriptionContent);
     buyDescription.className = 'buyDescription';
     div.appendChild(buyName);
+    div.appendChild(buyType);
     div.appendChild(buyDescription);
     return div
   }
