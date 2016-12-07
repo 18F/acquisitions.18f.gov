@@ -13,11 +13,13 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from projects.models import IAA, Project, AgileBPA
+from drf_multiple_model.views import MultipleModelAPIView
+from projects.models import IAA, Project, AgileBPA, Micropurchase
 from projects.serializers import (
     IAASerializer,
     ProjectSerializer,
     AgileBPASerializer,
+    MicropurchaseSerializer,
 )
 from projects.forms import QASPForm, AcquisitionPlanForm, MarketResearchForm
 from projects.filters import AgileBPAFilter, ProjectFilter
@@ -298,10 +300,24 @@ class ProjectDetail(mixins.RetrieveModelMixin,
         return self.retrieve(request, *args, **kwargs)
 
 
+class BuyList(MultipleModelAPIView):
+    """
+    List all buys
+    """
+    flat = True
+    sorting_field = 'id'
+    add_model_type = False
+    
+    queryList = [
+        (AgileBPA.objects.all(), AgileBPASerializer),
+        (Micropurchase.objects.all(), MicropurchaseSerializer),
+    ]
+
+
 class AgileBPAList(mixins.ListModelMixin,
               generics.GenericAPIView):
     """
-    List all buys
+    List all Agile BPA buys
     """
     serializer_class = AgileBPASerializer
     filter_class = AgileBPAFilter
@@ -319,7 +335,7 @@ class AgileBPAList(mixins.ListModelMixin,
 class AgileBPADetail(mixins.RetrieveModelMixin,
                 generics.GenericAPIView):
     """
-    Retrieve details of one buy
+    Retrieve details of one Agile BPA buy
     """
     serializer_class = AgileBPASerializer
 

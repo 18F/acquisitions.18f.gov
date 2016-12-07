@@ -22,7 +22,7 @@ def test_unauthenticated():
 
     assert len(response.data) == 10
     for b in response.data:
-        assert b['public'] == True
+        assert b['public'] is True
 
 
 @pytest.mark.django_db

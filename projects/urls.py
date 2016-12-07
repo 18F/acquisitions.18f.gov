@@ -9,7 +9,7 @@ api_patterns = [
     url(r'^projects/(?P<pk>[0-9]+)$',
         views.ProjectDetail.as_view(),
         name='project-detail'),
-    url(r'^buys/$', views.AgileBPAList.as_view(), name='buy-list'),
+    url(r'^buys/$', views.BuyList.as_view(), name='buy-list'),
     url(r'^buys/(?P<pk>[0-9]+)$',
         views.AgileBPADetail.as_view(),
         name='buy-detail'),
