@@ -274,10 +274,35 @@ class ContractingOfficerRepresentative(models.Model):
 
 
 class Buy(models.Model):
-    PROCUREMENT_METHOD_CHOICES = (
-        ('Agile BPA', 'Agile BPA'),
-        ('Micro-Purchase', 'Micro-Purchase'),
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
     )
+    description = models.TextField(
+        blank=False,
+        null=False,
+    )
+    project = models.ForeignKey(
+        Project,
+        related_name='buys',
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+    )
+    dollars = models.PositiveIntegerField(
+        blank=False,
+        null=True
+    )
+    public = models.BooleanField(
+        default=False,
+    )
+
+    class Meta:
+        abstract = True
+
+
+class AgileBPA(Buy):
     SET_ASIDE_CHOICES = (
         ("AbilityOne", "AbilityOne"),
         ("HUBZone Small Business", "HUBZone Small Business"),
@@ -293,33 +318,10 @@ class Buy(models.Model):
         ("Woman-Owned Small Business", "Woman-Owned Small Business"),
     )
 
-    name = models.CharField(
-        max_length=100,
-        blank=False,
-        null=False,
-    )
-    description = models.TextField(
-        blank=False,
-        null=False,
-    )
     contractual_history = models.TextField(
         blank=False,
         null=False,
         default="This is the first contract for this functionality.",
-    )
-    project = models.ForeignKey(
-        Project,
-        related_name='buys',
-        on_delete=models.CASCADE,
-        blank=False,
-        null=False,
-    )
-    dollars = models.PositiveIntegerField(
-        blank=False,
-        null=True
-    )
-    public = models.BooleanField(
-        default=False,
     )
     base_period_length = models.CharField(
         max_length=100,
@@ -338,9 +340,10 @@ class Buy(models.Model):
     )
     procurement_method = models.CharField(
         max_length=200,
-        choices=PROCUREMENT_METHOD_CHOICES,
-        blank=True,
-        null=True,
+        default="Agile Development Services BPA Order",
+        editable=False,
+        blank=False,
+        null=False,
     )
     set_aside_status = models.CharField(
         max_length=200,

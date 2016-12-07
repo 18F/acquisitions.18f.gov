@@ -3,7 +3,7 @@ import string
 import factory.fuzzy
 import random
 from acquisitions.factories import UserFactory
-from projects.models import IAA, Project, Buy, ContractingOffice, \
+from projects.models import IAA, Project, AgileBPA, ContractingOffice, \
                             ContractingSpecialist, ContractingOfficer, \
                             ContractingOfficerRepresentative, Agency, \
                             AgencyOffice
@@ -112,9 +112,9 @@ class ContractingOfficerRepresentativeFactory(
     )
 
 
-class BuyFactory(factory.django.DjangoModelFactory):
+class AgileBPAFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = Buy
+        model = AgileBPA
 
     project = factory.SubFactory(
         ProjectFactory,
@@ -131,5 +131,5 @@ class BuyFactory(factory.django.DjangoModelFactory):
         return random.randint(min, max)
 
 
-class AddBuyFactory(BuyFactory):
+class AddAgileBPAFactory(AgileBPAFactory):
     project = factory.Iterator(Project.objects.all())

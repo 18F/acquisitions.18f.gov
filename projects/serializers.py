@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from projects.models import IAA, Project, Buy
+from projects.models import IAA, Project, AgileBPA
 
 
 class IAASerializer(serializers.ModelSerializer):
@@ -29,11 +29,11 @@ class ProjectSerializer(serializers.ModelSerializer):
         )
 
 
-class BuySerializer(serializers.ModelSerializer):
+class AgileBPASerializer(serializers.ModelSerializer):
     project = ProjectSerializer()
 
     class Meta:
-        model = Buy
+        model = AgileBPA
         fields = (
             'id',
             'name',
