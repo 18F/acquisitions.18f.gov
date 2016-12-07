@@ -133,3 +133,26 @@ class AgileBPAFactory(factory.django.DjangoModelFactory):
 
 class AddAgileBPAFactory(AgileBPAFactory):
     project = factory.Iterator(Project.objects.all())
+
+
+class MicropurchaseFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Micropurchase
+
+    project = factory.SubFactory(
+        ProjectFactory,
+        public=factory.SelfAttribute('..public')
+    )
+    description = factory.Faker('paragraph')
+    name = factory.Faker('catch_phrase')
+    public = factory.Faker('boolean')
+
+    @factory.lazy_attribute
+    def dollars(self):
+        min = 500
+        max = 3500
+        return random.randint(min, max)
+
+
+class AddMicropurchaseFactory(MicropurchaseFactory):
+    project = factory.Iterator(Project.objects.all())
