@@ -632,4 +632,4 @@ class AgileBPA(Buy):
             })
 
     class Meta:
-        pass
+        verbose_name = 'Agile BPA Order'
