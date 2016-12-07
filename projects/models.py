@@ -298,6 +298,16 @@ class Buy(models.Model):
         default=False,
     )
 
+    # Milestone dates
+    issue_date = models.DateField(
+        blank=True,
+        null=True,
+    )
+    award_date = models.DateField(
+        blank=True,
+        null=True,
+    )
+
     class Meta:
         abstract = True
 
@@ -414,16 +424,6 @@ class AgileBPA(Buy):
         null=True,
     )
     market_research = models.TextField(
-        blank=True,
-        null=True,
-    )
-
-    # Milestone dates
-    issue_date = models.DateField(
-        blank=True,
-        null=True,
-    )
-    award_date = models.DateField(
         blank=True,
         null=True,
     )
