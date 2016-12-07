@@ -9,6 +9,7 @@ django-floppyforms
 django-markdown-deux
 djangorestframework
 djangorestframework-csv
+django-rest-multiple-models
 drfdocs
 factory_boy
 httmock
