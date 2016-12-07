@@ -285,7 +285,7 @@ class Buy(models.Model):
     )
     project = models.ForeignKey(
         Project,
-        related_name='buys',
+        related_name='%(class)s',
         on_delete=models.CASCADE,
         blank=False,
         null=False,

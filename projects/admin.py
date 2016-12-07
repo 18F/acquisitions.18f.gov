@@ -3,7 +3,7 @@ from django.contrib import admin
 from projects.models import IAA, Project, AgileBPA, ContractingOffice, \
                             ContractingSpecialist, ContractingOfficer, \
                             ContractingOfficerRepresentative, Agency, \
-                            AgencyOffice
+                            AgencyOffice, Micropurchase
 from projects.widgets import DurationMultiWidget
 
 
@@ -16,6 +16,7 @@ from projects.widgets import DurationMultiWidget
     ContractingOfficerRepresentative,
     Agency,
     AgencyOffice,
+    Micropurchase,
 )
 class WorkAdmin(admin.ModelAdmin):
     pass
