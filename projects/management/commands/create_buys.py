@@ -30,7 +30,7 @@ class Command(BaseCommand):
 
         if options['add']:
             AddAgileBPAFactory.create_batch(number)
-            AddMicropurchaseFactory(number)
+            AddMicropurchaseFactory.create_batch(number)
         else:
             AgileBPAFactory.create_batch(number)
-            MicropurchaseFactory(number)
+            MicropurchaseFactory.create_batch(number)

@@ -636,6 +636,14 @@ class AgileBPA(Buy):
 
 
 class Micropurchase(Buy):
+    procurement_method = models.CharField(
+        max_length=200,
+        default="Micro-purchase",
+        editable=False,
+        blank=False,
+        null=False,
+    )
+
     def clean(self):
         # Check that buy is not public without associated project being public
         if (self.project.public is not True) and (self.public is True):
