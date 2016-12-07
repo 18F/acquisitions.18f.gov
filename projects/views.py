@@ -14,6 +14,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from drf_multiple_model.views import MultipleModelAPIView
+from drf_multiple_model.mixins import Query
 from projects.models import IAA, Project, AgileBPA, Micropurchase
 from projects.serializers import (
     IAASerializer,
@@ -22,7 +23,10 @@ from projects.serializers import (
     MicropurchaseSerializer,
 )
 from projects.forms import QASPForm, AcquisitionPlanForm, MarketResearchForm
-from projects.filters import AgileBPAFilter, ProjectFilter
+from projects.filters import (
+    AgileBPAFilter,
+    ProjectFilter,
+)
 from nda.forms import NDAForm
 
 
@@ -309,30 +313,49 @@ class BuyList(MultipleModelAPIView):
     sorting_field = 'id'
     add_model_type = False
 
+    @staticmethod
+    def buy_filter(queryset, request, *args, **kwargs):
+        if 'id' in request.query_params:
+            buy_id = request.query_params['id']
+            queryset = queryset.filter(id=buy_id)
+        if 'project_id' in request.query_params:
+            project_id = request.query_params['project_id']
+            queryset = queryset.filter(project__id=project_id)
+        if 'name' in request.query_params:
+            name = request.query_params['name']
+            queryset = queryset.filter(name=name)
+        # TODO: allow filtering by procurement_method
+        return queryset
+
     def get_queryList(self):
         if self.request.user.has_perm('projects.view_project'):
             queryList = (
-                (
+                Query(
                     AgileBPA.objects.all(),
-                    AgileBPASerializer
+                    AgileBPASerializer,
+                    filter_fn=self.buy_filter,
                 ),
-                (
+                Query(
                     Micropurchase.objects.all(),
-                    MicropurchaseSerializer
+                    MicropurchaseSerializer,
+                    filter_fn=self.buy_filter,
                 )
             )
             return queryList
         else:
             queryList = (
-                (
+                Query(
                     AgileBPA.objects.select_related('project').filter(
                         public=True, project__public=True
                     ),
-                    AgileBPASerializer),
-                (
+                    AgileBPASerializer,
+                    filter_fn=self.buy_filter,
+                ),
+                Query(
                     Micropurchase.objects.select_related('project').filter(
                         public=True, project__public=True),
-                    MicropurchaseSerializer
+                    MicropurchaseSerializer,
+                    filter_fn=self.buy_filter,
                 )
             )
             return queryList
