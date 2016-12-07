@@ -674,3 +674,11 @@ class Micropurchase(Buy):
 
     class Meta:
         verbose_name = 'Micro-purchase'
+
+
+class OpenMarket(Buy):
+    pass
+
+
+class Software(Buy):
+    pass
