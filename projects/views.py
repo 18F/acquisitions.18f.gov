@@ -25,6 +25,7 @@ from projects.serializers import (
 from projects.forms import QASPForm, AcquisitionPlanForm, MarketResearchForm
 from projects.filters import (
     AgileBPAFilter,
+    MicropurchaseFilter,
     ProjectFilter,
 )
 from nda.forms import NDAForm
@@ -392,6 +393,44 @@ class AgileBPADetail(mixins.RetrieveModelMixin,
             return AgileBPA.objects.filter(pk=self.kwargs['pk'])
         elif self.request.user.has_perm('projects.view_project'):
             return AgileBPA.objects.filter(pk=self.kwargs['pk'])
+        else:
+            raise Http404
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+
+class MicropurchaseList(mixins.ListModelMixin,
+              generics.GenericAPIView):
+    """
+    List all Agile BPA buys
+    """
+    serializer_class = MicropurchaseSerializer
+    filter_class = MicropurchaseFilter
+
+    def get_queryset(self):
+        if self.request.user.has_perm('projects.view_project'):
+            return Micropurchase.objects.all()
+        else:
+            return Micropurchase.objects.select_related('project').filter(public=True, project__public=True)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class MicropurchaseDetail(mixins.RetrieveModelMixin,
+                generics.GenericAPIView):
+    """
+    Retrieve details of one Agile BPA buy
+    """
+    serializer_class = MicropurchaseSerializer
+
+    def get_queryset(self):
+        buy = Micropurchase.objects.get(pk=self.kwargs['pk'])
+        if buy.public is True:
+            return Micropurchase.objects.filter(pk=self.kwargs['pk'])
+        elif self.request.user.has_perm('projects.view_project'):
+            return Micropurchase.objects.filter(pk=self.kwargs['pk'])
         else:
             raise Http404
 
