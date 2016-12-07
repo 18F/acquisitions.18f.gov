@@ -22,6 +22,7 @@ class Agency(models.Model):
 
     class Meta:
         verbose_name_plural = 'Agencies'
+        ordering = ['name']
 
 
 class AgencyOffice(models.Model):
@@ -41,6 +42,7 @@ class AgencyOffice(models.Model):
 
     class Meta:
         unique_together = ('name', 'agency')
+        ordering = ['agency', 'name']
 
 
 class IAA(models.Model):
