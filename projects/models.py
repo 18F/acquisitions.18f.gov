@@ -21,7 +21,7 @@ class Agency(models.Model):
         return "{0}".format(self.name)
 
     class Meta:
-        verbose_name = 'Agencies'
+        verbose_name_plural = 'Agencies'
 
 
 class AgencyOffice(models.Model):
