@@ -272,6 +272,18 @@ class ContractingOfficerRepresentative(models.Model):
     class Meta:
         pass
 
+
+class Vendor(models.Model):
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
+    )
+
+    class Meta:
+        pass
+
+
 COMPETITION_STRATEGY_CHOICES = (
     ("A/E Procedures", "A/E Procedures"),
     ("Competed under SAP", "Competed under SAP"),
@@ -364,6 +376,11 @@ class Buy(models.Model):
         null=True,
     )
     award_date = models.DateField(
+        blank=True,
+        null=True,
+    )
+    vendor = models.ForeignKey(
+        Vendor,
         blank=True,
         null=True,
     )
@@ -679,6 +696,12 @@ class AgileBPA(Buy):
         if self.issue_date and not self.ready_to_issue():
             raise ValidationError({
                 'issue_date': 'This buy is not yet ready to be issued'
+            })
+
+        # No vendors before issuing, at least
+        if self.vendor and not self.issue_date:
+            raise ValidationError({
+                'vendor': 'There shouldn\'t be a vendor before issuing'
             })
 
         # Don't allow award date without issue date
