@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import admin
+from django.contrib.auth.models import User
 from projects.models import IAA, Project, AgileBPA, ContractingOffice, \
                             ContractingSpecialist, ContractingOfficer, \
                             ContractingOfficerRepresentative, Agency, \
@@ -40,6 +41,13 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class AgileBPAForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AgileBPAForm, self).__init__(*args, **kwargs)
+
+        project_id = kwargs['instance'].project
+        if project_id:
+            self.fields['technical_evaluation_panel'].queryset = User.objects.filter(project=project_id)
+
     class Meta:
         model = AgileBPA
         exclude = ('nda_signed',)
