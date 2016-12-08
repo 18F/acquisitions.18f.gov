@@ -1,8 +1,8 @@
 import pytest
 from datetime import date
 from django.core.exceptions import ValidationError
-from projects.models import Buy, Project
-from projects.factories import BuyFactory, ProjectFactory, \
+from projects.models import AgileBPA, Project
+from projects.factories import AgileBPAFactory, ProjectFactory, \
                                ContractingOfficeFactory, \
                                ContractingOfficerFactory, \
                                ContractingSpecialistFactory, \
@@ -14,7 +14,7 @@ class TestLocking:
     @pytest.mark.django_db
     def buy(self):
         project = ProjectFactory(public=True)
-        buy = BuyFactory(project=project)
+        buy = AgileBPAFactory(project=project)
         return buy
 
     @pytest.fixture

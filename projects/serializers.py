@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from projects.models import IAA, Project, Buy
+from projects.models import IAA, Project, AgileBPA, Micropurchase
 
 
 class IAASerializer(serializers.ModelSerializer):
@@ -29,11 +29,11 @@ class ProjectSerializer(serializers.ModelSerializer):
         )
 
 
-class BuySerializer(serializers.ModelSerializer):
+class AgileBPASerializer(serializers.ModelSerializer):
     project = ProjectSerializer()
 
     class Meta:
-        model = Buy
+        model = AgileBPA
         fields = (
             'id',
             'name',
@@ -45,4 +45,19 @@ class BuySerializer(serializers.ModelSerializer):
             'rfq_id',
             'period_of_performance',
             'github_repository',
+        )
+
+
+class MicropurchaseSerializer(serializers.ModelSerializer):
+    project = ProjectSerializer()
+
+    class Meta:
+        model = Micropurchase
+        fields = (
+            'id',
+            'name',
+            'description',
+            'public',
+            'project',
+            'procurement_method',
         )

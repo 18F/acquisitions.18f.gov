@@ -3,10 +3,18 @@ import string
 import factory.fuzzy
 import random
 from acquisitions.factories import UserFactory
-from projects.models import IAA, Project, Buy, ContractingOffice, \
-                            ContractingSpecialist, ContractingOfficer, \
-                            ContractingOfficerRepresentative, Agency, \
-                            AgencyOffice
+from projects.models import (
+    IAA,
+    Project,
+    AgileBPA,
+    Micropurchase,
+    ContractingOffice,
+    ContractingSpecialist,
+    ContractingOfficer,
+    ContractingOfficerRepresentative,
+    Agency,
+    AgencyOffice,
+)
 
 
 class AgencyFactory(factory.django.DjangoModelFactory):
@@ -112,9 +120,9 @@ class ContractingOfficerRepresentativeFactory(
     )
 
 
-class BuyFactory(factory.django.DjangoModelFactory):
+class AgileBPAFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = Buy
+        model = AgileBPA
 
     project = factory.SubFactory(
         ProjectFactory,
@@ -131,5 +139,28 @@ class BuyFactory(factory.django.DjangoModelFactory):
         return random.randint(min, max)
 
 
-class AddBuyFactory(BuyFactory):
+class AddAgileBPAFactory(AgileBPAFactory):
+    project = factory.Iterator(Project.objects.all())
+
+
+class MicropurchaseFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Micropurchase
+
+    project = factory.SubFactory(
+        ProjectFactory,
+        public=factory.SelfAttribute('..public')
+    )
+    description = factory.Faker('paragraph')
+    name = factory.Faker('catch_phrase')
+    public = factory.Faker('boolean')
+
+    @factory.lazy_attribute
+    def dollars(self):
+        min = 500
+        max = 3500
+        return random.randint(min, max)
+
+
+class AddMicropurchaseFactory(MicropurchaseFactory):
     project = factory.Iterator(Project.objects.all())

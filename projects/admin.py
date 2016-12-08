@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib import admin
-from projects.models import IAA, Project, Buy, ContractingOffice, \
+from projects.models import IAA, Project, AgileBPA, ContractingOffice, \
                             ContractingSpecialist, ContractingOfficer, \
                             ContractingOfficerRepresentative, Agency, \
-                            AgencyOffice
+                            AgencyOffice, Micropurchase
 from projects.widgets import DurationMultiWidget
 
 
@@ -16,6 +16,7 @@ from projects.widgets import DurationMultiWidget
     ContractingOfficerRepresentative,
     Agency,
     AgencyOffice,
+    Micropurchase,
 )
 class WorkAdmin(admin.ModelAdmin):
     pass
@@ -38,9 +39,9 @@ class ProjectAdmin(admin.ModelAdmin):
             return []
 
 
-class BuyForm(forms.ModelForm):
+class AgileBPAForm(forms.ModelForm):
     class Meta:
-        model = Buy
+        model = AgileBPA
         exclude = ('nda_signed',)
         widgets = {
             'base_period_length': DurationMultiWidget(),
@@ -48,9 +49,9 @@ class BuyForm(forms.ModelForm):
         }
 
 
-@admin.register(Buy)
-class BuyAdmin(admin.ModelAdmin):
-    form = BuyForm
+@admin.register(AgileBPA)
+class AgileBPAAdmin(admin.ModelAdmin):
+    form = AgileBPAForm
     filter_horizontal = ('technical_evaluation_panel',)
 
     def get_readonly_fields(self, request, obj=None):

@@ -163,7 +163,7 @@ class Project(models.Model):
 
     def budget_remaining(self):
         budget = self.dollars
-        for buy in self.buys.all():
+        for buy in self.agilebpa.all():
             budget -= buy.dollars
         return budget
 
@@ -274,10 +274,45 @@ class ContractingOfficerRepresentative(models.Model):
 
 
 class Buy(models.Model):
-    PROCUREMENT_METHOD_CHOICES = (
-        ('Agile BPA', 'Agile BPA'),
-        ('Micro-Purchase', 'Micro-Purchase'),
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
     )
+    description = models.TextField(
+        blank=False,
+        null=False,
+    )
+    project = models.ForeignKey(
+        Project,
+        related_name='%(class)s',
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+    )
+    dollars = models.PositiveIntegerField(
+        blank=False,
+        null=True
+    )
+    public = models.BooleanField(
+        default=False,
+    )
+
+    # Milestone dates
+    issue_date = models.DateField(
+        blank=True,
+        null=True,
+    )
+    award_date = models.DateField(
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        abstract = True
+
+
+class AgileBPA(Buy):
     SET_ASIDE_CHOICES = (
         ("AbilityOne", "AbilityOne"),
         ("HUBZone Small Business", "HUBZone Small Business"),
@@ -293,33 +328,10 @@ class Buy(models.Model):
         ("Woman-Owned Small Business", "Woman-Owned Small Business"),
     )
 
-    name = models.CharField(
-        max_length=100,
-        blank=False,
-        null=False,
-    )
-    description = models.TextField(
-        blank=False,
-        null=False,
-    )
     contractual_history = models.TextField(
         blank=False,
         null=False,
         default="This is the first contract for this functionality.",
-    )
-    project = models.ForeignKey(
-        Project,
-        related_name='buys',
-        on_delete=models.CASCADE,
-        blank=False,
-        null=False,
-    )
-    dollars = models.PositiveIntegerField(
-        blank=False,
-        null=True
-    )
-    public = models.BooleanField(
-        default=False,
     )
     base_period_length = models.CharField(
         max_length=100,
@@ -338,9 +350,10 @@ class Buy(models.Model):
     )
     procurement_method = models.CharField(
         max_length=200,
-        choices=PROCUREMENT_METHOD_CHOICES,
-        blank=True,
-        null=True,
+        default="Agile Development Services BPA Order",
+        editable=False,
+        blank=False,
+        null=False,
     )
     set_aside_status = models.CharField(
         max_length=200,
@@ -411,16 +424,6 @@ class Buy(models.Model):
         null=True,
     )
     market_research = models.TextField(
-        blank=True,
-        null=True,
-    )
-
-    # Milestone dates
-    issue_date = models.DateField(
-        blank=True,
-        null=True,
-    )
-    award_date = models.DateField(
         blank=True,
         null=True,
     )
@@ -629,4 +632,53 @@ class Buy(models.Model):
             })
 
     class Meta:
-        pass
+        verbose_name = 'Agile BPA Order'
+
+
+class Micropurchase(Buy):
+    procurement_method = models.CharField(
+        max_length=200,
+        default="Micro-purchase",
+        editable=False,
+        blank=False,
+        null=False,
+    )
+
+    def clean(self):
+        # Check that buy is not public without associated project being public
+        if (self.project.public is not True) and (self.public is True):
+            raise ValidationError({
+                'public': 'May not be public if the associated project is not.'
+            })
+
+        if self.dollars:
+            # Confirm that buy cost doesn't exceed project value
+            if self.dollars > self.project.budget_remaining():
+                raise ValidationError({
+                    'dollars': 'Value can\'t exceed project\'s remaining '
+                               'budget'
+                })
+
+            # Confirm that buy isn't over micro-purchase threshold
+            if self.dollars > 3500:
+                raise ValidationError({
+                    'dollars': 'Value can\'t exceed the micro-purchase '
+                               'threshold of $3500'
+                })
+
+        # Don't allow award date without issue date
+        if self.award_date and not self.issue_date:
+            raise ValidationError({
+                'award_date': 'Please set an issue date first'
+            })
+
+    class Meta:
+        verbose_name = 'Micro-purchase'
+
+
+class OpenMarket(Buy):
+    pass
+
+
+class Software(Buy):
+    pass
