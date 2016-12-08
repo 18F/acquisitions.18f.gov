@@ -27,6 +27,7 @@ class TestLocking:
         buy.acquisition_plan = '# ACQ PLAN'
         buy.base_period_length = '3 months'
         buy.competition_strategy = 'Set-Aside'
+        buy.contract_type = 'Time and Materials'
         buy.contracting_office = ContractingOfficeFactory()
         buy.contracting_officer = ContractingOfficerFactory()
         buy.contracting_officer_representative = ContractingOfficerRepresentativeFactory()

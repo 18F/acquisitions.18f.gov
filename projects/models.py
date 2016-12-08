@@ -335,6 +335,11 @@ SET_ASIDE_CHOICES = (
     ("Woman-Owned Small Business", "Woman-Owned Small Business"),
 )
 
+CONTRACT_TYPE_CHOICES = (
+    ("Labor Hours", "Labor Hours"),
+    ("Time and Materials", "Time and Materials"),
+)
+
 
 class Buy(models.Model):
     name = models.CharField(
@@ -432,6 +437,12 @@ class AgileBPA(Buy):
     competition_strategy = models.CharField(
         max_length=200,
         choices=COMPETITION_STRATEGY_CHOICES,
+        blank=True,
+        null=True,
+    )
+    contract_type = models.CharField(
+        max_length=200,
+        choices=CONTRACT_TYPE_CHOICES,
         blank=True,
         null=True,
     )
@@ -613,6 +624,7 @@ class AgileBPA(Buy):
             self.acquisition_plan,
             self.base_period_length,
             self.competition_strategy,
+            self.contract_type,
             self.contracting_office,
             self.contracting_officer_representative,
             self.contracting_officer,
