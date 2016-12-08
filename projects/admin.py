@@ -44,9 +44,15 @@ class AgileBPAForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AgileBPAForm, self).__init__(*args, **kwargs)
 
-        project_id = kwargs['instance'].project
-        if project_id:
-            self.fields['technical_evaluation_panel'].queryset = User.objects.filter(project=project_id)
+        # Limit the queryset for the technical evaluation panel to team members
+        # for this project
+        # TODO: Could this be made more user-friendly with javascript?
+        try:
+            project_id = kwargs['instance'].project
+            if project_id:
+                self.fields['technical_evaluation_panel'].queryset = User.objects.filter(project=project_id)
+        except:
+            self.fields['technical_evaluation_panel'].queryset = User.objects.none()
 
     class Meta:
         model = AgileBPA
@@ -63,4 +69,7 @@ class AgileBPAAdmin(admin.ModelAdmin):
     filter_horizontal = ('technical_evaluation_panel',)
 
     def get_readonly_fields(self, request, obj=None):
-        return obj.locked_fields()
+        if obj:
+            return obj.locked_fields()
+        else:
+            return []
