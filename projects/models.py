@@ -272,6 +272,57 @@ class ContractingOfficerRepresentative(models.Model):
     class Meta:
         pass
 
+COMPETITION_STRATEGY_CHOICES = (
+    ("A/E Procedures", "A/E Procedures"),
+    ("Competed under SAP", "Competed under SAP"),
+    ("Competitive Delivery Order Fair Opportunity Provided",
+        "Competitive Delivery Order Fair Opportunity Provided"),
+    ("Competitive Schedule Buy", "Competitive Schedule Buy"),
+    ("Fair Opportunity", "Fair Opportunity"),
+    ("Follow On to Competed Action (FAR 6.302-1)",
+        "Follow On to Competed Action (FAR 6.302-1)"),
+    ("Follow On to Competed Action", "Follow On to Competed Action"),
+    ("Full and Open after exclusion of sources (competitive small business \
+        set-asides, competitive 8a)",
+        "Full and Open after exclusion of sources (competitive small \
+        business set-asides, competitive 8a)"),
+    ("Full and Open Competition Unrestricted",
+        "Full and Open Competition Unrestricted"),
+    ("Full and Open Competition", "Full and Open Competition"),
+    ("Limited Sources FSS Order", "Limited Sources FSS Order"),
+    ("Limited Sources", "Limited Sources"),
+    ("Non-Competitive Delivery Order", "Non-Competitive Delivery Order"),
+    ("Not Available for Competition (e.g., 8a sole source, HUBZone & \
+        SDVOSB sole source, Ability One, all > SAT)",
+        "Not Available for Competition (e.g., 8a sole source, HUBZone & \
+        SDVOSB sole source, Ability One, all > SAT)"),
+    ("Not Competed (e.g., sole source, urgency, etc., all > SAT)",
+        "Not Competed (e.g., sole source, urgency, etc., all > SAT)"),
+    ("Not Competed under SAP (e.g., Urgent, Sole source, Logical \
+        Follow-On, 8a, HUBZone & SDVOSB sole source, all < SAT)",
+        "Not Competed under SAP (e.g., Urgent, Sole source, Logical \
+        Follow-On, 8a, HUBZone & SDVOSB sole source, all < SAT)"),
+    ("Partial Small Business Set-Aside",
+        "Partial Small Business Set-Aside"),
+    ("Set-Aside", "Set-Aside"),
+    ("Sole Source", "Sole Source"),
+)
+
+SET_ASIDE_CHOICES = (
+    ("AbilityOne", "AbilityOne"),
+    ("HUBZone Small Business", "HUBZone Small Business"),
+    ("Multiple Small Business Categories",
+        "Multiple Small Business Categories"),
+    ("Other Than Small", "Other Than Small"),
+    ("Service Disabled Veteran-owned Small Business",
+        "Service Disabled Veteran-owned Small Business"),
+    ("Small Business", "Small Business"),
+    ("Small Disadvantaged Business (includes Section 8a)",
+        "Small Disadvantaged Business (includes Section 8a)"),
+    ("Veteran-Owned Small Business", "Veteran-Owned Small Business"),
+    ("Woman-Owned Small Business", "Woman-Owned Small Business"),
+)
+
 
 class Buy(models.Model):
     name = models.CharField(
@@ -297,6 +348,10 @@ class Buy(models.Model):
     public = models.BooleanField(
         default=False,
     )
+    amount_of_competition = models.IntegerField(
+        blank=True,
+        null=True,
+    )
 
     # Milestone dates
     issue_date = models.DateField(
@@ -313,21 +368,6 @@ class Buy(models.Model):
 
 
 class AgileBPA(Buy):
-    SET_ASIDE_CHOICES = (
-        ("AbilityOne", "AbilityOne"),
-        ("HUBZone Small Business", "HUBZone Small Business"),
-        ("Multiple Small Business Categories",
-            "Multiple Small Business Categories"),
-        ("Other Than Small", "Other Than Small"),
-        ("Service Disabled Veteran-owned Small Business",
-            "Service Disabled Veteran-owned Small Business"),
-        ("Small Business", "Small Business"),
-        ("Small Disadvantaged Business (includes Section 8a)",
-            "Small Disadvantaged Business (includes Section 8a)"),
-        ("Veteran-Owned Small Business", "Veteran-Owned Small Business"),
-        ("Woman-Owned Small Business", "Woman-Owned Small Business"),
-    )
-
     contractual_history = models.TextField(
         blank=False,
         null=False,
@@ -348,6 +388,11 @@ class AgileBPA(Buy):
         blank=True,
         null=True,
     )
+    naics_code = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name="NAICS Code"
+    )
     procurement_method = models.CharField(
         max_length=200,
         default="Agile Development Services BPA Order",
@@ -361,6 +406,12 @@ class AgileBPA(Buy):
         blank=True,
         null=True,
         verbose_name='Set-aside Status'
+    )
+    competition_strategy = models.CharField(
+        max_length=200,
+        choices=COMPETITION_STRATEGY_CHOICES,
+        blank=True,
+        null=True,
     )
     rfq_id = models.CharField(
         max_length=20,
@@ -535,7 +586,7 @@ class AgileBPA(Buy):
         else:
             return True
 
-    def required_fields(self):
+    def ready_to_issue(self):
         required_fields = [
             self.name,
             self.description,
@@ -555,12 +606,10 @@ class AgileBPA(Buy):
             self.rfq_id,
             self.procurement_method,
             self.set_aside_status,
+            self.competition_strategy,
             self.github_repository,
         ]
-        return required_fields
-
-    def ready_to_issue(self):
-        if None in self.required_fields() or not self.all_nda_signed():
+        if None in required_fields or not self.all_nda_signed():
             return False
         else:
             return True
@@ -630,6 +679,13 @@ class AgileBPA(Buy):
             raise ValidationError({
                 'award_date': 'Please set an issue date first'
             })
+
+        # Check NAICS Code
+        if self.naics_code:
+            if len(self.naics_code) != 6:
+                raise ValidationError({
+                    'naics_code': 'NAICS Code must be six digits'
+                })
 
     class Meta:
         verbose_name = 'Agile BPA Order'

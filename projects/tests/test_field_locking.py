@@ -30,6 +30,7 @@ class TestLocking:
         buy.dollars = 1234
         buy.public = True
         buy.rfq_id = 'abc12345678'
+        buy.naics = 4444444
         buy.procurement_method = 'Agile BPA'
         buy.set_aside_status = 'Small Business'
         buy.github_repository = 'https://github.com/18f/wow_such_repo/'
