@@ -345,6 +345,11 @@ class Buy(models.Model):
         blank=False,
         null=True
     )
+    product_owner = models.ForeignKey(
+        User,
+        blank=True,
+        null=True,
+    )
     public = models.BooleanField(
         default=False,
     )
@@ -535,19 +540,19 @@ class AgileBPA(Buy):
     def acquisition_plan_status(self):
         # TODO: find a way to display the incomplete fields on the page
         required_fields = [
-            self.name,
-            self.description,
-            self.contractual_history,
-            self.project,
+            self.base_period_length,
             self.contracting_office,
             self.contracting_officer,
             self.contracting_specialist,
-            self.base_period_length,
-            self.option_periods,
-            self.option_period_length,
+            self.contractual_history,
+            self.description,
             self.dollars,
-            self.rfq_id,
+            self.name,
+            self.option_period_length,
+            self.option_periods,
             self.procurement_method,
+            self.project,
+            self.rfq_id,
             self.set_aside_status,
         ]
         if not self.acquisition_plan:
@@ -588,26 +593,28 @@ class AgileBPA(Buy):
 
     def ready_to_issue(self):
         required_fields = [
-            self.name,
-            self.description,
-            self.contractual_history,
-            self.project,
+            self.acquisition_plan,
+            self.base_period_length,
+            self.competition_strategy,
             self.contracting_office,
+            self.contracting_officer_representative,
             self.contracting_officer,
             self.contracting_specialist,
-            self.contracting_officer_representative,
-            self.base_period_length,
-            self.option_periods,
-            self.option_period_length,
-            self.acquisition_plan,
-            self.qasp,
+            self.contractual_history,
+            self.description,
             self.dollars,
-            self.public,
-            self.rfq_id,
-            self.procurement_method,
-            self.set_aside_status,
-            self.competition_strategy,
             self.github_repository,
+            self.naics_code,
+            self.name,
+            self.option_period_length,
+            self.option_periods,
+            self.procurement_method,
+            self.product_owner,
+            self.project,
+            self.public,
+            self.qasp,
+            self.rfq_id,
+            self.set_aside_status,
         ]
         if None in required_fields or not self.all_nda_signed():
             return False
@@ -682,7 +689,7 @@ class AgileBPA(Buy):
 
         # Check NAICS Code
         if self.naics_code:
-            if len(self.naics_code) != 6:
+            if len(str(self.naics_code)) != 6:
                 raise ValidationError({
                     'naics_code': 'NAICS Code must be six digits'
                 })
