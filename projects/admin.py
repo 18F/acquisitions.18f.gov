@@ -51,8 +51,10 @@ class AgileBPAForm(forms.ModelForm):
             project_id = kwargs['instance'].project
             if project_id:
                 self.fields['technical_evaluation_panel'].queryset = User.objects.filter(project=project_id)
+                self.fields['product_owner'].queryset = User.objects.filter(project=project_id)
         except:
             self.fields['technical_evaluation_panel'].queryset = User.objects.none()
+            self.fields['product_owner'].queryset = User.objects.none()
 
     class Meta:
         model = AgileBPA
