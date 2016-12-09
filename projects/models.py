@@ -95,6 +95,12 @@ class IAA(models.Model):
     def is_signed(self):
         return self.signed_on is not None
 
+    def budget_remaining(self):
+        budget = self.dollars
+        for project in self.projects.all():
+            budget -= project.dollars
+        return budget
+
     def clean(self):
         if self.signed_on > date.today():
             raise ValidationError({
@@ -165,13 +171,16 @@ class Project(models.Model):
         budget = self.dollars
         for buy in self.agilebpa.all():
             budget -= buy.dollars
+        for buy in self.micropurchase.all():
+            budget -= buy.dollars
         return budget
 
     def clean(self):
         if self.dollars:
-            if self.dollars > self.iaa.dollars:
+            if self.dollars > self.iaa.budget_remaining():
                 raise ValidationError({
-                    'dollars': 'Value can\'t exceed value of authorizing IAA'
+                    'dollars': 'Value can\'t exceed remaining budget of'
+                               'authorizing IAA'
                 })
 
     class Meta:
