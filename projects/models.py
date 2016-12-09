@@ -477,6 +477,24 @@ class AgileBPA(Buy):
         null=True,
     )
 
+    product_lead = models.ForeignKey(
+        User,
+        blank=True,
+        null=True,
+        related_name='product_lead',
+    )
+    acquisition_lead = models.ForeignKey(
+        User,
+        blank=True,
+        null=True,
+        related_name='acquisition_lead',
+    )
+    technical_lead = models.ForeignKey(
+        User,
+        blank=True,
+        null=True,
+        related_name='technical_lead',
+    )
     technical_evaluation_panel = models.ManyToManyField(
         User,
         blank=True,
