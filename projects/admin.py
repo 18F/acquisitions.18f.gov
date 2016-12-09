@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import admin
+from django.contrib.auth.models import User
 from projects.models import IAA, Project, AgileBPA, ContractingOffice, \
                             ContractingSpecialist, ContractingOfficer, \
                             ContractingOfficerRepresentative, Agency, \
@@ -40,6 +41,27 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class AgileBPAForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AgileBPAForm, self).__init__(*args, **kwargs)
+
+        # Limit the queryset for the technical evaluation panel to team members
+        # for this project
+        # TODO: Could this be made more user-friendly with javascript?
+        try:
+            project_id = kwargs['instance'].project
+            if project_id:
+                self.fields['technical_evaluation_panel'].queryset = User.objects.filter(project=project_id)
+                self.fields['product_owner'].queryset = User.objects.filter(project=project_id)
+                self.fields['product_lead'].queryset = User.objects.filter(project=project_id)
+                self.fields['acquisition_lead'].queryset = User.objects.filter(project=project_id)
+                self.fields['technical_lead'].queryset = User.objects.filter(project=project_id)
+        except:
+            self.fields['technical_evaluation_panel'].queryset = User.objects.none()
+            self.fields['product_owner'].queryset = User.objects.none()
+            self.fields['product_lead'].queryset = User.objects.none()
+            self.fields['acquisition_lead'].queryset = User.objects.none()
+            self.fields['technical_lead'].queryset = User.objects.none()
+
     class Meta:
         model = AgileBPA
         exclude = ('nda_signed',)
@@ -55,4 +77,7 @@ class AgileBPAAdmin(admin.ModelAdmin):
     filter_horizontal = ('technical_evaluation_panel',)
 
     def get_readonly_fields(self, request, obj=None):
-        return obj.locked_fields()
+        if obj:
+            return obj.locked_fields()
+        else:
+            return []

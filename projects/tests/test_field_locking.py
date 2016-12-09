@@ -2,11 +2,15 @@ import pytest
 from datetime import date
 from django.core.exceptions import ValidationError
 from projects.models import AgileBPA, Project
-from projects.factories import AgileBPAFactory, ProjectFactory, \
-                               ContractingOfficeFactory, \
-                               ContractingOfficerFactory, \
-                               ContractingSpecialistFactory, \
-                               ContractingOfficerRepresentativeFactory
+from projects.factories import (
+    AgileBPAFactory,
+    ProjectFactory,
+    ContractingOfficeFactory,
+    ContractingOfficerFactory,
+    ContractingSpecialistFactory,
+    ContractingOfficerRepresentativeFactory
+)
+from acquisitions.factories import UserFactory
 
 
 class TestLocking:
@@ -20,21 +24,25 @@ class TestLocking:
     @pytest.fixture
     @pytest.mark.django_db
     def buy_plus(self, buy):
+        buy.acquisition_plan = '# ACQ PLAN'
+        buy.base_period_length = '3 months'
+        buy.competition_strategy = 'Set-Aside'
+        buy.contract_type = 'Time and Materials'
         buy.contracting_office = ContractingOfficeFactory()
         buy.contracting_officer = ContractingOfficerFactory()
-        buy.contracting_specialist = ContractingSpecialistFactory()
         buy.contracting_officer_representative = ContractingOfficerRepresentativeFactory()
-        buy.base_period_length = '3 months'
-        buy.option_periods = 3
-        buy.option_period_length = '3 months'
+        buy.contracting_specialist = ContractingSpecialistFactory()
         buy.dollars = 1234
-        buy.public = True
-        buy.rfq_id = 'abc12345678'
-        buy.procurement_method = 'Agile BPA'
-        buy.set_aside_status = 'Small Business'
         buy.github_repository = 'https://github.com/18f/wow_such_repo/'
+        buy.naics_code = 444444
+        buy.option_period_length = '3 months'
+        buy.option_periods = 3
+        buy.procurement_method = 'Agile BPA'
+        buy.product_owner = UserFactory()
+        buy.public = True
         buy.qasp = '# QASP'
-        buy.acquisition_plan = '# ACQ PLAN'
+        buy.rfq_id = 'abc12345678'
+        buy.set_aside_status = 'Small Business'
         return buy
 
     @pytest.mark.django_db
