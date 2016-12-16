@@ -131,32 +131,49 @@ def qasp(request, buy):
         raise Http404
 
 
-def qasp_download(request, buy, doc_format):
+def download(request, buy, doc_type, doc_format):
     buy = get_object_or_404(AgileBPA, id=buy)
     supported_formats = ['markdown', 'docx', 'pdf']
+    available_docs = {
+        'qasp': buy.qasp,
+        'acquisition_plan': buy.acquisition_plan,
+        'market_research': buy.market_research,
+    }
+    # Check that the request is for a document that is available
+    if doc_type not in available_docs.keys():
+        raise Http404
+    # Return markdown is the format isn't clear
     if doc_format not in supported_formats:
         doc_format = 'markdown'
+    # Check that the user has access to view this document
     if not buy.public:
         if request.user.has_perm('projects.view_project'):
             pass
         else:
             raise Http404
-    if buy.qasp:
+    # Get the content of the document
+    doc_content = available_docs[doc_type]
+    if doc_content is not None:
+        # Markdown is the simplest: since the content is already stored that
+        # way, it can be sent back directly
         if doc_format == 'markdown':
-            response = HttpResponse(buy.qasp, content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename="{0} QASP.md"'.format(buy.name)
+            response = HttpResponse(doc_content, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="{0} {1}.md"'.format(buy.name, doc_type)
 
             return response
+        # For .docx, create a temporary file, use it as the output for pandoc,
+        # and then send that file. Using NamedTemporaryFile means that the file
+        # will be deleted as soon operations complete.
         elif doc_format == 'docx':
             dl = NamedTemporaryFile()
             output = pypandoc.convert_text(
-                buy.qasp,
+                doc_content,
                 'docx',
                 format='markdown_github',
                 outputfile=dl.name
             )
             response = HttpResponse(dl, content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename="{0} QASP.docx"'.format(buy.name)
+            response['Content-Disposition'] = 'attachment; filename="{0} {1}.docx"'.format(buy.name, doc_type)
             return response
         elif doc_format == 'pdf':
             # This requires LaTeX support (via pdflatex) in addition to a
@@ -164,13 +181,13 @@ def qasp_download(request, buy, doc_format):
             dl = NamedTemporaryFile(suffix='.pdf')
             print(dl.name)
             output = pypandoc.convert_text(
-                buy.qasp,
+                doc_content,
                 'pdf',
                 format='markdown_github',
                 outputfile=dl.name
             )
             response = HttpResponse(dl, content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename="{0} QASP.pdf"'.format(buy.name)
+            response['Content-Disposition'] = 'attachment; filename="{0} {1}.pdf"'.format(buy.name, doc_type)
             return response
     else:
         raise Http404
@@ -192,26 +209,6 @@ def market_research(request, buy):
         raise Http404
 
 
-def market_research_download(request, buy, format='markdown'):
-    buy = get_object_or_404(AgileBPA, id=buy)
-    if not buy.public:
-        if request.user.has_perm('projects.view_project'):
-            pass
-        else:
-            raise Http404
-    if buy.market_research:
-        if format == 'markdown':
-            response = HttpResponse(buy.market_research, content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename="{0} Market Research.md"'.format(buy.name)
-
-            return response
-        elif format == 'docx':
-            # TODO: is this possible without leaving python?
-            pass
-    else:
-        raise Http404
-
-
 def acquisition_plan(request, buy):
     buy = get_object_or_404(AgileBPA, id=buy)
     acquisition_plan_form = AcquisitionPlanForm(request.POST or None, buy=buy)
@@ -224,26 +221,6 @@ def acquisition_plan(request, buy):
             raise Http404
     if buy.acquisition_plan:
         return render(request, "projects/acquisition_plan.html", {"buy": buy, "acquisition_plan_form": acquisition_plan_form})
-    else:
-        raise Http404
-
-
-def acquisition_plan_download(request, buy, format='markdown'):
-    buy = get_object_or_404(AgileBPA, id=buy)
-    if not buy.public:
-        if request.user.has_perm('projects.view_project'):
-            pass
-        else:
-            raise Http404
-    if buy.acquisition_plan:
-        if format == 'markdown':
-            response = HttpResponse(buy.acquisition_plan, content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename="{0} Acquisition Plan.md"'.format(buy.name)
-
-            return response
-        elif format == 'docx':
-            # TODO: is this possible without leaving python?
-            pass
     else:
         raise Http404
 

@@ -40,9 +40,9 @@ buy_patterns = [
     url(r'(?P<buy>\d+)/nda/$', views.buy_nda, name='buy_nda'),
     url(r'(?P<buy>\d+)/qasp/$', views.qasp, name='qasp'),
     url(
-        r'(?P<buy>\d+)/qasp/download/(?P<doc_format>\w+)?$',
-        views.qasp_download,
-        name='qasp_download'
+        r'(?P<buy>\d+)/(?P<doc_type>\w+)/download/(?P<doc_format>\w+)?$',
+        views.download,
+        name='download'
     ),
     url(
         r'(?P<buy>\d+)/acquisition_plan/$',
@@ -50,19 +50,9 @@ buy_patterns = [
         name='acquisition_plan'
     ),
     url(
-        r'(?P<buy>\d+)/acquisition_plan/download/$',
-        views.acquisition_plan_download,
-        name='acquisition_plan_download'
-    ),
-    url(
         r'(?P<buy>\d+)/market_research/$',
         views.market_research,
         name='market_research'
-    ),
-    url(
-        r'(?P<buy>\d+)/market_research/download/$',
-        views.market_research_download,
-        name='market_research_download'
     ),
 ]
 
