@@ -40,7 +40,7 @@ buy_patterns = [
     url(r'(?P<buy>\d+)/nda/$', views.buy_nda, name='buy_nda'),
     url(r'(?P<buy>\d+)/qasp/$', views.qasp, name='qasp'),
     url(
-        r'(?P<buy>\d+)/qasp/download/$',
+        r'(?P<buy>\d+)/qasp/download/(?P<doc_format>\w+)?$',
         views.qasp_download,
         name='qasp_download'
     ),

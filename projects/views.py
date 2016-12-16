@@ -1,10 +1,12 @@
 import markdown
+import pypandoc
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.files.temp import NamedTemporaryFile
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework import mixins
@@ -129,22 +131,47 @@ def qasp(request, buy):
         raise Http404
 
 
-def qasp_download(request, buy, format='markdown'):
+def qasp_download(request, buy, doc_format):
     buy = get_object_or_404(AgileBPA, id=buy)
+    supported_formats = ['markdown', 'docx', 'pdf']
+    if doc_format not in supported_formats:
+        doc_format = 'markdown'
     if not buy.public:
         if request.user.has_perm('projects.view_project'):
             pass
         else:
             raise Http404
     if buy.qasp:
-        if format == 'markdown':
+        if doc_format == 'markdown':
             response = HttpResponse(buy.qasp, content_type='text/plain')
             response['Content-Disposition'] = 'attachment; filename="{0} QASP.md"'.format(buy.name)
 
             return response
-        elif format == 'docx':
-            # TODO: is this possible without leaving python?
-            pass
+        elif doc_format == 'docx':
+            dl = NamedTemporaryFile()
+            output = pypandoc.convert_text(
+                buy.qasp,
+                'docx',
+                format='markdown_github',
+                outputfile=dl.name
+            )
+            response = HttpResponse(dl, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="{0} QASP.docx"'.format(buy.name)
+            return response
+        elif doc_format == 'pdf':
+            # This requires LaTeX support (via pdflatex) in addition to a
+            # pandoc installation.
+            dl = NamedTemporaryFile(suffix='.pdf')
+            print(dl.name)
+            output = pypandoc.convert_text(
+                buy.qasp,
+                'pdf',
+                format='markdown_github',
+                outputfile=dl.name
+            )
+            response = HttpResponse(dl, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="{0} QASP.pdf"'.format(buy.name)
+            return response
     else:
         raise Http404
 

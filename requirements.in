@@ -22,6 +22,7 @@ poirot
 psycopg2
 pycodestyle
 PyJWT
+pypandoc
 pytest
 pytest-cov
 pytest-django

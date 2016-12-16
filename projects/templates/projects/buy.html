@@ -35,7 +35,7 @@
         <h3>QASP</h3>
         <p>Status: {{ buy.qasp_status }}</p>
         {% if buy.qasp %}
-        <p><a class="usa-button" href="{% url 'buys:qasp' buy.id %}">View</a><a class="usa-button" href="{% url 'buys:qasp_download' buy.id %}">Download</a></p>
+        <p><a class="usa-button" href="{% url 'buys:qasp' buy.id %}">View</a><a class="usa-button" href="{% url 'buys:qasp_download' buy.id 'markdown' %}">Download .md</a><a class="usa-button" href="{% url 'buys:qasp_download' buy.id 'docx' %}">Download .docx</a><a class="usa-button" href="{% url 'buys:qasp_download' buy.id 'pdf' %}">Download .pdf</a></p>
         <hr />
         <p>Regenerate the QASP from template:</p>
         {% if perms.project.view_project %}{% include "projects/includes/qasp_form.html" %}{% endif %}
