@@ -200,17 +200,16 @@ def download(request, buy, doc_type, doc_format):
     # Get the content of the document
     doc_content = available_docs[doc_type]
     if doc_content is not None:
-        # Markdown is the simplest: since the content is already stored that
-        # way, it can be sent back directly
         if doc_format == 'markdown':
+            # Markdown is the simplest: since the content is already stored
+            # that way, it can be sent back directly
             response = HttpResponse(doc_content, content_type='text/plain')
             response['Content-Disposition'] = 'attachment; filename="{0} {1}.md"'.format(buy.name, doc_type)
-
             return response
-        # For .docx, create a temporary file, use it as the output for pandoc,
-        # and then send that file. Using NamedTemporaryFile means that the file
-        # will be deleted as soon operations complete.
         elif doc_format == 'docx':
+            # For .docx, create a temporary file, use it as the output for
+            # pandoc, and then send that file. Using NamedTemporaryFile means
+            # that the file will be deleted as soon operations complete.
             dl = NamedTemporaryFile()
             output = pypandoc.convert_text(
                 doc_content,
@@ -225,7 +224,6 @@ def download(request, buy, doc_type, doc_format):
             # This requires LaTeX support (via pdflatex) in addition to a
             # pandoc installation.
             dl = NamedTemporaryFile(suffix='.pdf')
-            print(dl.name)
             output = pypandoc.convert_text(
                 doc_content,
                 'pdf',
