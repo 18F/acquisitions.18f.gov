@@ -7,6 +7,15 @@ blockquote {
   background-image: url('../img/astronaut.jpg');
 }
 
+.acq-documents {
+  margin-bottom: 1.5em;
+}
+
+.acq-documents > div {
+  background-color: #e4e4e4;
+  padding: 25px;
+}
+
 .teammateName {
   font-weight: bold;
 }

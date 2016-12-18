@@ -24,10 +24,8 @@
         <p>Status: {{ buy.acquisition_plan_status }}</p>
         {% if buy.acquisition_plan %}
         <p><a href="{% url 'buys:acquisition_plan' buy.id %}">View</a></p>
-        <p>Download: <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'markdown' %}">.md</a></p>
-        <hr />
-        <p>Regenerate the Acquisition Plan from template:</p>
-        {% if perms.project.view_project %}{% include "projects/includes/acquisition_plan_form.html" %}{% endif %}
+        <p>Download: <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'pdf' %}">.pdf</a></p>
+        {% if perms.project.view_project %}<hr /><p>Regenerate the Acquisition Plan from template:</p>{% include "projects/includes/acquisition_plan_form.html" %}{% endif %}
         {% else %}
         {% if perms.project.view_project %}{% include "projects/includes/acquisition_plan_form.html" %}{% endif %}
         {% endif %}
@@ -38,9 +36,7 @@
         {% if buy.qasp %}
         <p><a href="{% url 'buys:qasp' buy.id %}">View</a></p>
         <p>Download: <a href="{% url 'buys:download' buy.id 'qasp' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'qasp' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'qasp' 'pdf' %}">.pdf</a></p>
-        <hr />
-        <p>Regenerate the QASP from template:</p>
-        {% if perms.project.view_project %}{% include "projects/includes/qasp_form.html" %}{% endif %}
+        {% if perms.project.view_project %}<hr /><p>Regenerate the QASP from template:</p>{% include "projects/includes/qasp_form.html" %}{% endif %}
         {% else %}
         {% if perms.project.view_project %}{% include "projects/includes/qasp_form.html" %}{% endif %}
         {% endif %}
@@ -52,10 +48,8 @@
         <p>Status: {{ buy.market_research_status }}</p>
         {% if buy.market_research %}
         <p><a href="{% url 'buys:market_research' buy.id %}">View</a></p>
-        <p>Download: <a href="{% url 'buys:download' buy.id 'market_research' 'markdown' %}">.md</a></p>
-        <hr />
-        <p>Regenerate the Acquisition Plan from template:</p>
-        {% if perms.project.view_project %}{% include "projects/includes/market_research_form.html" %}{% endif %}
+        <p>Download: <a href="{% url 'buys:download' buy.id 'market_research' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'market_research' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'market_research' 'pdf' %}">.pdf</a></p>
+        {% if perms.project.view_project %}<hr /><p>Regenerate the Market Research Report from template:</p>{% include "projects/includes/market_research_form.html" %}{% endif %}
         {% else %}
         {% if perms.project.view_project %}{% include "projects/includes/market_research_form.html" %}{% endif %}
         {% endif %}
