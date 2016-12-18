@@ -131,6 +131,52 @@ def qasp(request, buy):
         raise Http404
 
 
+def market_research(request, buy):
+    buy = get_object_or_404(AgileBPA, id=buy)
+    market_research_form = MarketResearchForm(request.POST or None, buy=buy)
+    if market_research_form.is_valid():
+        buy.create_market_research()
+    if not buy.public:
+        if request.user.has_perm('projects.view_project'):
+            pass
+        else:
+            raise Http404
+    if buy.market_research:
+        return render(
+            request,
+            "projects/market_research.html",
+            {
+                "buy": buy,
+                "market_research_form": market_research_form
+            }
+        )
+    else:
+        raise Http404
+
+
+def acquisition_plan(request, buy):
+    buy = get_object_or_404(AgileBPA, id=buy)
+    acquisition_plan_form = AcquisitionPlanForm(request.POST or None, buy=buy)
+    if acquisition_plan_form.is_valid():
+        buy.create_acquisition_plan()
+    if not buy.public:
+        if request.user.has_perm('projects.view_project'):
+            pass
+        else:
+            raise Http404
+    if buy.acquisition_plan:
+        return render(
+            request,
+            "projects/acquisition_plan.html",
+            {
+                "buy": buy,
+                "acquisition_plan_form": acquisition_plan_form
+            }
+        )
+    else:
+        raise Http404
+
+
 def download(request, buy, doc_type, doc_format):
     buy = get_object_or_404(AgileBPA, id=buy)
     supported_formats = ['markdown', 'docx', 'pdf']
@@ -189,52 +235,6 @@ def download(request, buy, doc_type, doc_format):
             response = HttpResponse(dl, content_type='text/plain')
             response['Content-Disposition'] = 'attachment; filename="{0} {1}.pdf"'.format(buy.name, doc_type)
             return response
-    else:
-        raise Http404
-
-
-def market_research(request, buy):
-    buy = get_object_or_404(AgileBPA, id=buy)
-    market_research_form = MarketResearchForm(request.POST or None, buy=buy)
-    if market_research_form.is_valid():
-        buy.create_market_research()
-    if not buy.public:
-        if request.user.has_perm('projects.view_project'):
-            pass
-        else:
-            raise Http404
-    if buy.market_research:
-        return render(
-            request,
-            "projects/market_research.html",
-            {
-                "buy": buy,
-                "market_research_form": market_research_form
-            }
-        )
-    else:
-        raise Http404
-
-
-def acquisition_plan(request, buy):
-    buy = get_object_or_404(AgileBPA, id=buy)
-    acquisition_plan_form = AcquisitionPlanForm(request.POST or None, buy=buy)
-    if acquisition_plan_form.is_valid():
-        buy.create_acquisition_plan()
-    if not buy.public:
-        if request.user.has_perm('projects.view_project'):
-            pass
-        else:
-            raise Http404
-    if buy.acquisition_plan:
-        return render(
-            request,
-            "projects/acquisition_plan.html",
-            {
-                "buy": buy,
-                "acquisition_plan_form": acquisition_plan_form
-            }
-        )
     else:
         raise Http404
 
