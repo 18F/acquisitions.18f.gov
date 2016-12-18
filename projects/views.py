@@ -204,7 +204,14 @@ def market_research(request, buy):
         else:
             raise Http404
     if buy.market_research:
-        return render(request, "projects/market_research.html", {"buy": buy, "market_research_form": market_research_form})
+        return render(
+            request,
+            "projects/market_research.html",
+            {
+                "buy": buy,
+                "market_research_form": market_research_form
+            }
+        )
     else:
         raise Http404
 
@@ -220,7 +227,14 @@ def acquisition_plan(request, buy):
         else:
             raise Http404
     if buy.acquisition_plan:
-        return render(request, "projects/acquisition_plan.html", {"buy": buy, "acquisition_plan_form": acquisition_plan_form})
+        return render(
+            request,
+            "projects/acquisition_plan.html",
+            {
+                "buy": buy,
+                "acquisition_plan_form": acquisition_plan_form
+            }
+        )
     else:
         raise Http404
 
@@ -252,7 +266,7 @@ class IAAList(mixins.ListModelMixin,
 
 
 class IAADetail(mixins.RetrieveModelMixin,
-              generics.GenericAPIView):
+                generics.GenericAPIView):
     """
     Retrieve details of one IAA
     """
@@ -367,7 +381,7 @@ class BuyList(MultipleModelAPIView):
 
 
 class AgileBPAList(mixins.ListModelMixin,
-              generics.GenericAPIView):
+                   generics.GenericAPIView):
     """
     List all Agile BPA buys
     """
@@ -378,14 +392,17 @@ class AgileBPAList(mixins.ListModelMixin,
         if self.request.user.has_perm('projects.view_project'):
             return AgileBPA.objects.all()
         else:
-            return AgileBPA.objects.select_related('project').filter(public=True, project__public=True)
+            return AgileBPA.objects.select_related('project').filter(
+                public=True,
+                project__public=True
+            )
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
 
 class AgileBPADetail(mixins.RetrieveModelMixin,
-                generics.GenericAPIView):
+                     generics.GenericAPIView):
     """
     Retrieve details of one Agile BPA buy
     """
@@ -405,7 +422,7 @@ class AgileBPADetail(mixins.RetrieveModelMixin,
 
 
 class MicropurchaseList(mixins.ListModelMixin,
-              generics.GenericAPIView):
+                        generics.GenericAPIView):
     """
     List all Agile BPA buys
     """
@@ -416,14 +433,17 @@ class MicropurchaseList(mixins.ListModelMixin,
         if self.request.user.has_perm('projects.view_project'):
             return Micropurchase.objects.all()
         else:
-            return Micropurchase.objects.select_related('project').filter(public=True, project__public=True)
+            return Micropurchase.objects.select_related('project').filter(
+                public=True,
+                project__public=True
+            )
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
 
 class MicropurchaseDetail(mixins.RetrieveModelMixin,
-                generics.GenericAPIView):
+                          generics.GenericAPIView):
     """
     Retrieve details of one Agile BPA buy
     """
