@@ -233,7 +233,8 @@ class IAADetail(mixins.RetrieveModelMixin,
 class ProjectList(mixins.ListModelMixin,
                   generics.GenericAPIView):
     """
-    List all projects
+    List all projects. Projects may include one or more buys, which
+    are nested within the response.
     """
     serializer_class = ProjectSerializer
     filter_class = ProjectFilter
@@ -251,7 +252,8 @@ class ProjectList(mixins.ListModelMixin,
 class ProjectDetail(mixins.RetrieveModelMixin,
                     generics.GenericAPIView):
     """
-    Retrieve details of one project
+    Get details for one project. Projects may include one or more buys, which
+    are nested within the response.
     """
     serializer_class = ProjectSerializer
 
@@ -270,7 +272,8 @@ class ProjectDetail(mixins.RetrieveModelMixin,
 
 class BuyList(MultipleModelAPIView):
     """
-    List all buys
+    List all buys. This response includes all buys across the various
+    categories of buy that are available in the system.
     """
 
     flat = True
@@ -328,7 +331,7 @@ class BuyList(MultipleModelAPIView):
 class AgileBPAList(mixins.ListModelMixin,
                    generics.GenericAPIView):
     """
-    List all Agile BPA buys
+    List all Agile BPA buys.
     """
     serializer_class = AgileBPASerializer
     filter_class = AgileBPAFilter
@@ -349,7 +352,7 @@ class AgileBPAList(mixins.ListModelMixin,
 class AgileBPADetail(mixins.RetrieveModelMixin,
                      generics.GenericAPIView):
     """
-    Retrieve details of one Agile BPA buy
+    Retrieve details of one Agile BPA buy.
     """
     serializer_class = AgileBPASerializer
 
@@ -369,7 +372,9 @@ class AgileBPADetail(mixins.RetrieveModelMixin,
 class MicropurchaseList(mixins.ListModelMixin,
                         generics.GenericAPIView):
     """
-    List all Agile BPA buys
+    List all Micro-purchase buys. Micro-purchases have a maximum value of $3500
+    and require significantly less information that the other procurement
+    methods.
     """
     serializer_class = MicropurchaseSerializer
     filter_class = MicropurchaseFilter
@@ -390,7 +395,9 @@ class MicropurchaseList(mixins.ListModelMixin,
 class MicropurchaseDetail(mixins.RetrieveModelMixin,
                           generics.GenericAPIView):
     """
-    Retrieve details of one Agile BPA buy
+    Retrieve details of one Micro-purchase buy. Micro-purchases have a maximum
+    value of $3500 and require significantly less information that the other
+    procurement methods.
     """
     serializer_class = MicropurchaseSerializer
 
