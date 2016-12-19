@@ -210,7 +210,7 @@ class ContractingOffice(models.Model):
         pass
 
 
-class ContractingSpecialist(models.Model):
+class ContractingPersonnel(models.Model):
     user = models.OneToOneField(
         User,
         blank=False,
@@ -231,55 +231,19 @@ class ContractingSpecialist(models.Model):
         return self.user.get_full_name()
 
     class Meta:
-        pass
+        abstract = True
 
 
-class ContractingOfficer(models.Model):
-    user = models.OneToOneField(
-        User,
-        blank=False,
-        null=False,
-        on_delete=models.CASCADE,
-    )
-    office = models.ForeignKey(
-        ContractingOffice,
-        blank=False,
-        null=False,
-        on_delete=models.CASCADE,
-    )
-
-    def __str__(self):
-        return "{0} - {1}".format(self.user.get_full_name(), self.office.name)
-
-    def name(self):
-        return self.user.get_full_name()
-
-    class Meta:
-        pass
+class ContractingSpecialist(ContractingPersonnel):
+    pass
 
 
-class ContractingOfficerRepresentative(models.Model):
-    user = models.OneToOneField(
-        User,
-        blank=False,
-        null=False,
-        on_delete=models.CASCADE,
-    )
-    office = models.ForeignKey(
-        ContractingOffice,
-        blank=False,
-        null=False,
-        on_delete=models.CASCADE,
-    )
+class ContractingOfficer(ContractingPersonnel):
+    pass
 
-    def __str__(self):
-        return "{0} - {1}".format(self.user.get_full_name(), self.office.name)
 
-    def name(self):
-        return self.user.get_full_name()
-
-    class Meta:
-        pass
+class ContractingOfficerRepresentative(ContractingPersonnel):
+    pass
 
 
 class Vendor(models.Model):
