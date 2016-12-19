@@ -29,9 +29,9 @@ from nda.forms import NDAForm
 # Create your views here.
 
 # Utilities
-def _public_check(buy, user):
-    if not buy.public:
-        return request.user.has_perm('projects.view_project')
+def _public_check(thing, user):
+    if not thing.public:
+        return user.has_perm('projects.view_project')
     else:
         return True
 
@@ -83,7 +83,7 @@ def project(request, project):
     # Since we only want to show a page if the project exists, this can't
     # quite be an API-only thing. But most of the page is built via API.
     project = get_object_or_404(Project, id=project)
-    if not _public_check(buy, request.user):
+    if not _public_check(project, request.user):
         return render(request, "projects/private-page.html")
     return render(request, "projects/project.html", {"project": project})
 
