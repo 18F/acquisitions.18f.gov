@@ -5,62 +5,62 @@
 #    pip-compile --output-file requirements.txt requirements.in
 #
 appnope==0.1.0            # via ipython
-bandit==1.2.0
+bandit==1.3.0
 cfenv==0.5.2
 click==6.6                # via pip-tools
 codeclimate-test-reporter==0.2.0
 coverage==4.2
 decorator==4.0.10         # via ipython, traitlets
 dj-database-url==0.4.1
-django-filter==0.15.3
+django-filter==1.0.1
 django-floppyforms==1.7.0
 django-markdown-deux==1.0.5
 django-rest-multiple-models==1.8.1
-django==1.10.3
+Django==1.10.4
 djangorestframework-csv==2.0.0
-djangorestframework==3.5.2
+djangorestframework==3.5.3
 drfdocs==0.0.11
-factory-boy==2.7.0
-fake-factory==0.7.2       # via factory-boy
+factory-boy==2.8.1
+Faker==0.7.5              # via factory-boy
 first==2.0.1              # via pip-tools
 furl==0.5.6               # via cfenv
 gitdb2==2.0.0             # via gitpython
-GitPython==2.1.0          # via bandit
-httmock==1.2.5
+GitPython==2.1.1          # via bandit
+httmock==1.2.6
 ipython-genutils==0.1.0   # via traitlets
 ipython==5.1.0
-jinja2==2.8               # via poirot
-markdown2==2.3.1          # via django-markdown-deux
+Jinja2==2.8               # via poirot
+markdown2==2.3.2          # via django-markdown-deux
 markdown==2.6.7
-markupsafe==0.23          # via jinja2
-newrelic==2.74.0.54
+MarkupSafe==0.23          # via jinja2
+newrelic==2.76.0.55
 orderedmultidict==0.7.11  # via furl
 pbr==1.10.0               # via stevedore
 pexpect==4.2.1            # via ipython
 pickleshare==0.7.4        # via ipython
-pillow==3.4.2
-pip-tools==1.7.0
+Pillow==3.4.2
+pip-tools==1.8.0
 poirot==1.0.1
 prompt-toolkit==1.0.9     # via ipython
 psycopg2==2.6.2
 ptyprocess==0.5.1         # via pexpect
-py==1.4.31                # via pytest
+py==1.4.32                # via pytest
 pycodestyle==2.2.0
 pygments==2.1.3           # via ipython
-pyjwt==1.4.2
+PyJWT==1.4.2
 pypandoc==1.3.3
 pytest-cov==2.4.0
-pytest-django==3.0.0
-pytest==3.0.3
-python-dateutil==2.5.3    # via fake-factory
+pytest-django==3.1.2
+pytest==3.0.5
+python-dateutil==2.6.0    # via faker
 PyYAML==3.12              # via bandit
-regex==2016.10.22         # via poirot
-requests==2.11.1
+regex==2016.11.21         # via poirot
+requests==2.12.4
 simplegeneric==0.8.1      # via ipython
-six==1.10.0               # via bandit, djangorestframework-csv, fake-factory, furl, orderedmultidict, pip-tools, prompt-toolkit, python-dateutil, stevedore, traitlets
+six==1.10.0               # via bandit, djangorestframework-csv, faker, furl, orderedmultidict, pip-tools, prompt-toolkit, python-dateutil, stevedore, traitlets
 smmap2==2.0.1             # via gitdb2
-stevedore==1.18.0         # via bandit
-tqdm==4.9.0               # via poirot
+stevedore==1.19.1         # via bandit
+tqdm==4.10.0              # via poirot
 traitlets==4.3.1          # via ipython
 unicodecsv==0.14.1        # via djangorestframework-csv
 wcwidth==0.1.7            # via prompt-toolkit
