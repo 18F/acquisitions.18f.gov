@@ -3,15 +3,17 @@ python:
 - '3.5'
 addons:
   postgresql: '9.4'
-install: pip install -r requirements.txt
+install:
+- pip install -r requirements.txt
+- pip install -r requirements-dev.txt
 cache:
   directories:
   - "$HOME/.cache/pip"
 script:
-  - ./manage.py collectstatic --noinput -v 0
-  - py.test --cov=acquisitions --cov=projects --cov=team --cov=web --cov=nda
-  - codeclimate-test-reporter
-  - bandit -r .
+- ./manage.py collectstatic --noinput -v 0
+- py.test --cov=acquisitions --cov=projects --cov=team --cov=web --cov=nda
+- codeclimate-test-reporter
+- bandit -r .
 after_script:
 - npm install -g pa11y-crawl
 - pa11y-crawl --run "./manage.py runserver" --ci http://localhost:8000
