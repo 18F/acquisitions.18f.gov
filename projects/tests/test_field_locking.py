@@ -32,7 +32,7 @@ class TestLocking:
         buy.contracting_officer = ContractingOfficerFactory()
         buy.contracting_officer_representative = ContractingOfficerRepresentativeFactory()
         buy.contracting_specialist = ContractingSpecialistFactory()
-        buy.dollars = 1234
+        buy.dollars = 12
         buy.github_repository = 'https://github.com/18f/wow_such_repo/'
         buy.naics_code = 444444
         buy.option_period_length = '3 months'

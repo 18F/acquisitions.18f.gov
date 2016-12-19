@@ -24,7 +24,6 @@ from projects.serializers import (
     AgileBPASerializer,
     MicropurchaseSerializer,
 )
-from projects.forms import QASPForm, AcquisitionPlanForm, MarketResearchForm
 from projects.filters import (
     AgileBPAFilter,
     MicropurchaseFilter,
@@ -107,9 +106,6 @@ def buy_nda(request, buy):
 
 def qasp(request, buy):
     buy = get_object_or_404(AgileBPA, id=buy)
-    qasp_form = QASPForm(request.POST or None, buy=buy)
-    if qasp_form.is_valid():
-        buy.create_qasp()
     if not buy.public:
         if request.user.has_perm('projects.view_project'):
             pass
@@ -119,10 +115,7 @@ def qasp(request, buy):
         return render(
             request,
             "projects/qasp.html",
-            {
-                "buy": buy,
-                "qasp_form": qasp_form
-            }
+            {"buy": buy}
         )
     else:
         raise Http404
@@ -130,9 +123,6 @@ def qasp(request, buy):
 
 def market_research(request, buy):
     buy = get_object_or_404(AgileBPA, id=buy)
-    market_research_form = MarketResearchForm(request.POST or None, buy=buy)
-    if market_research_form.is_valid():
-        buy.create_market_research()
     if not buy.public:
         if request.user.has_perm('projects.view_project'):
             pass
@@ -142,10 +132,7 @@ def market_research(request, buy):
         return render(
             request,
             "projects/market_research.html",
-            {
-                "buy": buy,
-                "market_research_form": market_research_form
-            }
+            {"buy": buy}
         )
     else:
         raise Http404
@@ -153,9 +140,6 @@ def market_research(request, buy):
 
 def acquisition_plan(request, buy):
     buy = get_object_or_404(AgileBPA, id=buy)
-    acquisition_plan_form = AcquisitionPlanForm(request.POST or None, buy=buy)
-    if acquisition_plan_form.is_valid():
-        buy.create_acquisition_plan()
     if not buy.public:
         if request.user.has_perm('projects.view_project'):
             pass
@@ -165,10 +149,7 @@ def acquisition_plan(request, buy):
         return render(
             request,
             "projects/acquisition_plan.html",
-            {
-                "buy": buy,
-                "acquisition_plan_form": acquisition_plan_form
-            }
+            {"buy": buy}
         )
     else:
         raise Http404
