@@ -1,16 +1,10 @@
 import markdown
 import pypandoc
-from django.shortcuts import render
-from django.shortcuts import redirect
-from django.shortcuts import get_object_or_404
-from django.http import Http404
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404, HttpResponse
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.files.temp import NamedTemporaryFile
-from rest_framework import viewsets
-from rest_framework import status
-from rest_framework import mixins
-from rest_framework import generics
+from rest_framework import viewsets, status, mixins, generics
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -74,13 +68,13 @@ def buy(request, buy):
         print(request.POST)
         if 'generate_qasp' in request.POST:
             buy.create_qasp()
-            return redirect('buys:qasp', buy.id)
+            return redirect('buys:document', buy.id, 'qasp')
         if 'generate_acquisition_plan' in request.POST:
             buy.create_acquisition_plan()
-            return redirect('buys:acquisition_plan', buy.id)
+            return redirect('buys:document', buy.id, 'acquisition_plan')
         if 'generate_market_research' in request.POST:
             buy.create_market_research()
-            return redirect('buys:market_research', buy.id)
+            return redirect('buys:document', buy.id, 'market_research')
     return render(
         request,
         "projects/buy.html",
@@ -104,55 +98,11 @@ def buy_nda(request, buy):
     )
 
 
-def qasp(request, buy):
-    buy = get_object_or_404(AgileBPA, id=buy)
+def _public_check(buy, user):
     if not buy.public:
-        if request.user.has_perm('projects.view_project'):
-            pass
-        else:
-            raise Http404
-    if buy.qasp:
-        return render(
-            request,
-            "projects/qasp.html",
-            {"buy": buy}
-        )
+        return request.user.has_perm('projects.view_project')
     else:
-        raise Http404
-
-
-def market_research(request, buy):
-    buy = get_object_or_404(AgileBPA, id=buy)
-    if not buy.public:
-        if request.user.has_perm('projects.view_project'):
-            pass
-        else:
-            raise Http404
-    if buy.market_research:
-        return render(
-            request,
-            "projects/market_research.html",
-            {"buy": buy}
-        )
-    else:
-        raise Http404
-
-
-def acquisition_plan(request, buy):
-    buy = get_object_or_404(AgileBPA, id=buy)
-    if not buy.public:
-        if request.user.has_perm('projects.view_project'):
-            pass
-        else:
-            raise Http404
-    if buy.acquisition_plan:
-        return render(
-            request,
-            "projects/acquisition_plan.html",
-            {"buy": buy}
-        )
-    else:
-        raise Http404
+        return True
 
 
 def _make_response(doc_content, name, doc_type):
@@ -164,6 +114,30 @@ def _make_response(doc_content, name, doc_type):
     )
     response['Content-Disposition'] = disposition
     return response
+
+
+def document(request, buy, doc_type):
+    buy = get_object_or_404(AgileBPA, id=buy)
+    available_docs = {
+        'qasp': buy.qasp,
+        'acquisition_plan': buy.acquisition_plan,
+        'market_research': buy.market_research,
+    }
+    # Check that the request is for a document that is available
+    if doc_type not in available_docs.keys():
+        raise Http404
+    if not _public_check(buy, request.user):
+        raise Http404
+    doc_content = available_docs[doc_type]
+    if doc_content is not None:
+        return render(
+            request,
+            "projects/{0}.html".format(doc_type),
+            {"buy": buy}
+        )
+    else:
+        # TODO: Give option to generate a document if it does not exist
+        raise Http404
 
 
 def download(request, buy, doc_type, doc_format):

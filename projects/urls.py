@@ -37,21 +37,11 @@ buy_patterns = [
     url(r'^$', views.buys, name='buys'),
     url(r'(?P<buy>\d+)/$', views.buy, name='buy'),
     url(r'(?P<buy>\d+)/nda/$', views.buy_nda, name='buy_nda'),
-    url(r'(?P<buy>\d+)/qasp/$', views.qasp, name='qasp'),
+    url(r'(?P<buy>\d+)/(?P<doc_type>\w+)/$', views.document, name='document'),
     url(
         r'(?P<buy>\d+)/(?P<doc_type>\w+)/download/(?P<doc_format>\w+)?$',
         views.download,
         name='download'
-    ),
-    url(
-        r'(?P<buy>\d+)/acquisition_plan/$',
-        views.acquisition_plan,
-        name='acquisition_plan'
-    ),
-    url(
-        r'(?P<buy>\d+)/market_research/$',
-        views.market_research,
-        name='market_research'
     ),
 ]
 

@@ -28,7 +28,7 @@
         <h3>Acquisition Plan</h3>
         <p>Status: {{ buy.acquisition_plan_status }}</p>
         {% if buy.acquisition_plan %}
-        <p><a href="{% url 'buys:acquisition_plan' buy.id %}">View</a></p>
+        <p><a href="{% url 'buys:document' buy.id 'acquisition_plan' %}">View</a></p>
         <p>Download: <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'pdf' %}">.pdf</a></p>
         {% if perms.project.view_project %}
         <button onclick="connectButtons(this)" type="submit" name="generate_acquisition_plan" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
@@ -46,7 +46,7 @@
         <h3>QASP</h3>
         <p>Status: {{ buy.qasp_status }}</p>
         {% if buy.qasp %}
-        <p><a href="{% url 'buys:qasp' buy.id %}">View</a></p>
+        <p><a href="{% url 'buys:document' buy.id 'qasp' %}">View</a></p>
         <p>Download: <a href="{% url 'buys:download' buy.id 'qasp' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'qasp' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'qasp' 'pdf' %}">.pdf</a></p>
         {% if perms.project.view_project %}
         <button onclick="connectButtons(this)" type="submit" name="generate_qasp" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
@@ -66,7 +66,7 @@
         <h3>Market Research Report</h3>
         <p>Status: {{ buy.market_research_status }}</p>
         {% if buy.market_research %}
-        <p><a href="{% url 'buys:market_research' buy.id %}">View</a></p>
+        <p><a href="{% url 'buys:document' buy.id 'market_research' %}">View</a></p>
         <p>Download: <a href="{% url 'buys:download' buy.id 'market_research' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'market_research' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'market_research' 'pdf' %}">.pdf</a></p>
         {% if perms.project.view_project %}
         <button onclick="connectButtons(this)" type="submit" name="generate_market_research" data-a11y-dialog-show="confirm-dialog" formnovalidate>Regenerate</button>
