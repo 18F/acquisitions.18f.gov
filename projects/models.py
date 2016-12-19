@@ -333,7 +333,7 @@ class Buy(models.Model):
     )
     dollars = models.PositiveIntegerField(
         blank=False,
-        null=True
+        null=True,
     )
     product_owner = models.ForeignKey(
         User,
@@ -362,6 +362,26 @@ class Buy(models.Model):
         blank=True,
         null=True,
     )
+
+    def clean_dollars(self):
+        # Confirm that buy cost doesn't exceed project value
+        dollars = self.cleaned_data['dollars']
+        project = self.cleaned_data['project']
+        if dollars > project.budget_remaining():
+            raise ValidationError({
+                'dollars': 'Value can\'t exceed project\'s remaining budget'
+            })
+        return dollars
+
+    def clean_public(self):
+        # Check that buy is not public without associated project being public
+        public = cleaned_data['public']
+        project = cleaned_data['project']
+        if (project.public is not True) and (public is True):
+            raise ValidationError({
+                'public': 'May not be public if the associated project is not.'
+            })
+        return public
 
     class Meta:
         abstract = True
@@ -674,26 +694,12 @@ class AgileBPA(Buy):
             return 'Incomplete'
 
     def clean(self):
-        # Check that buy is not public without associated project being public
-        if (self.project.public is not True) and (self.public is True):
-            raise ValidationError({
-                'public': 'May not be public if the associated project is not.'
-            })
-
         # Confirm option period existence if option period length is set
         if (self.option_period_length) and (self.option_periods == 0):
             raise ValidationError({
                 'option_period_length': 'The number of option periods must be '
                 'greater than 0 to set a length'
             })
-
-        # Confirm that buy cost doesn't exceed project value
-        if self.dollars:
-            if self.dollars > self.project.budget_remaining():
-                raise ValidationError({
-                    'dollars': 'Value can\'t exceed project\'s remaining '
-                               'budget'
-                })
 
         # Don't allow issue date without a lot of other stuff
         if self.issue_date and not self.ready_to_issue():
@@ -734,26 +740,12 @@ class Micropurchase(Buy):
     )
 
     def clean(self):
-        # Check that buy is not public without associated project being public
-        if (self.project.public is not True) and (self.public is True):
+        # Confirm that buy isn't over micro-purchase threshold
+        if self.dollars > 3500:
             raise ValidationError({
-                'public': 'May not be public if the associated project is not.'
+                'dollars': 'Value can\'t exceed the micro-purchase '
+                           'threshold of $3500'
             })
-
-        if self.dollars:
-            # Confirm that buy cost doesn't exceed project value
-            if self.dollars > self.project.budget_remaining():
-                raise ValidationError({
-                    'dollars': 'Value can\'t exceed project\'s remaining '
-                               'budget'
-                })
-
-            # Confirm that buy isn't over micro-purchase threshold
-            if self.dollars > 3500:
-                raise ValidationError({
-                    'dollars': 'Value can\'t exceed the micro-purchase '
-                               'threshold of $3500'
-                })
 
         # Don't allow award date without issue date
         if self.award_date and not self.issue_date:
