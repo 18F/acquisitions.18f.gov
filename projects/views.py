@@ -1,10 +1,12 @@
 import markdown
+import pypandoc
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.files.temp import NamedTemporaryFile
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework import mixins
@@ -129,26 +131,6 @@ def qasp(request, buy):
         raise Http404
 
 
-def qasp_download(request, buy, format='markdown'):
-    buy = get_object_or_404(AgileBPA, id=buy)
-    if not buy.public:
-        if request.user.has_perm('projects.view_project'):
-            pass
-        else:
-            raise Http404
-    if buy.qasp:
-        if format == 'markdown':
-            response = HttpResponse(buy.qasp, content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename="{0} QASP.md"'.format(buy.name)
-
-            return response
-        elif format == 'docx':
-            # TODO: is this possible without leaving python?
-            pass
-    else:
-        raise Http404
-
-
 def market_research(request, buy):
     buy = get_object_or_404(AgileBPA, id=buy)
     market_research_form = MarketResearchForm(request.POST or None, buy=buy)
@@ -160,27 +142,14 @@ def market_research(request, buy):
         else:
             raise Http404
     if buy.market_research:
-        return render(request, "projects/market_research.html", {"buy": buy, "market_research_form": market_research_form})
-    else:
-        raise Http404
-
-
-def market_research_download(request, buy, format='markdown'):
-    buy = get_object_or_404(AgileBPA, id=buy)
-    if not buy.public:
-        if request.user.has_perm('projects.view_project'):
-            pass
-        else:
-            raise Http404
-    if buy.market_research:
-        if format == 'markdown':
-            response = HttpResponse(buy.market_research, content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename="{0} Market Research.md"'.format(buy.name)
-
-            return response
-        elif format == 'docx':
-            # TODO: is this possible without leaving python?
-            pass
+        return render(
+            request,
+            "projects/market_research.html",
+            {
+                "buy": buy,
+                "market_research_form": market_research_form
+            }
+        )
     else:
         raise Http404
 
@@ -196,27 +165,74 @@ def acquisition_plan(request, buy):
         else:
             raise Http404
     if buy.acquisition_plan:
-        return render(request, "projects/acquisition_plan.html", {"buy": buy, "acquisition_plan_form": acquisition_plan_form})
+        return render(
+            request,
+            "projects/acquisition_plan.html",
+            {
+                "buy": buy,
+                "acquisition_plan_form": acquisition_plan_form
+            }
+        )
     else:
         raise Http404
 
 
-def acquisition_plan_download(request, buy, format='markdown'):
+def download(request, buy, doc_type, doc_format):
     buy = get_object_or_404(AgileBPA, id=buy)
+    supported_formats = ['markdown', 'docx', 'pdf']
+    available_docs = {
+        'qasp': buy.qasp,
+        'acquisition_plan': buy.acquisition_plan,
+        'market_research': buy.market_research,
+    }
+    # Check that the request is for a document that is available
+    if doc_type not in available_docs.keys():
+        raise Http404
+    # Return markdown is the format isn't clear
+    if doc_format not in supported_formats:
+        doc_format = 'markdown'
+    # Check that the user has access to view this document
     if not buy.public:
         if request.user.has_perm('projects.view_project'):
             pass
         else:
             raise Http404
-    if buy.acquisition_plan:
-        if format == 'markdown':
-            response = HttpResponse(buy.acquisition_plan, content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename="{0} Acquisition Plan.md"'.format(buy.name)
-
+    # Get the content of the document
+    doc_content = available_docs[doc_type]
+    if doc_content is not None:
+        if doc_format == 'markdown':
+            # Markdown is the simplest: since the content is already stored
+            # that way, it can be sent back directly
+            response = HttpResponse(doc_content, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="{0} {1}.md"'.format(buy.name, doc_type)
             return response
-        elif format == 'docx':
-            # TODO: is this possible without leaving python?
-            pass
+        elif doc_format == 'docx':
+            # For .docx, create a temporary file, use it as the output for
+            # pandoc, and then send that file. Using NamedTemporaryFile means
+            # that the file will be deleted as soon operations complete.
+            dl = NamedTemporaryFile()
+            output = pypandoc.convert_text(
+                doc_content,
+                'docx',
+                format='markdown_github',
+                outputfile=dl.name
+            )
+            response = HttpResponse(dl, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="{0} {1}.docx"'.format(buy.name, doc_type)
+            return response
+        elif doc_format == 'pdf':
+            # This requires LaTeX support (via pdflatex) in addition to a
+            # pandoc installation.
+            dl = NamedTemporaryFile(suffix='.pdf')
+            output = pypandoc.convert_text(
+                doc_content,
+                'pdf',
+                format='markdown_github',
+                outputfile=dl.name
+            )
+            response = HttpResponse(dl, content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="{0} {1}.pdf"'.format(buy.name, doc_type)
+            return response
     else:
         raise Http404
 
@@ -248,7 +264,7 @@ class IAAList(mixins.ListModelMixin,
 
 
 class IAADetail(mixins.RetrieveModelMixin,
-              generics.GenericAPIView):
+                generics.GenericAPIView):
     """
     Retrieve details of one IAA
     """
@@ -363,7 +379,7 @@ class BuyList(MultipleModelAPIView):
 
 
 class AgileBPAList(mixins.ListModelMixin,
-              generics.GenericAPIView):
+                   generics.GenericAPIView):
     """
     List all Agile BPA buys
     """
@@ -374,14 +390,17 @@ class AgileBPAList(mixins.ListModelMixin,
         if self.request.user.has_perm('projects.view_project'):
             return AgileBPA.objects.all()
         else:
-            return AgileBPA.objects.select_related('project').filter(public=True, project__public=True)
+            return AgileBPA.objects.select_related('project').filter(
+                public=True,
+                project__public=True
+            )
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
 
 class AgileBPADetail(mixins.RetrieveModelMixin,
-                generics.GenericAPIView):
+                     generics.GenericAPIView):
     """
     Retrieve details of one Agile BPA buy
     """
@@ -401,7 +420,7 @@ class AgileBPADetail(mixins.RetrieveModelMixin,
 
 
 class MicropurchaseList(mixins.ListModelMixin,
-              generics.GenericAPIView):
+                        generics.GenericAPIView):
     """
     List all Agile BPA buys
     """
@@ -412,14 +431,17 @@ class MicropurchaseList(mixins.ListModelMixin,
         if self.request.user.has_perm('projects.view_project'):
             return Micropurchase.objects.all()
         else:
-            return Micropurchase.objects.select_related('project').filter(public=True, project__public=True)
+            return Micropurchase.objects.select_related('project').filter(
+                public=True,
+                project__public=True
+            )
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
 
 class MicropurchaseDetail(mixins.RetrieveModelMixin,
-                generics.GenericAPIView):
+                          generics.GenericAPIView):
     """
     Retrieve details of one Agile BPA buy
     """
