@@ -146,8 +146,10 @@ Development branch: `develop`
 
 ### Dependencies
 
-This project uses `pip-tools` to manage dependencies. As a result, developers
-should edit `requirements.in` and not `requirements.txt`.
+This project uses [`pip-tools`](https://github.com/nvie/pip-tools) to manage
+dependencies. As a result, developers should edit `requirements.in` and not
+`requirements.txt`. Similarly, development dependencies are kept in
+`requirements-dev.in` and `requirements-dev.txt`.
 
 For example:
 

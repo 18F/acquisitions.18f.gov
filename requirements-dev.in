@@ -1,0 +1,10 @@
+bandit
+codeclimate-test-reporter
+coverage
+ipython
+pip-tools
+poirot
+pycodestyle
+pytest
+pytest-cov
+pytest-django

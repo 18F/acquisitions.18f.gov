@@ -1,7 +1,4 @@
-bandit
 cfenv
-codeclimate-test-reporter
-coverage
 dj-database-url
 Django
 django-filter
@@ -12,19 +9,12 @@ djangorestframework-csv
 django-rest-multiple-models
 drfdocs
 factory_boy
-ipython
 httmock
 markdown
 newrelic
 Pillow
-pip-tools
-poirot
 psycopg2
-pycodestyle
 PyJWT
 pypandoc
-pytest
-pytest-cov
-pytest-django
 requests
 whitenoise
