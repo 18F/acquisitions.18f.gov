@@ -31,6 +31,9 @@ testable: true
 #     name: Name of the license from the Software Package Data Exchange (SPDX): https://spdx.org/licenses/
 #     url: URL for the text of the license
 licenses:
+  a11y-dialog:
+    name: MIT
+    url: https://github.com/edenspiekermann/a11y-dialog/blob/master/LICENSE
   bandit:
     name: Apache-2.0
     url: https://github.com/openstack/bandit/blob/master/LICENSE
@@ -100,6 +103,9 @@ licenses:
   requests:
     name: Apache-2.0
     url: https://github.com/kennethreitz/requests/blob/master/LICENSE
+  uswds:
+    name: CC0
+    url: https://github.com/18F/web-design-standards/blob/staging/LICENSE.md
   whitenoise:
     name: MIT
     url: https://github.com/evansd/whitenoise/blob/master/LICENSE
