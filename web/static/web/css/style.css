@@ -7,6 +7,8 @@ blockquote {
   background-image: url('../img/astronaut.jpg');
 }
 
+/* Buys */
+
 .acq-documents {
   margin-bottom: 1.5em;
 }
@@ -15,6 +17,8 @@ blockquote {
   background-color: #e4e4e4;
   padding: 25px;
 }
+
+/* Team */
 
 .teammateName {
   font-weight: bold;
@@ -27,4 +31,31 @@ blockquote {
     flex-direction: column;
     justify-content: center;
   }
+}
+
+/* Modals */
+
+.dialog[aria-hidden="true"] {
+  display: none;
+}
+
+.dialog-overlay {
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.66);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.dialog-content {
+  background-color: rgb(255, 255, 255);
+  z-index: 3;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }

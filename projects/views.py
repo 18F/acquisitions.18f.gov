@@ -72,34 +72,20 @@ def buy(request, buy):
         if not request.user.has_perm('projects.view_project'):
             return render(request, "projects/private-page.html")
     if request.method == 'POST':
+        print(request.POST)
         if 'generate_qasp' in request.POST:
-            qasp_form = QASPForm(request.POST, buy=buy)
-            if qasp_form.is_valid():
-                buy.create_qasp()
-                return redirect('buys:qasp', buy.id)
+            buy.create_qasp()
+            return redirect('buys:qasp', buy.id)
         if 'generate_acquisition_plan' in request.POST:
-            acquisition_plan_form = AcquisitionPlanForm(request.POST, buy=buy)
-            if acquisition_plan_form.is_valid():
-                buy.create_acquisition_plan()
-                return redirect('buys:acquisition_plan', buy.id)
+            buy.create_acquisition_plan()
+            return redirect('buys:acquisition_plan', buy.id)
         if 'generate_market_research' in request.POST:
-            market_research_form = MarketResearchForm(request.POST, buy=buy)
-            if market_research_form.is_valid():
-                buy.create_market_research()
-                return redirect('buys:market_research', buy.id)
-    else:
-        qasp_form = QASPForm(buy=buy)
-        acquisition_plan_form = AcquisitionPlanForm(buy=buy)
-        market_research_form = MarketResearchForm(buy=buy)
+            buy.create_market_research()
+            return redirect('buys:market_research', buy.id)
     return render(
         request,
         "projects/buy.html",
-        {
-            "buy": buy,
-            "qasp_form": qasp_form,
-            "acquisition_plan_form": acquisition_plan_form,
-            "market_research_form": market_research_form
-        }
+        {"buy": buy}
     )
 
 
@@ -126,7 +112,14 @@ def qasp(request, buy):
         else:
             raise Http404
     if buy.qasp:
-        return render(request, "projects/qasp.html", {"buy": buy, "qasp_form": qasp_form})
+        return render(
+            request,
+            "projects/qasp.html",
+            {
+                "buy": buy,
+                "qasp_form": qasp_form
+            }
+        )
     else:
         raise Http404
 

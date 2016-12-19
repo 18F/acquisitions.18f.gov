@@ -1,4 +1,9 @@
 {% extends "web/base.html" %}
+{% load static from staticfiles %}
+
+{% block resources %}
+  <script src="{% static "js/a11y-dialog.min.js" %}"></script>
+{% endblock %}
 
 {% block content %}
 {% if user in buy.technical_evaluation_panel.all and not user in buy.nda_signed.all %}
@@ -25,9 +30,16 @@
         {% if buy.acquisition_plan %}
         <p><a href="{% url 'buys:acquisition_plan' buy.id %}">View</a></p>
         <p>Download: <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'pdf' %}">.pdf</a></p>
-        {% if perms.project.view_project %}<hr /><p>Regenerate the Acquisition Plan from template:</p>{% include "projects/includes/acquisition_plan_form.html" %}{% endif %}
+        {% if perms.project.view_project %}
+        <button onclick="connectButtons(this)" type="submit" name="generate_acquisition_plan" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
+        {% endif %}
         {% else %}
-        {% if perms.project.view_project %}{% include "projects/includes/acquisition_plan_form.html" %}{% endif %}
+        {% if perms.project.view_project %}
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" name="generate_acquisition_plan">Generate</button>
+        </form>
+        {% endif %}
         {% endif %}
       </div>
       <div class="usa-width-one-half" id="qasp">
@@ -36,9 +48,16 @@
         {% if buy.qasp %}
         <p><a href="{% url 'buys:qasp' buy.id %}">View</a></p>
         <p>Download: <a href="{% url 'buys:download' buy.id 'qasp' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'qasp' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'qasp' 'pdf' %}">.pdf</a></p>
-        {% if perms.project.view_project %}<hr /><p>Regenerate the QASP from template:</p>{% include "projects/includes/qasp_form.html" %}{% endif %}
+        {% if perms.project.view_project %}
+        <button onclick="connectButtons(this)" type="submit" name="generate_qasp" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
+        {% endif %}
         {% else %}
-        {% if perms.project.view_project %}{% include "projects/includes/qasp_form.html" %}{% endif %}
+        {% if perms.project.view_project %}
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" name="generate_qasp">Generate</button>
+        </form>
+        {% endif %}
         {% endif %}
       </div>
     </div>
@@ -49,9 +68,16 @@
         {% if buy.market_research %}
         <p><a href="{% url 'buys:market_research' buy.id %}">View</a></p>
         <p>Download: <a href="{% url 'buys:download' buy.id 'market_research' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'market_research' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'market_research' 'pdf' %}">.pdf</a></p>
-        {% if perms.project.view_project %}<hr /><p>Regenerate the Market Research Report from template:</p>{% include "projects/includes/market_research_form.html" %}{% endif %}
+        {% if perms.project.view_project %}
+        <button onclick="connectButtons(this)" type="submit" name="generate_market_research" data-a11y-dialog-show="confirm-dialog" formnovalidate>Regenerate</button>
+        {% endif %}
         {% else %}
-        {% if perms.project.view_project %}{% include "projects/includes/market_research_form.html" %}{% endif %}
+        {% if perms.project.view_project %}
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" name="generate_market_research">Generate</button>
+        </form>
+        {% endif %}
         {% endif %}
       </div>
       <div class="usa-width-one-half" id="qasp">
@@ -59,4 +85,33 @@
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block modals %}
+<div id="confirm-dialog" class="dialog" aria-hidden="true">
+  <div class="dialog-overlay" tabindex="-1" data-a11y-dialog-hide>
+    <div class="dialog-content" aria-labelledby="dialogTitle" aria-describedby="dialogDescription" role="dialog">
+      <div role="document">
+        <h1 id="dialogTitle" tabindex="0">Regenerate document</h1>
+
+        <p id="dialogDescription">Regenerating will overwrite the existing document, including any changes made. Are you sure?</p>
+
+        <form action="" method="post" target="_blank">
+          {% csrf_token %}
+          <button type="submit" name="button" id="confirm-button">I'm sure</button>
+        </form>
+        <button data-a11y-dialog-hide class="dialog-close" title="Close registration form">&times;</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  var dialogEl = document.getElementById('confirm-dialog');
+  var dialog = new A11yDialog(dialogEl);
+  function connectButtons(el) {
+    // Sets the form submission name based on the specific "regenerate" button clicked
+    const confirm = document.getElementById('confirm-button');
+    confirm.name = el.name
+  }
+</script>
 {% endblock %}

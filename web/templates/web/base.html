@@ -31,13 +31,14 @@
     <a class="usa-skipnav" href="#main-content">Skip to main content</a>
     {% include "web/includes/header.html" %}
     <div class="usa-overlay"></div>
-    <main id="main-content">
+    <main id="main" aria-label="Content">
 
       {% block content %}
 
       {% endblock %}
 
     </main>
+    {% block modals %}{% endblock modals %}
     {% include "web/includes/footer.html" %}
   </body>
 </html>
