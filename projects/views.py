@@ -27,6 +27,40 @@ from nda.forms import NDAForm
 
 
 # Create your views here.
+
+# Utilities
+def _public_check(buy, user):
+    if not buy.public:
+        return request.user.has_perm('projects.view_project')
+    else:
+        return True
+
+
+def _make_response(doc_content, name, doc_type):
+    response = HttpResponse(doc_content, content_type='text/plain')
+    disposition = 'attachment; filename="{0} {1}.{2}"'.format(
+        name,
+        doc_type,
+        fmt
+    )
+    response['Content-Disposition'] = disposition
+    return response
+
+
+def _get_doc(buy, doc_type):
+    available_docs = {
+        'qasp': buy.qasp,
+        'acquisition_plan': buy.acquisition_plan,
+        'market_research': buy.market_research,
+    }
+    # Check that the request is for a document that is available
+    if doc_type not in available_docs.keys():
+        raise Http404
+    doc_content = available_docs[doc_type]
+    return doc_content
+
+
+# Views
 def iaas(request):
     return render(request, "projects/iaas.html")
 
@@ -49,9 +83,8 @@ def project(request, project):
     # Since we only want to show a page if the project exists, this can't
     # quite be an API-only thing. But most of the page is built via API.
     project = get_object_or_404(Project, id=project)
-    if not project.public:
-        if not request.user.has_perm('projects.view_project'):
-            return render(request, "projects/private-page.html")
+    if not _public_check(buy, request.user):
+        return render(request, "projects/private-page.html")
     return render(request, "projects/project.html", {"project": project})
 
 
@@ -61,9 +94,8 @@ def buys(request):
 
 def buy(request, buy):
     buy = get_object_or_404(AgileBPA, id=buy)
-    if not buy.public:
-        if not request.user.has_perm('projects.view_project'):
-            return render(request, "projects/private-page.html")
+    if not _public_check(buy, request.user):
+        return render(request, "projects/private-page.html")
     if request.method == 'POST':
         print(request.POST)
         if 'generate_qasp' in request.POST:
@@ -98,37 +130,12 @@ def buy_nda(request, buy):
     )
 
 
-def _public_check(buy, user):
-    if not buy.public:
-        return request.user.has_perm('projects.view_project')
-    else:
-        return True
-
-
-def _make_response(doc_content, name, doc_type):
-    response = HttpResponse(doc_content, content_type='text/plain')
-    disposition = 'attachment; filename="{0} {1}.{2}"'.format(
-        name,
-        doc_type,
-        fmt
-    )
-    response['Content-Disposition'] = disposition
-    return response
-
-
 def document(request, buy, doc_type):
     buy = get_object_or_404(AgileBPA, id=buy)
-    available_docs = {
-        'qasp': buy.qasp,
-        'acquisition_plan': buy.acquisition_plan,
-        'market_research': buy.market_research,
-    }
-    # Check that the request is for a document that is available
-    if doc_type not in available_docs.keys():
-        raise Http404
     if not _public_check(buy, request.user):
         raise Http404
-    doc_content = available_docs[doc_type]
+    # Get the content of the document
+    doc_content = _get_doc(buy, doc_type)
     if doc_content is not None:
         return render(
             request,
@@ -143,14 +150,8 @@ def document(request, buy, doc_type):
 def download(request, buy, doc_type, doc_format):
     buy = get_object_or_404(AgileBPA, id=buy)
     supported_formats = ['markdown', 'md', 'docx', 'pdf']
-    available_docs = {
-        'qasp': buy.qasp,
-        'acquisition_plan': buy.acquisition_plan,
-        'market_research': buy.market_research,
-    }
-    # Check that the request is for a document that is available
-    if doc_type not in available_docs.keys():
-        raise Http404
+    # Get the content of the document
+    doc_content = _get_doc(buy, doc_type)
     # Return markdown is the format isn't clear
     if doc_format not in supported_formats:
         doc_format = 'md'
@@ -158,13 +159,8 @@ def download(request, buy, doc_type, doc_format):
     if doc_format == 'markdown':
         doc_format = 'md'
     # Check that the user has access to view this document
-    if not buy.public:
-        if request.user.has_perm('projects.view_project'):
-            pass
-        else:
-            raise Http404
-    # Get the content of the document
-    doc_content = available_docs[doc_type]
+    if not _public_check(buy, request.user):
+        raise Http404
     if doc_content is not None:
         if doc_format == 'md':
             # Markdown is the simplest: since the content is already stored
