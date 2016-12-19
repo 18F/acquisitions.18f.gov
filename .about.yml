@@ -52,12 +52,24 @@ licenses:
   django-filter:
     name: BSD-3-Clause
     url: https://github.com/carltongibson/django-filter/blob/develop/LICENSE
+  django-floppyforms:
+    name: BSD-3-Clause
+    url: https://github.com/gregmuellegger/django-floppyforms/blob/master/LICENSE
+  django-markdown-deux:
+    name: MIT
+    url: https://github.com/trentm/django-markdown-deux/blob/master/LICENSE.txt
   djangorestframework:
     name: BSD-2-Clause
     url: https://github.com/tomchristie/django-rest-framework/blob/master/LICENSE.md
   djangorestframework-csv:
     name: BSD-2-Clause
     url: https://github.com/mjumbewu/django-rest-framework-csv#license
+  django-rest-multiple-models:
+    name: MIT
+    url: https://github.com/Axiologue/DjangoRestMultipleModels/blob/master/LICENSE
+  drfdocs:
+    name: BSD-2-Clause
+    url: https://github.com/manosim/django-rest-framework-docs/blob/master/LICENSE
   factory_boy:
     name: MIT
     url: https://github.com/FactoryBoy/factory_boy/blob/master/LICENSE
@@ -79,6 +91,9 @@ licenses:
   pycodestyle:
     name: MIT
     url: https://github.com/PyCQA/pycodestyle/blob/master/LICENSE
+  pypandoc:
+    name: MIT
+    url: https://github.com/bebraw/pypandoc/blob/master/LICENSE
   PyJWT:
     name: MIT
     url: https://github.com/jpadilla/pyjwt/blob/master/LICENSE
