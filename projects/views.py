@@ -98,7 +98,11 @@ def buy_nda(request, buy):
     if nda_form.is_valid():
         buy.nda_signed.add(request.user)
         return redirect(reverse('buys:buy', args=[buy.id]))
-    return render(request, "nda/buy_nda.html", {"buy": buy, "nda_form": nda_form})
+    return render(
+        request,
+        "nda/buy_nda.html",
+        {"buy": buy, "nda_form": nda_form}
+    )
 
 
 def qasp(request, buy):
@@ -170,9 +174,20 @@ def acquisition_plan(request, buy):
         raise Http404
 
 
+def _make_response(doc_content, name, doc_type):
+    response = HttpResponse(doc_content, content_type='text/plain')
+    disposition = 'attachment; filename="{0} {1}.{2}"'.format(
+        name,
+        doc_type,
+        fmt
+    )
+    response['Content-Disposition'] = disposition
+    return response
+
+
 def download(request, buy, doc_type, doc_format):
     buy = get_object_or_404(AgileBPA, id=buy)
-    supported_formats = ['markdown', 'docx', 'pdf']
+    supported_formats = ['markdown', 'md', 'docx', 'pdf']
     available_docs = {
         'qasp': buy.qasp,
         'acquisition_plan': buy.acquisition_plan,
@@ -183,7 +198,10 @@ def download(request, buy, doc_type, doc_format):
         raise Http404
     # Return markdown is the format isn't clear
     if doc_format not in supported_formats:
-        doc_format = 'markdown'
+        doc_format = 'md'
+    # Standardize format spelling
+    if doc_format == 'markdown':
+        doc_format = 'md'
     # Check that the user has access to view this document
     if not buy.public:
         if request.user.has_perm('projects.view_project'):
@@ -193,12 +211,10 @@ def download(request, buy, doc_type, doc_format):
     # Get the content of the document
     doc_content = available_docs[doc_type]
     if doc_content is not None:
-        if doc_format == 'markdown':
+        if doc_format == 'md':
             # Markdown is the simplest: since the content is already stored
             # that way, it can be sent back directly
-            response = HttpResponse(doc_content, content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename="{0} {1}.md"'.format(buy.name, doc_type)
-            return response
+            _make_response(doc_content, buy.name, doc_type)
         elif doc_format == 'docx':
             # For .docx, create a temporary file, use it as the output for
             # pandoc, and then send that file. Using NamedTemporaryFile means
@@ -210,9 +226,7 @@ def download(request, buy, doc_type, doc_format):
                 format='markdown_github',
                 outputfile=dl.name
             )
-            response = HttpResponse(dl, content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename="{0} {1}.docx"'.format(buy.name, doc_type)
-            return response
+            _make_response(doc_content, buy.name, doc_type)
         elif doc_format == 'pdf':
             # This requires LaTeX support (via pdflatex) in addition to a
             # pandoc installation.
@@ -223,20 +237,9 @@ def download(request, buy, doc_type, doc_format):
                 format='markdown_github',
                 outputfile=dl.name
             )
-            response = HttpResponse(dl, content_type='text/plain')
-            response['Content-Disposition'] = 'attachment; filename="{0} {1}.pdf"'.format(buy.name, doc_type)
-            return response
+            _make_response(doc_content, buy.name, doc_type)
     else:
         raise Http404
-
-
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'projects': reverse('projects:project-list', request=request, format=format),
-        'buys': reverse('projects:buy-list', request=request, format=format),
-        'iaas': reverse('projects:iaa-list', request=request, format=format)
-    })
 
 
 class IAAList(mixins.ListModelMixin,
