@@ -566,7 +566,7 @@ class AgileBPA(Buy):
             'market_research': self.market_research,
         }
         doc_content = render_to_string(
-            'projects/markdown/{}.md'.format(doc_type),
+            'projects/markdown/{0}.md'.format(doc_type),
             {'buy': self, 'date': date.today()}
         )
         setattr(self, doc_type, doc_content)
