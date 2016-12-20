@@ -605,12 +605,7 @@ class AgileBPA(Buy):
             return '{0:.2f}% Complete'.format(percentage)
 
     def qasp_status(self):
-        if self.name and not self.qasp:
-            return 'Not yet generated'
-        elif self.name and self.qasp:
-            return 'Complete'
-        else:
-            return 'Incomplete'
+        return 'Not yet generated' if self.qasp is None else 'Complete'
 
     def create_market_research(self):
         # TODO: This may need mark_safe from django.utils.safestring
@@ -619,6 +614,9 @@ class AgileBPA(Buy):
             {'buy': self}
         )
         self.save(update_fields=['market_research'])
+
+    def market_research_status(self):
+        return 'Not yet generated' if self.market_research is None else 'Complete'
 
     def all_nda_signed(self):
         panelists = self.technical_evaluation_panel.all()
@@ -684,14 +682,6 @@ class AgileBPA(Buy):
         else:
             fields = []
         return fields
-
-    def market_research_status(self):
-        if self.name and not self.market_research:
-            return 'Not yet generated'
-        elif self.name and self.market_research:
-            return 'Complete'
-        else:
-            return 'Incomplete'
 
     def clean(self):
         # Confirm option period existence if option period length is set
