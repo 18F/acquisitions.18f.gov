@@ -559,22 +559,18 @@ class AgileBPA(Buy):
         except Exception:
             return None
 
-    # TODO: this document generation seems to involve repeated logic
-    def create_qasp(self):
-        # TODO: This may need mark_safe from django.utils.safestring
-        self.qasp = render_to_string(
-                'projects/markdown/qasp.md',
-                {'buy': self}
-            )
-        self.save(update_fields=['qasp'])
-
-    def create_acquisition_plan(self):
-        # TODO: This may need mark_safe from django.utils.safestring
-        self.acquisition_plan = render_to_string(
-                'projects/markdown/acquisition_plan.md',
-                {'buy': self, 'date': date.today()}
-            )
-        self.save(update_fields=['acquisition_plan'])
+    def create_document(self, doc_type):
+        available_docs = {
+            'qasp': self.qasp,
+            'acquisition_plan': self.acquisition_plan,
+            'market_research': self.market_research,
+        }
+        doc_content = render_to_string(
+            'projects/markdown/{}.md'.format(doc_type),
+            {'buy': self, 'date': date.today()}
+        )
+        setattr(self, doc_type, doc_content)
+        self.save(update_fields=[doc_type])
 
     def acquisition_plan_status(self):
         # TODO: find a way to display the incomplete fields on the page
@@ -606,14 +602,6 @@ class AgileBPA(Buy):
 
     def qasp_status(self):
         return 'Not yet generated' if self.qasp is None else 'Complete'
-
-    def create_market_research(self):
-        # TODO: This may need mark_safe from django.utils.safestring
-        self.market_research = render_to_string(
-            'projects/markdown/market_research.md',
-            {'buy': self}
-        )
-        self.save(update_fields=['market_research'])
 
     def market_research_status(self):
         return 'Not yet generated' if self.market_research is None else 'Complete'

@@ -99,13 +99,13 @@ def buy(request, buy):
     if request.method == 'POST':
         print(request.POST)
         if 'generate_qasp' in request.POST:
-            buy.create_qasp()
+            buy.create_document('qasp')
             return redirect('buys:document', buy.id, 'qasp')
         if 'generate_acquisition_plan' in request.POST:
-            buy.create_acquisition_plan()
+            buy.create_document('acquisition_plan')
             return redirect('buys:document', buy.id, 'acquisition_plan')
         if 'generate_market_research' in request.POST:
-            buy.create_market_research()
+            buy.create_document('market_research')
             return redirect('buys:document', buy.id, 'market_research')
     return render(
         request,
