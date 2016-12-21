@@ -1,11 +1,15 @@
 from django import forms
 from django.contrib import admin
+from django.db import models
 from django.contrib.auth.models import User
+from django.forms import CharField
+from django.forms import Textarea
 from projects.models import IAA, Project, AgileBPA, ContractingOffice, \
                             ContractingSpecialist, ContractingOfficer, \
                             ContractingOfficerRepresentative, Agency, \
                             AgencyOffice, Micropurchase
 from projects.widgets import DurationMultiWidget
+from django.contrib.postgres.forms import SimpleArrayField
 
 
 # Register your models here.
@@ -44,6 +48,7 @@ class AgileBPAForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AgileBPAForm, self).__init__(*args, **kwargs)
 
+        self.fields['requirements'].widget = Textarea(attrs=None)
         # Limit the queryset for the technical evaluation panel to team members
         # for this project
         # TODO: Could this be made more user-friendly with javascript?
@@ -62,6 +67,12 @@ class AgileBPAForm(forms.ModelForm):
             self.fields['acquisition_lead'].queryset = User.objects.none()
             self.fields['technical_lead'].queryset = User.objects.none()
 
+    requirements = SimpleArrayField(
+        CharField(),
+        delimiter='\n',
+        help_text='Multiple requirements are allowed. Enter each one on its own line.'
+    )
+
     class Meta:
         model = AgileBPA
         exclude = ('nda_signed',)
@@ -75,6 +86,9 @@ class AgileBPAForm(forms.ModelForm):
 class AgileBPAAdmin(admin.ModelAdmin):
     form = AgileBPAForm
     filter_horizontal = ('technical_evaluation_panel',)
+    # formfield_overrides = {
+    #     ArrayField: {'widget': SplitArrayWidget}
+    # }
 
     def get_readonly_fields(self, request, obj=None):
         if obj:

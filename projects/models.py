@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from datetime import date, timedelta
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from django.shortcuts import reverse
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User, Group
@@ -334,6 +335,11 @@ class Buy(models.Model):
     dollars = models.PositiveIntegerField(
         blank=False,
         null=True,
+    )
+    requirements = ArrayField(
+        # https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#arrayfield
+        models.CharField(max_length=200, blank=True),
+        default=list,
     )
     product_owner = models.ForeignKey(
         User,
