@@ -623,6 +623,11 @@ class AgileBPA(Buy):
     def market_research_status(self):
         return 'Not yet generated' if self.market_research is None else 'Complete'
 
+    def tasks(self):
+        # A version of responsibilities for use in a logicless template
+        bulleted = ['- {0}'.format(req) for req in self.requirements]
+        return '\n'.join(bulleted)
+
     def all_nda_signed(self):
         panelists = self.technical_evaluation_panel.all()
         signers = self.nda_signed.all()
