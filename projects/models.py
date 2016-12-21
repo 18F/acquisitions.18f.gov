@@ -247,6 +247,10 @@ class ContractingOfficerRepresentative(ContractingPersonnel):
     pass
 
 
+class AlternateContractingOfficerRepresentative(ContractingPersonnel):
+    pass
+
+
 class Vendor(models.Model):
     name = models.CharField(
         max_length=100,
@@ -470,6 +474,11 @@ class AgileBPA(Buy):
     )
     contracting_officer_representative = models.ForeignKey(
         ContractingOfficerRepresentative,
+        blank=True,
+        null=True,
+    )
+    alternate_contracting_officer_representative = models.ForeignKey(
+        AlternateContractingOfficerRepresentative,
         blank=True,
         null=True,
     )
