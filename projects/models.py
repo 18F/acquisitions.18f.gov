@@ -486,6 +486,9 @@ class AgileBPA(Buy):
         blank=True,
         null=True,
     )
+    security_clearance_required = models.BooleanField(
+        default=False,
+    )
 
     product_lead = models.ForeignKey(
         User,
@@ -627,6 +630,13 @@ class AgileBPA(Buy):
         # A version of responsibilities for use in a logicless template
         bulleted = ['- {0}'.format(req) for req in self.requirements]
         return '\n'.join(bulleted)
+
+    def needs_clearance(self):
+        # Security clearance requirement for use in a logicless template
+        if self.security_clearance_required:
+            return "- Secret Clearance (for at least the Technical Lead)"
+        else:
+            return None
 
     def all_nda_signed(self):
         panelists = self.technical_evaluation_panel.all()
