@@ -70,7 +70,9 @@ class AgileBPAForm(forms.ModelForm):
     requirements = SimpleArrayField(
         CharField(),
         delimiter='\n',
-        help_text='Multiple requirements are allowed. Enter each one on its own line.'
+        help_text='Multiple requirements are allowed. '
+                  'Enter each one on its own line.',
+        required=False
     )
 
     class Meta:
@@ -86,9 +88,6 @@ class AgileBPAForm(forms.ModelForm):
 class AgileBPAAdmin(admin.ModelAdmin):
     form = AgileBPAForm
     filter_horizontal = ('technical_evaluation_panel',)
-    # formfield_overrides = {
-    #     ArrayField: {'widget': SplitArrayWidget}
-    # }
 
     def get_readonly_fields(self, request, obj=None):
         if obj:

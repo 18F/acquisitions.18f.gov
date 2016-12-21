@@ -338,8 +338,10 @@ class Buy(models.Model):
     )
     requirements = ArrayField(
         # https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#arrayfield
-        models.CharField(max_length=200, blank=True),
+        models.CharField(max_length=200, blank=True, null=True),
         default=list,
+        blank=True,
+        null=True,
     )
     product_owner = models.ForeignKey(
         User,
