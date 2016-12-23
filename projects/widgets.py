@@ -1,14 +1,6 @@
-import copy
 from datetime import timedelta
 from django.forms import widgets
 from django import forms
-from django.contrib.postgres.validators import (
-    ArrayMaxLengthValidator, ArrayMinLengthValidator,
-)
-from django.core.exceptions import ValidationError
-from django.utils import six
-from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
 
 
 class DurationMultiWidget(widgets.MultiWidget):
