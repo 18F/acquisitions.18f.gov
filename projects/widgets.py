@@ -1,5 +1,6 @@
 from datetime import timedelta
 from django.forms import widgets
+from django import forms
 
 
 class DurationMultiWidget(widgets.MultiWidget):

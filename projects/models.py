@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from datetime import date, timedelta
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from django.shortcuts import reverse
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User, Group
@@ -246,6 +247,10 @@ class ContractingOfficerRepresentative(ContractingPersonnel):
     pass
 
 
+class AlternateContractingOfficerRepresentative(ContractingPersonnel):
+    pass
+
+
 class Vendor(models.Model):
     name = models.CharField(
         max_length=100,
@@ -333,6 +338,20 @@ class Buy(models.Model):
     )
     dollars = models.PositiveIntegerField(
         blank=False,
+        null=True,
+    )
+    requirements = ArrayField(
+        # https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#arrayfield
+        models.CharField(max_length=200, blank=True, null=True),
+        default=list,
+        blank=True,
+        null=True,
+    )
+    skills_needed = ArrayField(
+        # https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#arrayfield
+        models.CharField(max_length=200, blank=True, null=True),
+        default=list,
+        blank=True,
         null=True,
     )
     product_owner = models.ForeignKey(
@@ -465,9 +484,17 @@ class AgileBPA(Buy):
         blank=True,
         null=True,
     )
+    alternate_contracting_officer_representative = models.ForeignKey(
+        AlternateContractingOfficerRepresentative,
+        blank=True,
+        null=True,
+    )
     github_repository = models.URLField(
         blank=True,
         null=True,
+    )
+    security_clearance_required = models.BooleanField(
+        default=False,
     )
 
     product_lead = models.ForeignKey(
@@ -605,6 +632,23 @@ class AgileBPA(Buy):
 
     def market_research_status(self):
         return 'Not yet generated' if self.market_research is None else 'Complete'
+
+    def tasks(self):
+        # A version of responsibilities for use in a logicless template
+        bulleted = ['- {0}'.format(req) for req in self.requirements]
+        return '\n'.join(bulleted)
+
+    def skills(self):
+        # A version of responsibilities for use in a logicless template
+        bulleted = ['- {0}'.format(req) for req in self.skills_needed]
+        return '\n'.join(bulleted)
+
+    def needs_clearance(self):
+        # Security clearance requirement for use in a logicless template
+        if self.security_clearance_required:
+            return "- Secret Clearance (for at least the Technical Lead)"
+        else:
+            return None
 
     def all_nda_signed(self):
         panelists = self.technical_evaluation_panel.all()
