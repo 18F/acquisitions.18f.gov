@@ -49,6 +49,7 @@ class AgileBPAForm(forms.ModelForm):
         super(AgileBPAForm, self).__init__(*args, **kwargs)
 
         self.fields['requirements'].widget = Textarea(attrs=None)
+        self.fields['skills'].widget = Textarea(attrs=None)
         # Limit the queryset for the technical evaluation panel to team members
         # for this project
         # TODO: Could this be made more user-friendly with javascript?
@@ -70,8 +71,17 @@ class AgileBPAForm(forms.ModelForm):
     requirements = SimpleArrayField(
         CharField(),
         delimiter='\n',
-        help_text='Multiple requirements are allowed. '
-                  'Enter each one on its own line.',
+        help_text='Multiple requirements are allowed. Enter each one on its '
+                  'own line. Additional formatting, like bullet points, will '
+                  'be added later, so leave that out.',
+        required=False
+    )
+    skills = SimpleArrayField(
+        CharField(),
+        delimiter='\n',
+        help_text='Multiple skills are allowed. Enter each one on its '
+                  'own line. Additional formatting, like bullet points, will '
+                  'be added later, so leave that out.',
         required=False
     )
 

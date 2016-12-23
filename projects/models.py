@@ -347,6 +347,13 @@ class Buy(models.Model):
         blank=True,
         null=True,
     )
+    skills_needed = ArrayField(
+        # https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#arrayfield
+        models.CharField(max_length=200, blank=True, null=True),
+        default=list,
+        blank=True,
+        null=True,
+    )
     product_owner = models.ForeignKey(
         User,
         blank=True,
@@ -629,6 +636,11 @@ class AgileBPA(Buy):
     def tasks(self):
         # A version of responsibilities for use in a logicless template
         bulleted = ['- {0}'.format(req) for req in self.requirements]
+        return '\n'.join(bulleted)
+
+    def skills(self):
+        # A version of responsibilities for use in a logicless template
+        bulleted = ['- {0}'.format(req) for req in self.skills_needed]
         return '\n'.join(bulleted)
 
     def needs_clearance(self):
