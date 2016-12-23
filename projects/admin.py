@@ -95,19 +95,6 @@ class AgileBPAAdmin(admin.ModelAdmin):
                 'locked',
             )
         }),
-        ('Contract Pieces', {
-            'fields': (
-                'contractual_history',
-                'base_period_length',
-                'option_periods',
-                'option_period_length',
-                'naics_code',
-                'set_aside_status',
-                'competition_strategy',
-                'contract_type',
-                'rfq_id',
-            )
-        }),
         ('Staffing', {
             'fields': (
                 'product_owner',
@@ -127,6 +114,19 @@ class AgileBPAAdmin(admin.ModelAdmin):
                 'contracting_officer_representative',
             )
         }),
+        ('Contract Pieces', {
+            'fields': (
+                'contractual_history',
+                'base_period_length',
+                'option_periods',
+                'option_period_length',
+                'naics_code',
+                'set_aside_status',
+                'competition_strategy',
+                'contract_type',
+                'rfq_id',
+            )
+        }),
         ('Milestones', {
             'fields': (
                 'issue_date',
@@ -136,7 +136,7 @@ class AgileBPAAdmin(admin.ModelAdmin):
         ('Award', {
             'fields': (
                 'vendor',
-                'amount_of_competition'
+                'amount_of_competition',
             )
         }),
         ('Documents', {
