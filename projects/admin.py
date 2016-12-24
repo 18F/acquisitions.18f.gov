@@ -4,10 +4,18 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.forms import CharField
 from django.forms import Textarea
-from projects.models import IAA, Project, AgileBPA, ContractingOffice, \
-                            ContractingSpecialist, ContractingOfficer, \
-                            ContractingOfficerRepresentative, Agency, \
-                            AgencyOffice, Micropurchase
+from projects.models import (
+    Agency,
+    AgencyOffice,
+    AgileBPA,
+    ContractingOffice,
+    ContractingOfficer,
+    ContractingOfficerRepresentative,
+    ContractingSpecialist,
+    IAA,
+    Micropurchase,
+    Project,
+)
 from projects.widgets import DurationMultiWidget
 from django.contrib.postgres.forms import SimpleArrayField
 
@@ -98,6 +106,71 @@ class AgileBPAForm(forms.ModelForm):
 class AgileBPAAdmin(admin.ModelAdmin):
     form = AgileBPAForm
     filter_horizontal = ('technical_evaluation_panel',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                'name',
+                'description',
+                'project',
+                'dollars',
+                'public',
+                'github_repository',
+                'locked',
+            )
+        }),
+        ('Staffing', {
+            'fields': (
+                'product_owner',
+                (
+                    'product_lead',
+                    'technical_lead',
+                    'acquisition_lead',
+                ),
+                'technical_evaluation_panel',
+            )
+        }),
+        ('Contracting Office', {
+            'fields': (
+                'contracting_office',
+                'contracting_specialist',
+                'contracting_officer',
+                'contracting_officer_representative',
+            )
+        }),
+        ('Contract Pieces', {
+            'fields': (
+                'contractual_history',
+                'base_period_length',
+                'option_periods',
+                'option_period_length',
+                'naics_code',
+                'set_aside_status',
+                'competition_strategy',
+                'contract_type',
+                'rfq_id',
+            )
+        }),
+        ('Milestones', {
+            'fields': (
+                'issue_date',
+                'award_date',
+            )
+        }),
+        ('Award', {
+            'fields': (
+                'vendor',
+                'amount_of_competition',
+            )
+        }),
+        ('Documents', {
+            'fields': (
+                'acquisition_plan',
+                'market_research',
+                'qasp',
+            ),
+            'classes': ('collapse',)
+        }),
+    )
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
