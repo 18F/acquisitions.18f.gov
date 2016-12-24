@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib import admin
+from django.db import models
 from django.contrib.auth.models import User
+from django.forms import CharField
+from django.forms import Textarea
 from projects.models import (
     Agency,
     AgencyOffice,
@@ -14,6 +17,7 @@ from projects.models import (
     Project,
 )
 from projects.widgets import DurationMultiWidget
+from django.contrib.postgres.forms import SimpleArrayField
 
 
 # Register your models here.
@@ -52,6 +56,8 @@ class AgileBPAForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AgileBPAForm, self).__init__(*args, **kwargs)
 
+        self.fields['requirements'].widget = Textarea(attrs=None)
+        self.fields['skills'].widget = Textarea(attrs=None)
         # Limit the queryset for the technical evaluation panel to team members
         # for this project
         # TODO: Could this be made more user-friendly with javascript?
@@ -69,6 +75,23 @@ class AgileBPAForm(forms.ModelForm):
             self.fields['product_lead'].queryset = User.objects.none()
             self.fields['acquisition_lead'].queryset = User.objects.none()
             self.fields['technical_lead'].queryset = User.objects.none()
+
+    requirements = SimpleArrayField(
+        CharField(),
+        delimiter='\n',
+        help_text='Multiple requirements are allowed. Enter each one on its '
+                  'own line. Additional formatting, like bullet points, will '
+                  'be added later, so leave that out.',
+        required=False
+    )
+    skills = SimpleArrayField(
+        CharField(),
+        delimiter='\n',
+        help_text='Multiple skills are allowed. Enter each one on its '
+                  'own line. Additional formatting, like bullet points, will '
+                  'be added later, so leave that out.',
+        required=False
+    )
 
     class Meta:
         model = AgileBPA
