@@ -56,8 +56,6 @@ class AgileBPAForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AgileBPAForm, self).__init__(*args, **kwargs)
 
-        self.fields['requirements'].widget = Textarea(attrs=None)
-        self.fields['skills'].widget = Textarea(attrs=None)
         # Limit the queryset for the technical evaluation panel to team members
         # for this project
         # TODO: Could this be made more user-friendly with javascript?
@@ -82,7 +80,8 @@ class AgileBPAForm(forms.ModelForm):
         help_text='Multiple requirements are allowed. Enter each one on its '
                   'own line. Additional formatting, like bullet points, will '
                   'be added later, so leave that out.',
-        required=False
+        required=False,
+        widget=Textarea,
     )
     skills = SimpleArrayField(
         CharField(),
@@ -90,7 +89,8 @@ class AgileBPAForm(forms.ModelForm):
         help_text='Multiple skills are allowed. Enter each one on its '
                   'own line. Additional formatting, like bullet points, will '
                   'be added later, so leave that out.',
-        required=False
+        required=False,
+        widget=Textarea,
     )
 
     class Meta:
@@ -135,18 +135,24 @@ class AgileBPAAdmin(admin.ModelAdmin):
                 'contracting_specialist',
                 'contracting_officer',
                 'contracting_officer_representative',
+                'alternate_contracting_officer_representative',
             )
         }),
         ('Contract Pieces', {
             'fields': (
                 'contractual_history',
+                'requirements',
+                'skills',
                 'base_period_length',
-                'option_periods',
-                'option_period_length',
+                (
+                    'option_periods',
+                    'option_period_length',
+                ),
                 'naics_code',
                 'set_aside_status',
                 'competition_strategy',
                 'contract_type',
+                'security_clearance_required',
                 'rfq_id',
             )
         }),
