@@ -382,6 +382,15 @@ class Buy(models.Model):
         null=True,
     )
 
+    def status(self):
+        if self.award_date:
+            status = "Awarded"
+        elif self.issue_date:
+            status = "Out for Bid"
+        else:
+            status = "Planning"
+        return status
+
     def clean_dollars(self):
         # Confirm that buy cost doesn't exceed project value
         dollars = self.cleaned_data['dollars']
