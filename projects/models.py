@@ -519,6 +519,10 @@ class AgileBPA(Buy):
         blank=True,
         null=True,
     )
+    google_drive_folder = models.URLField(
+        blank=True,
+        null=True,
+    )
     security_clearance_required = models.BooleanField(
         default=False,
     )

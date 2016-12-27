@@ -115,6 +115,7 @@ class AgileBPAAdmin(admin.ModelAdmin):
                 'dollars',
                 'public',
                 'github_repository',
+                'google_drive_folder',
                 'locked',
             )
         }),
