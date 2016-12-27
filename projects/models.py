@@ -700,7 +700,6 @@ class AgileBPA(Buy):
             self.contractual_history,
             self.description,
             self.dollars,
-            self.github_repository,
             self.naics_code,
             self.name,
             self.option_period_length,
