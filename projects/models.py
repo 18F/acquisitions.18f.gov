@@ -600,15 +600,12 @@ class AgileBPA(Buy):
             return None
 
     def period_of_performance(self):
-        # TODO: Come back and see if this makes sense
-        # The goal of this is to turn our string-based period of performance
-        # into something that can be manipulated and displayed in different
-        # ways. But for now, the strings are what's needed for templating
-        # and such.
+        # TODO: Find a way to display more than just days
         try:
             base = self._get_time_from_string(self.base_period_length)
             option = self._get_time_from_string(self.option_period_length)
-            return base + (self.option_periods * option)
+            total = base + (self.option_periods * option)
+            return "{0} days".format(str(total.days))
         except Exception:
             return None
 
