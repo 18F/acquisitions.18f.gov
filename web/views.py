@@ -45,19 +45,31 @@ def search(request):
     # )
     projects = Project.objects.annotate(
         rank=SearchRank(
-            SearchVector('name', 'description'),
+            SearchVector(
+                'name',
+                'description',
+            ),
             SearchQuery(terms)
         )
     ).filter(public=True, rank__gte=0.04)
     agilebpas = AgileBPA.objects.annotate(
         rank=SearchRank(
-            SearchVector('name', 'description', 'acquisition_plan'),
+            SearchVector(
+                'name',
+                'description',
+                'acquisition_plan',
+                'procurement_method',
+            ),
             SearchQuery(terms)
         )
     ).filter(public=True, rank__gte=0.04)
     micropurchases = Micropurchase.objects.annotate(
         rank=SearchRank(
-            SearchVector('name', 'description'),
+            SearchVector(
+                'name',
+                'description',
+                'procurement_method',
+            ),
             SearchQuery(terms)
         )
     ).filter(public=True, rank__gte=0.04)
