@@ -98,7 +98,7 @@ class IAA(models.Model):
 
     def budget_remaining(self):
         budget = self.dollars
-        for project in self.projects.all():
+        for project in self.project_set.all():
             budget -= project.dollars
         return budget
 
