@@ -38,6 +38,7 @@
     // Check for project buy wrapper div
     let wrapper = document.getElementById('project-'+buy.project.id+'-buy-wrapper');
     let project = document.getElementById('project-'+buy.project.id)
+    let separator = null;
     if (!wrapper) {
       wrapper = document.createElement('div');
       wrapper.id = 'project-'+buy.project.id+'-buy-wrapper';
@@ -55,6 +56,9 @@
       wrapper.appendChild(sidebarWrapper);
       wrapper.appendChild(main);
       project.appendChild(wrapper);
+
+    } else {
+      separator = document.createElement('hr');
     }
     // Create buy div
     let buyDiv = document.createElement('div');
@@ -64,11 +68,18 @@
     let buyType = document.createElement('p');
     let typeContent = document.createTextNode('Type: '+buy.procurement_method)
     buyType.appendChild(typeContent);
+    let buyStatus = document.createElement('p');
+    let statusContent = document.createTextNode('Status: '+buy.status)
+    buyStatus.appendChild(statusContent);
     let buyDescription = document.createElement('div');
     let descriptionContent = document.createTextNode(buy.description);
     buyDescription.appendChild(descriptionContent);
+    if (separator) {
+      buyDiv.appendChild(separator);
+    }
     buyDiv.appendChild(buyName);
     buyDiv.appendChild(buyType);
+    buyDiv.appendChild(buyStatus);
     buyDiv.appendChild(buyDescription);
     wrapper.childNodes[1].appendChild(buyDiv);
   }
