@@ -387,7 +387,9 @@ class Buy(models.Model):
     )
 
     def status(self):
-        if self.award_date:
+        if self.delivery_date:
+            status = "Delivered"
+        elif self.award_date:
             status = "Awarded"
         elif self.issue_date:
             status = "Out for Bid"
