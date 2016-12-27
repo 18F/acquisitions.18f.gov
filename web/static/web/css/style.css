@@ -7,6 +7,10 @@ blockquote {
   background-image: url('../img/astronaut.jpg');
 }
 
+.usa-nav-submenu {
+  box-shadow: 0 2px 3px #3e94cf, 0 2px 5px #3e94cf;
+}
+
 /* Buys */
 
 .acq-documents {
