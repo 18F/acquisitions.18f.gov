@@ -41,6 +41,7 @@ class AgileBPASerializer(serializers.ModelSerializer):
             'public',
             'project',
             'procurement_method',
+            'status',
             'set_aside_status',
             'rfq_id',
             'period_of_performance',
@@ -60,4 +61,5 @@ class MicropurchaseSerializer(serializers.ModelSerializer):
             'public',
             'project',
             'procurement_method',
+            'status',
         )
