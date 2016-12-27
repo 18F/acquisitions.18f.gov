@@ -29,11 +29,10 @@ class ProjectSerializer(serializers.ModelSerializer):
         )
 
 
-class AgileBPASerializer(serializers.ModelSerializer):
+class BuySerializer(serializers.ModelSerializer):
     project = ProjectSerializer()
 
     class Meta:
-        model = AgileBPA
         fields = (
             'id',
             'name',
@@ -42,6 +41,13 @@ class AgileBPASerializer(serializers.ModelSerializer):
             'project',
             'procurement_method',
             'status',
+        )
+
+
+class AgileBPASerializer(BuySerializer):
+    class Meta:
+        model = AgileBPA
+        fields = BuySerializer.Meta.fields + (
             'set_aside_status',
             'rfq_id',
             'period_of_performance',
@@ -49,17 +55,7 @@ class AgileBPASerializer(serializers.ModelSerializer):
         )
 
 
-class MicropurchaseSerializer(serializers.ModelSerializer):
-    project = ProjectSerializer()
-
+class MicropurchaseSerializer(BuySerializer):
     class Meta:
         model = Micropurchase
-        fields = (
-            'id',
-            'name',
-            'description',
-            'public',
-            'project',
-            'procurement_method',
-            'status',
-        )
+        fields = BuySerializer.Meta.fields
