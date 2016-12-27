@@ -5,8 +5,20 @@
   <div class="usa-width-one-full">
     <h1>Buys</h1>
     {% if perms.projects.view_project %}<div>Showing: <strong>public</strong> and <strong>non-public</strong> buys</div>{% endif %}
-    <h2>Current</h2>
-    <div id="current">
+    <h2>Planning</h2>
+    <div id="planning">
+
+    </div>
+    <h2>Out for Bid</h2>
+    <div id="posted">
+
+    </div>
+    <h2>Awarded</h2>
+    <div id="awarded">
+
+    </div>
+    <h2>Delivered</h2>
+    <div id="delivered">
 
     </div>
   </div>
@@ -35,7 +47,12 @@
     div.appendChild(buyDescription);
     return div
   }
-  const current = document.getElementById('current');
+  const statuses = {
+    "Planning": document.getElementById('planning'),
+    "Out for Bid": document.getElementById('posted'),
+    "Awarded": document.getElementById('awarded'),
+    "Delivered": document.getElementById('delivered')
+  }
   const r1 = new XMLHttpRequest();
   r1.open("GET", "/api/buys/", true);
   r1.onreadystatechange = function () {
@@ -43,7 +60,8 @@
     var jsonResponse = JSON.parse(r1.responseText);
     if (jsonResponse.length > 0) {
       for (const buy of jsonResponse) {
-        current.appendChild(createBuy(buy));
+        const state = statuses[buy.status];
+        state.appendChild(createBuy(buy));
       }
     } else {
       let div = document.createElement("div");
