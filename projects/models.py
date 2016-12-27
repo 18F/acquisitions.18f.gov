@@ -376,6 +376,10 @@ class Buy(models.Model):
         blank=True,
         null=True,
     )
+    delivery_date = models.DateField(
+        blank=True,
+        null=True,
+    )
     vendor = models.ForeignKey(
         Vendor,
         blank=True,
@@ -397,7 +401,7 @@ class Buy(models.Model):
         project = self.cleaned_data['project']
         if dollars > project.budget_remaining():
             raise ValidationError({
-                'dollars': 'Value can\'t exceed project\'s remaining budget'
+                'dollars': 'Value can\'t exceed project\'s remaining budget.'
             })
         return dollars
 
@@ -410,6 +414,17 @@ class Buy(models.Model):
                 'public': 'May not be public if the associated project is not.'
             })
         return public
+
+    def clean_delivery_date(self):
+        # Check that delivery doesn't occur before award
+        delivery_date = cleaned_data['delivery_date']
+        award_date = cleaned_data['award_date']
+        vendor = cleaned_data['vendor']
+        if delivery_date and not award_date or not vendor:
+            raise ValidationError({
+                'delivery_date': 'An award date and vendor are required to '
+                                 'add the delivery date.'
+            })
 
     class Meta:
         abstract = True
