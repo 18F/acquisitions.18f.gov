@@ -1,0 +1,15 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>Search results ({{ results | length }})</h1>
+    {% for result in results %}
+      <a href="{{ result.get_absolute_url }}"><h2>{{ result }}</h2></a>
+      <div class="">
+        {{ result.rank }}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
