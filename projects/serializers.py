@@ -31,6 +31,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class BuySerializer(serializers.ModelSerializer):
     project = ProjectSerializer()
+    procurement_method = serializers.CharField(source='get_procurement_method_display')
 
     class Meta:
         fields = (

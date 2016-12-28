@@ -318,6 +318,11 @@ CONTRACT_TYPE_CHOICES = (
     ("Time and Materials", "Time and Materials"),
 )
 
+PROCUREMENT_METHOD_CHOICES = (
+    ("agile_bpa", "Agile Development Services BPA"),
+    ('micropurchase', "Micro-purchase"),
+)
+
 
 class Buy(models.Model):
     name = models.CharField(
@@ -460,7 +465,8 @@ class AgileBPA(Buy):
     )
     procurement_method = models.CharField(
         max_length=200,
-        default="Agile Development Services BPA Order",
+        choices=PROCUREMENT_METHOD_CHOICES,
+        default="agile_bpa",
         editable=False,
         blank=False,
         null=False,
@@ -620,7 +626,10 @@ class AgileBPA(Buy):
             'market_research': self.market_research,
         }
         doc_content = render_to_string(
-            'acq_templates/{0}/{1}.md'.format("agile_bpa", doc_type),
+            'acq_templates/{0}/{1}.md'.format(
+                self.procurement_method,
+                doc_type,
+            ),
             {'buy': self, 'date': date.today()}
         )
         setattr(self, doc_type, doc_content)
@@ -781,7 +790,8 @@ class AgileBPA(Buy):
 class Micropurchase(Buy):
     procurement_method = models.CharField(
         max_length=200,
-        default="Micro-purchase",
+        choices=PROCUREMENT_METHOD_CHOICES,
+        default="micropurchase",
         editable=False,
         blank=False,
         null=False,
