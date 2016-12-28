@@ -4,6 +4,7 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
+-e git+https://github.com/18F/acq-templates.git@0914b6bdf2f28f7446903d913e707bf9fcac2f90#egg=acq_templates
 cfenv==0.5.2
 dj-database-url==0.4.1
 django-filter==1.0.1
