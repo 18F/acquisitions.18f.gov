@@ -93,7 +93,10 @@ def buys(request):
 
 
 def buy(request, buy):
-    buy = get_object_or_404(AgileBPA, id=buy)
+    try:
+        buy = Micropurchase.objects.get(id=buy)
+    except Micropurchase.DoesNotExist:
+        buy = get_object_or_404(AgileBPA, id=buy)
     if not _public_check(buy, request.user):
         return render(request, "projects/private-page.html")
     if request.method == 'POST':
