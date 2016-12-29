@@ -679,6 +679,12 @@ class AgileBPA(Buy):
         bulleted = ['- {0}'.format(req) for req in self.skills_needed]
         return '\n'.join(bulleted)
 
+    def panelists(self):
+        # A version of the tech eval panel for use in a logicless template
+        numbered = ['1. {0}'.format(p.get_full_name()) for
+                    p in self.technical_evaluation_panel]
+        return '\n'.join(numbered)
+
     def needs_clearance(self):
         # Security clearance requirement for use in a logicless template
         if self.security_clearance_required:
