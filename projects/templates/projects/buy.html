@@ -39,8 +39,8 @@
         </tr>
       </tbody>
     </table>
-    <h2>Documents</h2>
     {% for doc in buy.available_docs %}
+    {% if forloop.first %}<h2>Documents</h2>{% endif %}
       {% if forloop.counter0|divisibleby:"2" %}
       <div class="usa-grid-full acq-documents">
         <div class="usa-width-one-half" id="{{ doc }}">
