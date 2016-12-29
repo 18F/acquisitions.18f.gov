@@ -36,12 +36,12 @@ def _public_check(thing, user):
         return True
 
 
-def _make_response(doc_content, name, doc_type):
+def _make_response(doc_content, name, doc_type, doc_format):
     response = HttpResponse(doc_content, content_type='text/plain')
     disposition = 'attachment; filename="{0} {1}.{2}"'.format(
         name,
         doc_type,
-        fmt
+        doc_format,
     )
     response['Content-Disposition'] = disposition
     return response
@@ -168,7 +168,7 @@ def download(request, buy, doc_type, doc_format):
         if doc_format == 'md':
             # Markdown is the simplest: since the content is already stored
             # that way, it can be sent back directly
-            _make_response(doc_content, buy.name, doc_type)
+            return _make_response(doc_content, buy.name, doc_type, doc_format)
         elif doc_format == 'docx':
             # For .docx, create a temporary file, use it as the output for
             # pandoc, and then send that file. Using NamedTemporaryFile means
@@ -180,7 +180,7 @@ def download(request, buy, doc_type, doc_format):
                 format='markdown_github',
                 outputfile=dl.name
             )
-            _make_response(doc_content, buy.name, doc_type)
+            return _make_response(doc_content, buy.name, doc_type, doc_format)
         elif doc_format == 'pdf':
             # This requires LaTeX support (via pdflatex) in addition to a
             # pandoc installation.
@@ -191,7 +191,7 @@ def download(request, buy, doc_type, doc_format):
                 format='markdown_github',
                 outputfile=dl.name
             )
-            _make_response(doc_content, buy.name, doc_type)
+            return _make_response(doc_content, buy.name, doc_type, doc_format)
     else:
         raise Http404
 

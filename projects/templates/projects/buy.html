@@ -40,66 +40,50 @@
       </tbody>
     </table>
     <h2>Documents</h2>
-    <div class="usa-grid-full acq-documents">
-      <div class="usa-width-one-half" id="acquisition-plan">
-        <h3>Acquisition Plan</h3>
-        <p>Status: {{ buy.acquisition_plan_status }}</p>
-        {% if buy.acquisition_plan %}
-        <p><a href="{% url 'buys:document' buy.id 'acquisition_plan' %}">View</a></p>
-        <p>Download: <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'pdf' %}">.pdf</a></p>
-        {% if perms.project.view_project %}
-        <button onclick="connectButtons(this)" type="submit" name="generate_acquisition_plan" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
-        {% endif %}
-        {% else %}
-        {% if perms.project.view_project %}
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" name="generate_acquisition_plan">Generate</button>
-        </form>
-        {% endif %}
-        {% endif %}
+    {% for doc in buy.available_docs %}
+      {% if forloop.counter0|divisibleby:"2" %}
+      <div class="usa-grid-full acq-documents">
+        <div class="usa-width-one-half" id="{{ doc }}">
+          <h3>{{ doc.name }}</h3>
+          {% if buy.acquisition_plan %}
+          <p><a href="{% url 'buys:document' buy.id doc.short %}">View</a></p>
+          <p>Download: <a href="{% url 'buys:download' buy.id doc.short 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id doc.short 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id doc.short 'pdf' %}">.pdf</a></p>
+          {% if perms.project.view_project %}
+          <button onclick="connectButtons(this)" type="submit" name="generate_{{ doc }}" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
+          {% endif %}
+          {% else %}
+          {% if perms.project.view_project %}
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="generate_{{ doc }}">Generate</button>
+          </form>
+          {% endif %}
+          {% endif %}
+        </div>
+      {% elif forloop.last %}
       </div>
-      <div class="usa-width-one-half" id="qasp">
-        <h3>QASP</h3>
-        <p>Status: {{ buy.qasp_status }}</p>
-        {% if buy.qasp %}
-        <p><a href="{% url 'buys:document' buy.id 'qasp' %}">View</a></p>
-        <p>Download: <a href="{% url 'buys:download' buy.id 'qasp' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'qasp' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'qasp' 'pdf' %}">.pdf</a></p>
-        {% if perms.project.view_project %}
-        <button onclick="connectButtons(this)" type="submit" name="generate_qasp" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
-        {% endif %}
-        {% else %}
-        {% if perms.project.view_project %}
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" name="generate_qasp">Generate</button>
-        </form>
-        {% endif %}
-        {% endif %}
+      {% else %}
+        <div class="usa-width-one-half" id="{{ doc }}">
+          <h3>{{ doc.name }}</h3>
+          {% if buy.acquisition_plan %}
+          <p><a href="{% url 'buys:document' buy.id doc.short %}">View</a></p>
+          <p>Download: <a href="{% url 'buys:download' buy.id doc.short 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id doc.short 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id doc.short 'pdf' %}">.pdf</a></p>
+          {% if perms.project.view_project %}
+          <button onclick="connectButtons(this)" type="submit" name="generate_{{ doc }}" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
+          {% endif %}
+          {% else %}
+          {% if perms.project.view_project %}
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="generate_{{ doc }}">Generate</button>
+          </form>
+          {% endif %}
+          {% endif %}
+        </div>
       </div>
-    </div>
-    <div class="usa-grid-full acq-documents">
-      <div class="usa-width-one-half" id="market-research">
-        <h3>Market Research Report</h3>
-        <p>Status: {{ buy.market_research_status }}</p>
-        {% if buy.market_research %}
-        <p><a href="{% url 'buys:document' buy.id 'market_research' %}">View</a></p>
-        <p>Download: <a href="{% url 'buys:download' buy.id 'market_research' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'market_research' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'market_research' 'pdf' %}">.pdf</a></p>
-        {% if perms.project.view_project %}
-        <button onclick="connectButtons(this)" type="submit" name="generate_market_research" data-a11y-dialog-show="confirm-dialog" formnovalidate>Regenerate</button>
-        {% endif %}
-        {% else %}
-        {% if perms.project.view_project %}
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" name="generate_market_research">Generate</button>
-        </form>
-        {% endif %}
-        {% endif %}
-      </div>
-      <div class="usa-width-one-half" id="qasp">
-        <h3>Another Document</h3>
-    </div>
+      {% endif %}
+    {% empty %}
+    {% endfor %}
   </div>
 </section>
 {% endblock %}

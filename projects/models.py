@@ -435,6 +435,11 @@ class Buy(models.Model):
         except Exception:
             return None
 
+    def available_docs(self):
+        raise NotImplementedError(
+            "This model's available_docs method is not yet implemented."
+        )
+
     def create_document(self, doc_type):
         doc_content = render_to_string(
             'acq_templates/{0}/{1}.md'.format(
@@ -630,6 +635,22 @@ class AgileBPA(Buy):
         null=True,
     )
 
+    def available_docs(self):
+        return [
+            {
+                'name': 'QASP',
+                'short': 'qasp'
+            },
+            {
+                'name': 'Acquisition Plan',
+                'short': 'acquisition_plan'
+            },
+            {
+                'name': 'Market Research',
+                'short': 'market_research'
+            },
+        ]
+
     def acquisition_plan_status(self):
         # TODO: find a way to display the incomplete fields on the page
         required_fields = [
@@ -802,6 +823,9 @@ class Micropurchase(Buy):
         blank=False,
         null=False,
     )
+
+    def available_docs(self):
+        return []
 
     def clean(self):
         # Confirm that buy isn't over micro-purchase threshold
