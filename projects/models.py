@@ -391,6 +391,12 @@ class Buy(models.Model):
         null=True,
     )
 
+    def __str__(self):
+        return "{0}".format(self.name)
+
+    def get_absolute_url(self):
+        return "/buys/{0}/".format(self.id)
+
     def status(self):
         if self.delivery_date:
             status = "Delivered"
@@ -401,6 +407,44 @@ class Buy(models.Model):
         else:
             status = "Planning"
         return status
+
+    def is_private(self):
+        return not self.public
+
+    def _get_time_from_string(self, length):
+        try:
+            amount, units = length.split(' ')
+            amount = int(amount)
+            if units == 'days':
+                duration = timedelta(days=amount)
+            elif units == 'weeks':
+                duration = timedelta(weeks=amount)
+            else:
+                raise ValueError('Couldn\'t parse input length')
+            return duration
+        except Exception:
+            return None
+
+    def period_of_performance(self):
+        # TODO: Find a way to display more than just days
+        try:
+            base = self._get_time_from_string(self.base_period_length)
+            option = self._get_time_from_string(self.option_period_length)
+            total = base + (self.option_periods * option)
+            return "{0} days".format(str(total.days))
+        except Exception:
+            return None
+
+    def create_document(self, doc_type):
+        doc_content = render_to_string(
+            'acq_templates/{0}/{1}.md'.format(
+                self.procurement_method,
+                doc_type,
+            ),
+            {'buy': self, 'date': date.today()}
+        )
+        setattr(self, doc_type, doc_content)
+        self.save(update_fields=[doc_type])
 
     def clean_dollars(self):
         # Confirm that buy cost doesn't exceed project value
@@ -585,55 +629,6 @@ class AgileBPA(Buy):
         blank=True,
         null=True,
     )
-
-    def __str__(self):
-        return "{0}".format(self.name)
-
-    def get_absolute_url(self):
-        return "/buys/{0}/".format(self.id)
-
-    def is_private(self):
-        return not self.public
-
-    def _get_time_from_string(self, length):
-        try:
-            amount, units = length.split(' ')
-            amount = int(amount)
-            if units == 'days':
-                duration = timedelta(days=amount)
-            elif units == 'weeks':
-                duration = timedelta(weeks=amount)
-            else:
-                raise ValueError('Couldn\'t parse input length')
-            return duration
-        except Exception:
-            return None
-
-    def period_of_performance(self):
-        # TODO: Find a way to display more than just days
-        try:
-            base = self._get_time_from_string(self.base_period_length)
-            option = self._get_time_from_string(self.option_period_length)
-            total = base + (self.option_periods * option)
-            return "{0} days".format(str(total.days))
-        except Exception:
-            return None
-
-    def create_document(self, doc_type):
-        available_docs = {
-            'qasp': self.qasp,
-            'acquisition_plan': self.acquisition_plan,
-            'market_research': self.market_research,
-        }
-        doc_content = render_to_string(
-            'acq_templates/{0}/{1}.md'.format(
-                self.procurement_method,
-                doc_type,
-            ),
-            {'buy': self, 'date': date.today()}
-        )
-        setattr(self, doc_type, doc_content)
-        self.save(update_fields=[doc_type])
 
     def acquisition_plan_status(self):
         # TODO: find a way to display the incomplete fields on the page
