@@ -669,6 +669,10 @@ class AgileBPA(Buy):
     def market_research_status(self):
         return 'Not yet generated' if self.market_research is None else 'Complete'
 
+    # Logicless template methods
+    def procurement_vehicle(self):
+        return self.get_procurement_method_display()
+
     def tasks(self):
         # A version of responsibilities for use in a logicless template
         bulleted = ['- {0}'.format(req) for req in self.requirements]
@@ -682,7 +686,7 @@ class AgileBPA(Buy):
     def panelists(self):
         # A version of the tech eval panel for use in a logicless template
         numbered = ['1. {0}'.format(p.get_full_name()) for
-                    p in self.technical_evaluation_panel]
+                    p in self.technical_evaluation_panel.all()]
         return '\n'.join(numbered)
 
     def needs_clearance(self):
@@ -692,6 +696,7 @@ class AgileBPA(Buy):
         else:
             return None
 
+    # Pre-issuance checks
     def all_nda_signed(self):
         panelists = self.technical_evaluation_panel.all()
         signers = self.nda_signed.all()
