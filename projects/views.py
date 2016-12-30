@@ -1,5 +1,6 @@
 import markdown
 import pypandoc
+import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -48,15 +49,11 @@ def _make_response(doc_content, name, doc_type, doc_format):
 
 
 def _get_doc(buy, doc_type):
-    available_docs = {
-        'qasp': buy.qasp,
-        'acquisition_plan': buy.acquisition_plan,
-        'market_research': buy.market_research,
-    }
+    available_docs = [d['short'] for d in buy.available_docs()]
     # Check that the request is for a document that is available
-    if doc_type not in available_docs.keys():
+    if doc_type not in available_docs:
         raise Http404
-    doc_content = available_docs[doc_type]
+    doc_content = getattr(buy, doc_type)
     return doc_content
 
 
@@ -100,16 +97,11 @@ def buy(request, buy):
     if not _public_check(buy, request.user):
         return render(request, "projects/private-page.html")
     if request.method == 'POST':
-        print(request.POST)
-        if 'generate_qasp' in request.POST:
-            buy.create_document('qasp')
-            return redirect('buys:document', buy.id, 'qasp')
-        if 'generate_acquisition_plan' in request.POST:
-            buy.create_document('acquisition_plan')
-            return redirect('buys:document', buy.id, 'acquisition_plan')
-        if 'generate_market_research' in request.POST:
-            buy.create_document('market_research')
-            return redirect('buys:document', buy.id, 'market_research')
+        doc_type = [i for i in request.POST if re.match("generate_\w+")]
+        if len(doc_type) > 0:
+            doc_type = doc_type[0][9:]
+            buy.create_document(doc_type)
+            return redirect('buys:document', buy.id, doc_type)
     return render(
         request,
         "projects/buy.html",
@@ -142,8 +134,8 @@ def document(request, buy, doc_type):
     if doc_content is not None:
         return render(
             request,
-            "projects/{0}.html".format(doc_type),
-            {"buy": buy}
+            "projects/document.html",
+            {"document": doc_content}
         )
     else:
         # TODO: Give option to generate a document if it does not exist

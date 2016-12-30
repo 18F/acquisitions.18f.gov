@@ -514,6 +514,18 @@ class AgileBPA(Buy):
         blank=True,
         null=True,
     )
+    question_period_length = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        default=7,
+        help_text='Length is measured in calendar days.'
+    )
+    submission_period_length = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        default=14,
+        help_text='Length is measured in calendar days.'
+    )
     naics_code = models.IntegerField(
         blank=True,
         null=True,
@@ -643,6 +655,23 @@ class AgileBPA(Buy):
         blank=True,
         null=True,
         help_text='Document: Market Research',
+    )
+    pws = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Performance Work Statement',
+        help_text='Document: Performance Work Statement',
+    )
+    rfq = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Request for Quotations',
+        help_text='Document: Request for Quotations'
+    )
+    interview_questions = models.TextField(
+        blank=True,
+        null=True,
+        help_text='Document: Oral Interview Questions'
     )
 
     def acquisition_plan_status(self):
