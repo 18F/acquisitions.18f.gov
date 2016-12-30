@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load static from staticfiles %}
+{% load document_tags %}
 
 {% block resources %}
   <script src="{% static "js/a11y-dialog.min.js" %}"></script>
@@ -45,17 +46,17 @@
       <div class="usa-grid-full acq-documents">
         <div class="usa-width-one-half" id="{{ doc }}">
           <h3>{{ doc.name }}</h3>
-          {% if buy.acquisition_plan %}
+          {% if buy|has_document:doc.short %}
           <p><a href="{% url 'buys:document' buy.id doc.short %}">View</a></p>
           <p>Download: <a href="{% url 'buys:download' buy.id doc.short 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id doc.short 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id doc.short 'pdf' %}">.pdf</a></p>
           {% if perms.project.view_project %}
-          <button onclick="connectButtons(this)" type="submit" name="generate_{{ doc }}" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
+          <button onclick="connectButtons(this)" type="submit" name="generate_{{ doc.short }}" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
           {% endif %}
           {% else %}
           {% if perms.project.view_project %}
           <form method="post">
             {% csrf_token %}
-            <button type="submit" name="generate_{{ doc }}">Generate</button>
+            <button type="submit" name="generate_{{ doc.short }}">Generate</button>
           </form>
           {% endif %}
           {% endif %}
@@ -69,13 +70,13 @@
           <p><a href="{% url 'buys:document' buy.id doc.short %}">View</a></p>
           <p>Download: <a href="{% url 'buys:download' buy.id doc.short 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id doc.short 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id doc.short 'pdf' %}">.pdf</a></p>
           {% if perms.project.view_project %}
-          <button onclick="connectButtons(this)" type="submit" name="generate_{{ doc }}" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
+          <button onclick="connectButtons(this)" type="submit" name="generate_{{ doc.short }}" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
           {% endif %}
           {% else %}
           {% if perms.project.view_project %}
           <form method="post">
             {% csrf_token %}
-            <button type="submit" name="generate_{{ doc }}">Generate</button>
+            <button type="submit" name="generate_{{ doc.short }}">Generate</button>
           </form>
           {% endif %}
           {% endif %}
