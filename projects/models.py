@@ -708,6 +708,13 @@ class AgileBPA(Buy):
     def market_research_status(self):
         return 'Not yet generated' if self.market_research is None else 'Complete'
 
+    # Date calculations
+    def questions_due_by(self):
+        return self.issue_date + timedelta(days=self.question_period_length)
+
+    def submissions_due_by(self):
+        return self.issue_date + timedelta(days=self.submission_period_length)
+
     # Logicless template methods
     def procurement_vehicle(self):
         return self.get_procurement_method_display()

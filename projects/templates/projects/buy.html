@@ -38,6 +38,18 @@
           <th scope="row">Set-Aside</th>
           <td>{{ buy.set_aside_status }}</td>
         </tr>
+        <tr>
+          <th scope="row">Posted on</th>
+          <td>{{ buy.issue_date }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Questions due by</th>
+          <td>{{ buy.questions_due_by }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Submissions due by</th>
+          <td>{{ buy.submissions_due_by }}</td>
+        </tr>
       </tbody>
     </table>
     {% for doc in buy.available_docs %}

@@ -135,7 +135,10 @@ def document(request, buy, doc_type):
         return render(
             request,
             "projects/document.html",
-            {"document": doc_content}
+            {
+                "buy": buy,
+                "document": doc_content
+            }
         )
     else:
         # TODO: Give option to generate a document if it does not exist
