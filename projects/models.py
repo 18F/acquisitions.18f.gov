@@ -828,6 +828,13 @@ class AgileBPA(Buy):
                 'issue_date': 'This buy is not yet ready to be issued'
             })
 
+        # Buys cannot be issued in the future
+        # TODO: add appropriate logic to let buys be set for future issuance
+        if self.issue_date and self.issue_date > date.today():
+            raise ValidationError({
+                'issue_date': 'For now, buys cannot be set for future issuance'
+            })
+
         # No vendors before issuing, at least
         if self.vendor and not self.issue_date:
             raise ValidationError({
