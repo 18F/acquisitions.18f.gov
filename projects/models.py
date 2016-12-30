@@ -808,6 +808,13 @@ class AgileBPA(Buy):
                 'greater than 0 to set a length'
             })
 
+        # Submission period must be longer than question period
+        if (self.question_period_length + 7) > self.submission_period_length:
+            raise ValidationError({
+                'submission_period_length': 'The submission period must be at'
+                'least 7 calendar days longer than the question period'
+            })
+
         # Don't allow issue date without a lot of other stuff
         if self.issue_date and not self.ready_to_issue():
             raise ValidationError({
