@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-acq-templates==0.1.0
+acq-templates==0.1.2
 cfenv==0.5.2
 dj-database-url==0.4.1
 django-filter==1.0.1
