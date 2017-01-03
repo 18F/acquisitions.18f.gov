@@ -1,5 +1,6 @@
 import markdown
 import pypandoc
+import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -36,27 +37,23 @@ def _public_check(thing, user):
         return True
 
 
-def _make_response(doc_content, name, doc_type):
+def _make_response(doc_content, name, doc_type, doc_format):
     response = HttpResponse(doc_content, content_type='text/plain')
     disposition = 'attachment; filename="{0} {1}.{2}"'.format(
         name,
         doc_type,
-        fmt
+        doc_format,
     )
     response['Content-Disposition'] = disposition
     return response
 
 
 def _get_doc(buy, doc_type):
-    available_docs = {
-        'qasp': buy.qasp,
-        'acquisition_plan': buy.acquisition_plan,
-        'market_research': buy.market_research,
-    }
+    available_docs = [d['short'] for d in buy.available_docs()]
     # Check that the request is for a document that is available
-    if doc_type not in available_docs.keys():
+    if doc_type not in available_docs:
         raise Http404
-    doc_content = available_docs[doc_type]
+    doc_content = getattr(buy, doc_type)
     return doc_content
 
 
@@ -93,20 +90,18 @@ def buys(request):
 
 
 def buy(request, buy):
-    buy = get_object_or_404(AgileBPA, id=buy)
+    try:
+        buy = Micropurchase.objects.get(id=buy)
+    except Micropurchase.DoesNotExist:
+        buy = get_object_or_404(AgileBPA, id=buy)
     if not _public_check(buy, request.user):
         return render(request, "projects/private-page.html")
     if request.method == 'POST':
-        print(request.POST)
-        if 'generate_qasp' in request.POST:
-            buy.create_document('qasp')
-            return redirect('buys:document', buy.id, 'qasp')
-        if 'generate_acquisition_plan' in request.POST:
-            buy.create_document('acquisition_plan')
-            return redirect('buys:document', buy.id, 'acquisition_plan')
-        if 'generate_market_research' in request.POST:
-            buy.create_document('market_research')
-            return redirect('buys:document', buy.id, 'market_research')
+        doc_type = [i for i in request.POST if re.match("generate_\w+")]
+        if len(doc_type) > 0:
+            doc_type = doc_type[0][9:]
+            buy.create_document(doc_type)
+            return redirect('buys:document', buy.id, doc_type)
     return render(
         request,
         "projects/buy.html",
@@ -139,8 +134,11 @@ def document(request, buy, doc_type):
     if doc_content is not None:
         return render(
             request,
-            "projects/{0}.html".format(doc_type),
-            {"buy": buy}
+            "projects/document.html",
+            {
+                "buy": buy,
+                "document": doc_content
+            }
         )
     else:
         # TODO: Give option to generate a document if it does not exist
@@ -165,7 +163,7 @@ def download(request, buy, doc_type, doc_format):
         if doc_format == 'md':
             # Markdown is the simplest: since the content is already stored
             # that way, it can be sent back directly
-            _make_response(doc_content, buy.name, doc_type)
+            return _make_response(doc_content, buy.name, doc_type, doc_format)
         elif doc_format == 'docx':
             # For .docx, create a temporary file, use it as the output for
             # pandoc, and then send that file. Using NamedTemporaryFile means
@@ -177,7 +175,7 @@ def download(request, buy, doc_type, doc_format):
                 format='markdown_github',
                 outputfile=dl.name
             )
-            _make_response(doc_content, buy.name, doc_type)
+            return _make_response(doc_content, buy.name, doc_type, doc_format)
         elif doc_format == 'pdf':
             # This requires LaTeX support (via pdflatex) in addition to a
             # pandoc installation.
@@ -188,7 +186,7 @@ def download(request, buy, doc_type, doc_format):
                 format='markdown_github',
                 outputfile=dl.name
             )
-            _make_response(doc_content, buy.name, doc_type)
+            return _make_response(doc_content, buy.name, doc_type, doc_format)
     else:
         raise Http404
 

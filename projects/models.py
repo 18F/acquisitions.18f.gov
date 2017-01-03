@@ -318,6 +318,11 @@ CONTRACT_TYPE_CHOICES = (
     ("Time and Materials", "Time and Materials"),
 )
 
+PROCUREMENT_METHOD_CHOICES = (
+    ("agile_bpa", "Agile Development Services BPA"),
+    ('micropurchase', "Micro-purchase"),
+)
+
 
 class Buy(models.Model):
     name = models.CharField(
@@ -386,6 +391,12 @@ class Buy(models.Model):
         null=True,
     )
 
+    def __str__(self):
+        return "{0}".format(self.name)
+
+    def get_absolute_url(self):
+        return "/buys/{0}/".format(self.id)
+
     def status(self):
         if self.delivery_date:
             status = "Delivered"
@@ -396,6 +407,56 @@ class Buy(models.Model):
         else:
             status = "Planning"
         return status
+
+    def is_private(self):
+        return not self.public
+
+    def _get_time_from_string(self, length):
+        try:
+            amount, units = length.split(' ')
+            amount = int(amount)
+            if units == 'days':
+                duration = timedelta(days=amount)
+            elif units == 'weeks':
+                duration = timedelta(weeks=amount)
+            else:
+                raise ValueError('Couldn\'t parse input length')
+            return duration
+        except Exception:
+            return None
+
+    def period_of_performance(self):
+        # TODO: Find a way to display more than just days
+        try:
+            base = self._get_time_from_string(self.base_period_length)
+            option = self._get_time_from_string(self.option_period_length)
+            total = base + (self.option_periods * option)
+            return "{0} days".format(str(total.days))
+        except Exception:
+            return None
+
+    def available_docs(self):
+        docs = []
+        for field in self._meta.get_fields():
+            if 'Document' in field.help_text:
+                docs.append(
+                    {
+                        'name': field.verbose_name.title(),
+                        'short': field.name
+                    }
+                )
+        return docs
+
+    def create_document(self, doc_type):
+        doc_content = render_to_string(
+            'acq_templates/{0}/{1}.md'.format(
+                self.procurement_method,
+                doc_type,
+            ),
+            {'buy': self, 'date': date.today()}
+        )
+        setattr(self, doc_type, doc_content)
+        self.save(update_fields=[doc_type])
 
     def clean_dollars(self):
         # Confirm that buy cost doesn't exceed project value
@@ -453,6 +514,18 @@ class AgileBPA(Buy):
         blank=True,
         null=True,
     )
+    question_period_length = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        default=7,
+        help_text='Length is measured in calendar days.'
+    )
+    submission_period_length = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        default=14,
+        help_text='Length is measured in calendar days.'
+    )
     naics_code = models.IntegerField(
         blank=True,
         null=True,
@@ -460,7 +533,8 @@ class AgileBPA(Buy):
     )
     procurement_method = models.CharField(
         max_length=200,
-        default="Agile Development Services BPA Order",
+        choices=PROCUREMENT_METHOD_CHOICES,
+        default="agile_bpa",
         editable=False,
         blank=False,
         null=False,
@@ -569,62 +643,36 @@ class AgileBPA(Buy):
     qasp = models.TextField(
         blank=True,
         null=True,
-        verbose_name='QASP',
+        verbose_name='Quality Assurance Surveillance Plan',
+        help_text='Document: Quality Assurance Surveillance Plan',
     )
     acquisition_plan = models.TextField(
         blank=True,
         null=True,
+        help_text='Document: Acquisition Plan',
     )
     market_research = models.TextField(
         blank=True,
         null=True,
+        help_text='Document: Market Research',
     )
-
-    def __str__(self):
-        return "{0}".format(self.name)
-
-    def get_absolute_url(self):
-        return "/buys/{0}/".format(self.id)
-
-    def is_private(self):
-        return not self.public
-
-    def _get_time_from_string(self, length):
-        try:
-            amount, units = length.split(' ')
-            amount = int(amount)
-            if units == 'days':
-                duration = timedelta(days=amount)
-            elif units == 'weeks':
-                duration = timedelta(weeks=amount)
-            else:
-                raise ValueError('Couldn\'t parse input length')
-            return duration
-        except Exception:
-            return None
-
-    def period_of_performance(self):
-        # TODO: Find a way to display more than just days
-        try:
-            base = self._get_time_from_string(self.base_period_length)
-            option = self._get_time_from_string(self.option_period_length)
-            total = base + (self.option_periods * option)
-            return "{0} days".format(str(total.days))
-        except Exception:
-            return None
-
-    def create_document(self, doc_type):
-        available_docs = {
-            'qasp': self.qasp,
-            'acquisition_plan': self.acquisition_plan,
-            'market_research': self.market_research,
-        }
-        doc_content = render_to_string(
-            'projects/markdown/{0}.md'.format(doc_type),
-            {'buy': self, 'date': date.today()}
-        )
-        setattr(self, doc_type, doc_content)
-        self.save(update_fields=[doc_type])
+    pws = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Performance Work Statement',
+        help_text='Document: Performance Work Statement',
+    )
+    rfq = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Request for Quotations',
+        help_text='Document: Request for Quotations'
+    )
+    interview_questions = models.TextField(
+        blank=True,
+        null=True,
+        help_text='Document: Oral Interview Questions'
+    )
 
     def acquisition_plan_status(self):
         # TODO: find a way to display the incomplete fields on the page
@@ -660,6 +708,23 @@ class AgileBPA(Buy):
     def market_research_status(self):
         return 'Not yet generated' if self.market_research is None else 'Complete'
 
+    # Date calculations
+    def questions_due_by(self):
+        if self.issue_date:
+            return self.issue_date + timedelta(days=self.question_period_length)
+        else:
+            return "To be determined"
+
+    def submissions_due_by(self):
+        if self.issue_date:
+            return self.issue_date + timedelta(days=self.submission_period_length)
+        else:
+            return "To be determined"
+
+    # Logicless template methods
+    def procurement_vehicle(self):
+        return self.get_procurement_method_display()
+
     def tasks(self):
         # A version of responsibilities for use in a logicless template
         bulleted = ['- {0}'.format(req) for req in self.requirements]
@@ -670,6 +735,12 @@ class AgileBPA(Buy):
         bulleted = ['- {0}'.format(req) for req in self.skills_needed]
         return '\n'.join(bulleted)
 
+    def panelists(self):
+        # A version of the tech eval panel for use in a logicless template
+        numbered = ['1. {0}'.format(p.get_full_name()) for
+                    p in self.technical_evaluation_panel.all()]
+        return '\n'.join(numbered)
+
     def needs_clearance(self):
         # Security clearance requirement for use in a logicless template
         if self.security_clearance_required:
@@ -677,6 +748,7 @@ class AgileBPA(Buy):
         else:
             return None
 
+    # Pre-issuance checks
     def all_nda_signed(self):
         panelists = self.technical_evaluation_panel.all()
         signers = self.nda_signed.all()
@@ -749,10 +821,24 @@ class AgileBPA(Buy):
                 'greater than 0 to set a length'
             })
 
+        # Submission period must be longer than question period
+        if (self.question_period_length + 7) > self.submission_period_length:
+            raise ValidationError({
+                'submission_period_length': 'The submission period must be at'
+                'least 7 calendar days longer than the question period'
+            })
+
         # Don't allow issue date without a lot of other stuff
         if self.issue_date and not self.ready_to_issue():
             raise ValidationError({
                 'issue_date': 'This buy is not yet ready to be issued'
+            })
+
+        # Buys cannot be issued in the future
+        # TODO: add appropriate logic to let buys be set for future issuance
+        if self.issue_date and self.issue_date > date.today():
+            raise ValidationError({
+                'issue_date': 'For now, buys cannot be set for future issuance'
             })
 
         # No vendors before issuing, at least
@@ -781,7 +867,8 @@ class AgileBPA(Buy):
 class Micropurchase(Buy):
     procurement_method = models.CharField(
         max_length=200,
-        default="Micro-purchase",
+        choices=PROCUREMENT_METHOD_CHOICES,
+        default="micropurchase",
         editable=False,
         blank=False,
         null=False,

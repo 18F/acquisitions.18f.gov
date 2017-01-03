@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'news',
     'acquisitions',
 
+    'acq_templates',
     'rest_framework',
     'rest_framework.authtoken',
     'markdown_deux',

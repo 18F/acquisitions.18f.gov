@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load static from staticfiles %}
+{% load document_tags %}
 
 {% block resources %}
   <script src="{% static "js/a11y-dialog.min.js" %}"></script>
@@ -31,76 +32,49 @@
         </tr>
         <tr>
           <th scope="row">Procurement Method</th>
-          <td>{{ buy.procurement_method }}</td>
+          <td>{{ buy.get_procurement_method_display }}</td>
         </tr>
         <tr>
           <th scope="row">Set-Aside</th>
           <td>{{ buy.set_aside_status }}</td>
         </tr>
+        <tr>
+          <th scope="row">Posted on</th>
+          <td>{{ buy.issue_date }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Questions due by</th>
+          <td>{{ buy.questions_due_by }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Submissions due by</th>
+          <td>{{ buy.submissions_due_by }}</td>
+        </tr>
       </tbody>
     </table>
-    <h2>Documents</h2>
-    <div class="usa-grid-full acq-documents">
-      <div class="usa-width-one-half" id="acquisition-plan">
-        <h3>Acquisition Plan</h3>
-        <p>Status: {{ buy.acquisition_plan_status }}</p>
-        {% if buy.acquisition_plan %}
-        <p><a href="{% url 'buys:document' buy.id 'acquisition_plan' %}">View</a></p>
-        <p>Download: <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'acquisition_plan' 'pdf' %}">.pdf</a></p>
-        {% if perms.project.view_project %}
-        <button onclick="connectButtons(this)" type="submit" name="generate_acquisition_plan" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
-        {% endif %}
-        {% else %}
-        {% if perms.project.view_project %}
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" name="generate_acquisition_plan">Generate</button>
-        </form>
-        {% endif %}
-        {% endif %}
-      </div>
-      <div class="usa-width-one-half" id="qasp">
-        <h3>QASP</h3>
-        <p>Status: {{ buy.qasp_status }}</p>
-        {% if buy.qasp %}
-        <p><a href="{% url 'buys:document' buy.id 'qasp' %}">View</a></p>
-        <p>Download: <a href="{% url 'buys:download' buy.id 'qasp' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'qasp' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'qasp' 'pdf' %}">.pdf</a></p>
-        {% if perms.project.view_project %}
-        <button onclick="connectButtons(this)" type="submit" name="generate_qasp" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
-        {% endif %}
-        {% else %}
-        {% if perms.project.view_project %}
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" name="generate_qasp">Generate</button>
-        </form>
-        {% endif %}
-        {% endif %}
-      </div>
-    </div>
-    <div class="usa-grid-full acq-documents">
-      <div class="usa-width-one-half" id="market-research">
-        <h3>Market Research Report</h3>
-        <p>Status: {{ buy.market_research_status }}</p>
-        {% if buy.market_research %}
-        <p><a href="{% url 'buys:document' buy.id 'market_research' %}">View</a></p>
-        <p>Download: <a href="{% url 'buys:download' buy.id 'market_research' 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id 'market_research' 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id 'market_research' 'pdf' %}">.pdf</a></p>
-        {% if perms.project.view_project %}
-        <button onclick="connectButtons(this)" type="submit" name="generate_market_research" data-a11y-dialog-show="confirm-dialog" formnovalidate>Regenerate</button>
-        {% endif %}
-        {% else %}
-        {% if perms.project.view_project %}
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" name="generate_market_research">Generate</button>
-        </form>
-        {% endif %}
-        {% endif %}
-      </div>
-      <div class="usa-width-one-half" id="qasp">
-        <h3>Another Document</h3>
-    </div>
-  </div>
+    {% for doc in buy.available_docs %}
+    {% if forloop.first %}<h2>Documents</h2>{% endif %}
+      {% if forloop.counter0|divisibleby:"2" %}<div class="usa-grid-full acq-documents">{% endif %}
+        <div class="usa-width-one-half" id="{{ doc }}">
+          <h3>{{ doc.name }}</h3>
+          {% if buy|has_document:doc.short %}
+          <p><a href="{% url 'buys:document' buy.id doc.short %}">View</a></p>
+          <p>Download: <a href="{% url 'buys:download' buy.id doc.short 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id doc.short 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id doc.short 'pdf' %}">.pdf</a></p>
+          {% if perms.project.view_project %}
+          <button onclick="connectButtons(this)" type="submit" name="generate_{{ doc.short }}" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
+          {% endif %}
+          {% else %}
+          {% if perms.project.view_project %}
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="generate_{{ doc.short }}">Generate</button>
+          </form>
+          {% endif %}
+          {% endif %}
+        </div>
+      {% if not forloop.counter0|divisibleby:"2" %}</div>{% endif %}
+    {% if forloop.last %}</div>{% endif %}
+    {% endfor %}
 </section>
 {% endblock %}
 

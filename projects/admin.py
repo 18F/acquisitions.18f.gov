@@ -174,6 +174,9 @@ class AgileBPAAdmin(admin.ModelAdmin):
                 'acquisition_plan',
                 'market_research',
                 'qasp',
+                'pws',
+                'rfq',
+                'interview_questions',
             ),
             'classes': ('collapse',)
         }),
