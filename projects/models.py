@@ -587,6 +587,9 @@ class Buy(models.Model):
     def is_private(self):
         return not self.public
 
+    #######################
+    # Period of Performance
+    #######################
     def _get_time_from_string(self, length):
         try:
             amount, units = length.split(' ')
@@ -671,7 +674,9 @@ class Buy(models.Model):
     def market_research_status(self):
         return 'Not yet generated' if self.market_research is None else 'Complete'
 
+    ###################
     # Date calculations
+    ###################
     def questions_due_by(self):
         if self.issue_date:
             return self.issue_date + timedelta(days=self.question_period_length)
@@ -684,7 +689,9 @@ class Buy(models.Model):
         else:
             return "To be determined"
 
+    ############################
     # Logicless template methods
+    ############################
     def procurement_vehicle(self):
         return self.get_procurement_method_display()
 
@@ -711,7 +718,9 @@ class Buy(models.Model):
         else:
             return None
 
+    #####################
     # Pre-issuance checks
+    #####################
     def all_nda_signed(self):
         panelists = self.technical_evaluation_panel.all()
         signers = self.nda_signed.all()
@@ -776,6 +785,9 @@ class Buy(models.Model):
             fields = []
         return fields
 
+    ############
+    # Validation
+    ############
     def clean(self):
         # Confirm option period existence if option period length is set
         if (self.option_period_length) and (self.option_periods == 0):
