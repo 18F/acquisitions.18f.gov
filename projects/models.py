@@ -567,12 +567,21 @@ class Buy(models.Model):
         help_text='Document: Oral Interview Questions'
     )
 
+    ################
+    # Django methods
+    ################
     def __str__(self):
         return "{0}".format(self.name)
 
     def get_absolute_url(self):
         return "/buys/{0}/".format(self.id)
 
+    class Meta:
+        pass
+
+    ############
+    # Buy status
+    ############
     def status(self):
         if self.delivery_date:
             status = "Delivered"
@@ -584,8 +593,24 @@ class Buy(models.Model):
             status = "Planning"
         return status
 
+    ###################
+    # Public or private
+    ###################
     def is_private(self):
         return not self.public
+
+    ##################################
+    # Simplified Acquisition Threshold
+    ##################################
+    # TODO: it'd be nice to break out compliance stuff into it's own thing.
+    # There are a few options for that: (1) it could be in another app that's
+    # imported here, (2) it could be a series of constants set in the settings,
+    # or (3) if we expect some things to change over time, it could be another
+    # model in the database.
+    SIMPLIFIED_ACQUISITION_THRESHOLD = 150000
+
+    def is_under_sat(self):
+        return self.dollars <= SIMPLIFIED_ACQUISITION_THRESHOLD
 
     #######################
     # Period of Performance
@@ -851,6 +876,3 @@ class Buy(models.Model):
                 'delivery_date': 'An award date and vendor are required to '
                                  'add the delivery date.'
             })
-
-    class Meta:
-        pass
