@@ -1,3 +1,4 @@
+acq-templates
 cfenv
 dj-database-url
 Django
@@ -18,5 +19,3 @@ PyJWT
 pypandoc
 requests
 whitenoise
-
--e git+https://github.com/18F/acq-templates.git@0914b6bdf2f28f7446903d913e707bf9fcac2f90#egg=acq_templates
