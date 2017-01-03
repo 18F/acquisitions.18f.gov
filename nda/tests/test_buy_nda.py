@@ -1,6 +1,6 @@
 import pytest
 from django.contrib.auth.models import User, Group
-from projects.factories import AgileBPAFactory
+from projects.factories import BuyFactory
 from acquisitions.factories import UserFactory
 
 
@@ -16,7 +16,7 @@ class TestBuyNDA:
     @pytest.fixture
     @pytest.mark.django_db
     def buy(self):
-        buy = AgileBPAFactory()
+        buy = BuyFactory()
         return buy
 
     @pytest.mark.django_db

@@ -2,14 +2,14 @@ from django.contrib.auth.models import Permission, User
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase, Client
 from django.shortcuts import reverse
-from projects.models import AgileBPA, Project
-from projects.factories import AgileBPAFactory
+from projects.models import Buy, Project
+from projects.factories import BuyFactory
 from acquisitions.factories import UserFactory
 
 
-class TestPrivateAgileBPAs(TestCase):
+class TestPrivateBuys(TestCase):
     def setUp(self):
-        self.buy = AgileBPAFactory.create(public=False)
+        self.buy = BuyFactory.create(public=False)
         self.user = UserFactory.create()
         self.client = Client()
 

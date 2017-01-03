@@ -170,9 +170,7 @@ class Project(models.Model):
 
     def budget_remaining(self):
         budget = self.dollars
-        for buy in self.agilebpa.all():
-            budget -= buy.dollars
-        for buy in self.micropurchase.all():
+        for buy in self.buy.all():
             budget -= buy.dollars
         return budget
 
@@ -320,7 +318,7 @@ CONTRACT_TYPE_CHOICES = (
 
 PROCUREMENT_METHOD_CHOICES = (
     ("agile_bpa", "Agile Development Services BPA"),
-    ('micropurchase', "Micro-purchase"),
+    ('micropurchase', "Micro-purchase Platform"),
 )
 
 
@@ -391,109 +389,6 @@ class Buy(models.Model):
         null=True,
     )
 
-    def __str__(self):
-        return "{0}".format(self.name)
-
-    def get_absolute_url(self):
-        return "/buys/{0}/".format(self.id)
-
-    def status(self):
-        if self.delivery_date:
-            status = "Delivered"
-        elif self.award_date:
-            status = "Awarded"
-        elif self.issue_date:
-            status = "Out for Bid"
-        else:
-            status = "Planning"
-        return status
-
-    def is_private(self):
-        return not self.public
-
-    def _get_time_from_string(self, length):
-        try:
-            amount, units = length.split(' ')
-            amount = int(amount)
-            if units == 'days':
-                duration = timedelta(days=amount)
-            elif units == 'weeks':
-                duration = timedelta(weeks=amount)
-            else:
-                raise ValueError('Couldn\'t parse input length')
-            return duration
-        except Exception:
-            return None
-
-    def period_of_performance(self):
-        # TODO: Find a way to display more than just days
-        try:
-            base = self._get_time_from_string(self.base_period_length)
-            option = self._get_time_from_string(self.option_period_length)
-            total = base + (self.option_periods * option)
-            return "{0} days".format(str(total.days))
-        except Exception:
-            return None
-
-    def available_docs(self):
-        docs = []
-        for field in self._meta.get_fields():
-            if 'Document' in field.help_text:
-                docs.append(
-                    {
-                        'name': field.verbose_name.title(),
-                        'short': field.name
-                    }
-                )
-        return docs
-
-    def create_document(self, doc_type):
-        doc_content = render_to_string(
-            'acq_templates/{0}/{1}.md'.format(
-                self.procurement_method,
-                doc_type,
-            ),
-            {'buy': self, 'date': date.today()}
-        )
-        setattr(self, doc_type, doc_content)
-        self.save(update_fields=[doc_type])
-
-    def clean_dollars(self):
-        # Confirm that buy cost doesn't exceed project value
-        dollars = self.cleaned_data['dollars']
-        project = self.cleaned_data['project']
-        if dollars > project.budget_remaining():
-            raise ValidationError({
-                'dollars': 'Value can\'t exceed project\'s remaining budget.'
-            })
-        return dollars
-
-    def clean_public(self):
-        # Check that buy is not public without associated project being public
-        public = cleaned_data['public']
-        project = cleaned_data['project']
-        if (project.public is not True) and (public is True):
-            raise ValidationError({
-                'public': 'May not be public if the associated project is not.'
-            })
-        return public
-
-    def clean_delivery_date(self):
-        # Check that delivery doesn't occur before award
-        delivery_date = cleaned_data['delivery_date']
-        award_date = cleaned_data['award_date']
-        vendor = cleaned_data['vendor']
-        if delivery_date and not award_date or not vendor:
-            raise ValidationError({
-                'delivery_date': 'An award date and vendor are required to '
-                                 'add the delivery date.'
-            })
-
-    class Meta:
-        abstract = True
-
-
-class AgileBPA(Buy):
     contractual_history = models.TextField(
         blank=False,
         null=False,
@@ -534,8 +429,6 @@ class AgileBPA(Buy):
     procurement_method = models.CharField(
         max_length=200,
         choices=PROCUREMENT_METHOD_CHOICES,
-        default="agile_bpa",
-        editable=False,
         blank=False,
         null=False,
     )
@@ -673,6 +566,76 @@ class AgileBPA(Buy):
         null=True,
         help_text='Document: Oral Interview Questions'
     )
+
+    def __str__(self):
+        return "{0}".format(self.name)
+
+    def get_absolute_url(self):
+        return "/buys/{0}/".format(self.id)
+
+    def status(self):
+        if self.delivery_date:
+            status = "Delivered"
+        elif self.award_date:
+            status = "Awarded"
+        elif self.issue_date:
+            status = "Out for Bid"
+        else:
+            status = "Planning"
+        return status
+
+    def is_private(self):
+        return not self.public
+
+    def _get_time_from_string(self, length):
+        try:
+            amount, units = length.split(' ')
+            amount = int(amount)
+            if units == 'days':
+                duration = timedelta(days=amount)
+            elif units == 'weeks':
+                duration = timedelta(weeks=amount)
+            else:
+                raise ValueError('Couldn\'t parse input length')
+            return duration
+        except Exception:
+            return None
+
+    def period_of_performance(self):
+        # TODO: Find a way to display more than just days
+        try:
+            base = self._get_time_from_string(self.base_period_length)
+            option = self._get_time_from_string(self.option_period_length)
+            total = base + (self.option_periods * option)
+            return "{0} days".format(str(total.days))
+        except Exception:
+            return None
+
+    ################
+    # Document stuff
+    ################
+    def create_document(self, doc_type):
+        doc_content = render_to_string(
+            'acq_templates/{0}/{1}.md'.format(
+                self.procurement_method,
+                doc_type,
+            ),
+            {'buy': self, 'date': date.today()}
+        )
+        setattr(self, doc_type, doc_content)
+        self.save(update_fields=[doc_type])
+
+    def available_docs(self):
+        docs = []
+        for field in self._meta.get_fields():
+            if 'Document' in field.help_text:
+                docs.append(
+                    {
+                        'name': field.verbose_name.title(),
+                        'short': field.name
+                    }
+                )
+        return docs
 
     def acquisition_plan_status(self):
         # TODO: find a way to display the incomplete fields on the page
@@ -860,41 +823,22 @@ class AgileBPA(Buy):
                     'naics_code': 'NAICS Code must be six digits'
                 })
 
-    class Meta:
-        verbose_name = 'Agile BPA Order'
-
-
-class Micropurchase(Buy):
-    procurement_method = models.CharField(
-        max_length=200,
-        choices=PROCUREMENT_METHOD_CHOICES,
-        default="micropurchase",
-        editable=False,
-        blank=False,
-        null=False,
-    )
-
-    def clean(self):
-        # Confirm that buy isn't over micro-purchase threshold
-        if self.dollars > 3500:
+        if self.dollars > self.project.budget_remaining():
             raise ValidationError({
-                'dollars': 'Value can\'t exceed the micro-purchase '
-                           'threshold of $3500'
+                'dollars': 'Value can\'t exceed project\'s remaining budget.'
             })
 
-        # Don't allow award date without issue date
-        if self.award_date and not self.issue_date:
+        if (self.project.public is not True) and (self.public is True):
             raise ValidationError({
-                'award_date': 'Please set an issue date first'
+                'public': 'May not be public if the associated project is not.'
+            })
+
+        # Check that delivery doesn't occur before award
+        if self.delivery_date and (not self.award_date or not self.vendor):
+            raise ValidationError({
+                'delivery_date': 'An award date and vendor are required to '
+                                 'add the delivery date.'
             })
 
     class Meta:
-        verbose_name = 'Micro-purchase'
-
-
-class OpenMarket(Buy):
-    pass
-
-
-class Software(Buy):
-    pass
+        pass

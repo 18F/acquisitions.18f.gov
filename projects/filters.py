@@ -1,20 +1,12 @@
 import django_filters
-from projects.models import IAA, Project, AgileBPA, Micropurchase
+from projects.models import IAA, Project, Buy
 
 
-class AgileBPAFilter(django_filters.rest_framework.FilterSet):
+class BuyFilter(django_filters.rest_framework.FilterSet):
     project_id = django_filters.CharFilter(name="project__id")
 
     class Meta:
-        model = AgileBPA
-        fields = ['id', 'name', 'project_id']
-
-
-class MicropurchaseFilter(django_filters.rest_framework.FilterSet):
-    project_id = django_filters.CharFilter(name="project__id")
-
-    class Meta:
-        model = Micropurchase
+        model = Buy
         fields = ['id', 'name', 'project_id']
 
 
