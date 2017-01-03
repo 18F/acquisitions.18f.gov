@@ -599,18 +599,22 @@ class Buy(models.Model):
     def is_private(self):
         return not self.public
 
-    ##################################
-    # Simplified Acquisition Threshold
-    ##################################
+    ########################
+    # Acquisition Thresholds
+    ########################
     # TODO: it'd be nice to break out compliance stuff into it's own thing.
     # There are a few options for that: (1) it could be in another app that's
     # imported here, (2) it could be a series of constants set in the settings,
     # or (3) if we expect some things to change over time, it could be another
     # model in the database.
+    MICROPURCHASE_THRESHOLD = 3500
     SIMPLIFIED_ACQUISITION_THRESHOLD = 150000
 
+    def is_micropurchase(self):
+        return self.dollars <= self.MICROPURCHASE_THRESHOLD
+
     def is_under_sat(self):
-        return self.dollars <= SIMPLIFIED_ACQUISITION_THRESHOLD
+        return self.dollars <= self.SIMPLIFIED_ACQUISITION_THRESHOLD
 
     #######################
     # Period of Performance
@@ -667,7 +671,7 @@ class Buy(models.Model):
 
     def acquisition_plan_status(self):
         # TODO: find a way to display the incomplete fields on the page
-        required_fields = [
+        acq_plan_fields = [
             self.base_period_length,
             self.contracting_office,
             self.contracting_officer,
@@ -687,10 +691,10 @@ class Buy(models.Model):
             return 'Not yet generated'
         else:
             incomplete_fields = []
-            for field in required_fields:
+            for field in acq_plan_fields:
                 if field is None:
                     incomplete_fields.append(field)
-            percentage = (len(incomplete_fields) / len(required_fields)) * 100
+            percentage = (len(incomplete_fields) / len(acq_plan_fields)) * 100
             return '{0:.2f}% Complete'.format(percentage)
 
     def qasp_status(self):
@@ -704,13 +708,15 @@ class Buy(models.Model):
     ###################
     def questions_due_by(self):
         if self.issue_date:
-            return self.issue_date + timedelta(days=self.question_period_length)
+            delta = timedelta(days=self.question_period_length)
+            return self.issue_date + delta
         else:
             return "To be determined"
 
     def submissions_due_by(self):
         if self.issue_date:
-            return self.issue_date + timedelta(days=self.submission_period_length)
+            delta = timedelta(days=self.submission_period_length)
+            return self.issue_date + delta
         else:
             return "To be determined"
 
@@ -758,29 +764,38 @@ class Buy(models.Model):
 
     def ready_to_issue(self):
         required_fields = [
-            self.acquisition_plan,
             self.base_period_length,
-            self.competition_strategy,
-            self.contract_type,
-            self.contracting_office,
-            self.contracting_officer_representative,
-            self.contracting_officer,
-            self.contracting_specialist,
-            self.contractual_history,
             self.description,
             self.dollars,
-            self.naics_code,
             self.name,
-            self.option_period_length,
-            self.option_periods,
             self.procurement_method,
             self.product_owner,
             self.project,
             self.public,
-            self.qasp,
-            self.rfq_id,
-            self.set_aside_status,
         ]
+        if not self.is_micropurchase():
+            required_fields += [
+                self.competition_strategy,
+                self.contract_type,
+                self.contracting_office,
+                self.contracting_officer_representative,
+                self.contracting_officer,
+                self.contracting_specialist,
+                self.contractual_history,
+                self.naics_code,
+                self.option_period_length,
+                self.option_periods,
+                self.rfq_id,
+                self.set_aside_status,
+            ]
+        if not self.is_under_sat():
+            required_fields += [
+                self.acquisition_plan,
+                self.market_research,
+                self.qasp,
+                self.pws,
+                self.rfq,
+            ]
         if None in required_fields or not self.all_nda_signed():
             return False
         else:
@@ -789,22 +804,22 @@ class Buy(models.Model):
     def locked_fields(self):
         if self.locked:
             fields = [
+                'acquisition_plan',
+                'base_period_length',
+                'contracting_office',
+                'contracting_officer_representative',
+                'contracting_officer',
+                'contracting_specialist',
+                'contractual_history',
+                'dollars'
+                'option_period_length',
+                'option_periods',
+                'procurement_method',
                 'project',
                 'public',
                 'qasp',
-                'acquisition_plan',
-                'contractual_history',
                 'rfq_id',
-                'contracting_office',
-                'contracting_officer',
-                'contracting_specialist',
-                'contracting_officer_representative',
                 'set_aside_status',
-                'procurement_method',
-                'base_period_length',
-                'option_periods',
-                'option_period_length',
-                'dollars'
             ]
         else:
             fields = []
@@ -814,24 +829,18 @@ class Buy(models.Model):
     # Validation
     ############
     def clean(self):
-        # Confirm option period existence if option period length is set
-        if (self.option_period_length) and (self.option_periods == 0):
-            raise ValidationError({
-                'option_period_length': 'The number of option periods must be '
-                'greater than 0 to set a length'
-            })
-
-        # Submission period must be longer than question period
-        if (self.question_period_length + 7) > self.submission_period_length:
-            raise ValidationError({
-                'submission_period_length': 'The submission period must be at'
-                'least 7 calendar days longer than the question period'
-            })
-
-        # Don't allow issue date without a lot of other stuff
+        # Validators for all buys
+        #########################
+        # Don't allow issue date until the buy is ready for issuance
         if self.issue_date and not self.ready_to_issue():
             raise ValidationError({
                 'issue_date': 'This buy is not yet ready to be issued'
+            })
+
+        # No vendor award before issuance, at least
+        if self.vendor and not self.issue_date:
+            raise ValidationError({
+                'vendor': 'There shouldn\'t be a vendor before issuing'
             })
 
         # Buys cannot be issued in the future
@@ -839,12 +848,6 @@ class Buy(models.Model):
         if self.issue_date and self.issue_date > date.today():
             raise ValidationError({
                 'issue_date': 'For now, buys cannot be set for future issuance'
-            })
-
-        # No vendors before issuing, at least
-        if self.vendor and not self.issue_date:
-            raise ValidationError({
-                'vendor': 'There shouldn\'t be a vendor before issuing'
             })
 
         # Don't allow award date without issue date
@@ -876,3 +879,35 @@ class Buy(models.Model):
                 'delivery_date': 'An award date and vendor are required to '
                                  'add the delivery date.'
             })
+
+        # Validators for micro-purchases
+        ################################
+        if self.procurement_method == 'micropurchase' and self.dollars and not self.is_micropurchase():
+            raise ValidationError({
+                'dollars': 'A micro-purchase must be $3500 or less'
+            })
+
+        if self.is_micropurchase():
+            pass
+
+        # Validators for buys under SAT
+        ###############################
+        if self.is_under_sat():
+            pass
+
+        # Validators for buys over SAT
+        ##############################
+        if not self.is_under_sat():
+            # Confirm option period existence if option period length is set
+            if (self.option_period_length) and (self.option_periods == 0):
+                raise ValidationError({
+                    'option_period_length': 'The number of option periods must'
+                    ' be greater than 0 to set a length'
+                })
+
+            # Submission period must be longer than question period
+            if (self.question_period_length + 7) > self.submission_period_length:
+                raise ValidationError({
+                    'submission_period_length': 'The submission period must be'
+                    ' at least 7 calendar days longer than the question period'
+                })
