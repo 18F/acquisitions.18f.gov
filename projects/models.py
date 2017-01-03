@@ -710,10 +710,16 @@ class AgileBPA(Buy):
 
     # Date calculations
     def questions_due_by(self):
-        return self.issue_date + timedelta(days=self.question_period_length)
+        if self.issue_date:
+            return self.issue_date + timedelta(days=self.question_period_length)
+        else:
+            return "To be determined"
 
     def submissions_due_by(self):
-        return self.issue_date + timedelta(days=self.submission_period_length)
+        if self.issue_date:
+            return self.issue_date + timedelta(days=self.submission_period_length)
+        else:
+            return "To be determined"
 
     # Logicless template methods
     def procurement_vehicle(self):
