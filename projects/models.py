@@ -265,69 +265,68 @@ class Vendor(models.Model):
         pass
 
 
-COMPETITION_STRATEGY_CHOICES = (
-    ("A/E Procedures", "A/E Procedures"),
-    ("Competed under SAP", "Competed under SAP"),
-    ("Competitive Delivery Order Fair Opportunity Provided",
-        "Competitive Delivery Order Fair Opportunity Provided"),
-    ("Competitive Schedule Buy", "Competitive Schedule Buy"),
-    ("Fair Opportunity", "Fair Opportunity"),
-    ("Follow On to Competed Action (FAR 6.302-1)",
-        "Follow On to Competed Action (FAR 6.302-1)"),
-    ("Follow On to Competed Action", "Follow On to Competed Action"),
-    ("Full and Open after exclusion of sources (competitive small business \
-        set-asides, competitive 8a)",
-        "Full and Open after exclusion of sources (competitive small \
-        business set-asides, competitive 8a)"),
-    ("Full and Open Competition Unrestricted",
-        "Full and Open Competition Unrestricted"),
-    ("Full and Open Competition", "Full and Open Competition"),
-    ("Limited Sources FSS Order", "Limited Sources FSS Order"),
-    ("Limited Sources", "Limited Sources"),
-    ("Non-Competitive Delivery Order", "Non-Competitive Delivery Order"),
-    ("Not Available for Competition (e.g., 8a sole source, HUBZone & \
-        SDVOSB sole source, Ability One, all > SAT)",
-        "Not Available for Competition (e.g., 8a sole source, HUBZone & \
-        SDVOSB sole source, Ability One, all > SAT)"),
-    ("Not Competed (e.g., sole source, urgency, etc., all > SAT)",
-        "Not Competed (e.g., sole source, urgency, etc., all > SAT)"),
-    ("Not Competed under SAP (e.g., Urgent, Sole source, Logical \
-        Follow-On, 8a, HUBZone & SDVOSB sole source, all < SAT)",
-        "Not Competed under SAP (e.g., Urgent, Sole source, Logical \
-        Follow-On, 8a, HUBZone & SDVOSB sole source, all < SAT)"),
-    ("Partial Small Business Set-Aside",
-        "Partial Small Business Set-Aside"),
-    ("Set-Aside", "Set-Aside"),
-    ("Sole Source", "Sole Source"),
-)
-
-SET_ASIDE_CHOICES = (
-    ("AbilityOne", "AbilityOne"),
-    ("HUBZone Small Business", "HUBZone Small Business"),
-    ("Multiple Small Business Categories",
-        "Multiple Small Business Categories"),
-    ("Other Than Small", "Other Than Small"),
-    ("Service Disabled Veteran-owned Small Business",
-        "Service Disabled Veteran-owned Small Business"),
-    ("Small Business", "Small Business"),
-    ("Small Disadvantaged Business (includes Section 8a)",
-        "Small Disadvantaged Business (includes Section 8a)"),
-    ("Veteran-Owned Small Business", "Veteran-Owned Small Business"),
-    ("Woman-Owned Small Business", "Woman-Owned Small Business"),
-)
-
-CONTRACT_TYPE_CHOICES = (
-    ("Labor Hours", "Labor Hours"),
-    ("Time and Materials", "Time and Materials"),
-)
-
-PROCUREMENT_METHOD_CHOICES = (
-    ("agile_bpa", "Agile Development Services BPA"),
-    ('micropurchase', "Micro-purchase Platform"),
-)
-
-
 class Buy(models.Model):
+    COMPETITION_STRATEGY_CHOICES = (
+        ("A/E Procedures", "A/E Procedures"),
+        ("Competed under SAP", "Competed under SAP"),
+        ("Competitive Delivery Order Fair Opportunity Provided",
+            "Competitive Delivery Order Fair Opportunity Provided"),
+        ("Competitive Schedule Buy", "Competitive Schedule Buy"),
+        ("Fair Opportunity", "Fair Opportunity"),
+        ("Follow On to Competed Action (FAR 6.302-1)",
+            "Follow On to Competed Action (FAR 6.302-1)"),
+        ("Follow On to Competed Action", "Follow On to Competed Action"),
+        ("Full and Open after exclusion of sources (competitive small business \
+            set-asides, competitive 8a)",
+            "Full and Open after exclusion of sources (competitive small \
+            business set-asides, competitive 8a)"),
+        ("Full and Open Competition Unrestricted",
+            "Full and Open Competition Unrestricted"),
+        ("Full and Open Competition", "Full and Open Competition"),
+        ("Limited Sources FSS Order", "Limited Sources FSS Order"),
+        ("Limited Sources", "Limited Sources"),
+        ("Non-Competitive Delivery Order", "Non-Competitive Delivery Order"),
+        ("Not Available for Competition (e.g., 8a sole source, HUBZone & \
+            SDVOSB sole source, Ability One, all > SAT)",
+            "Not Available for Competition (e.g., 8a sole source, HUBZone & \
+            SDVOSB sole source, Ability One, all > SAT)"),
+        ("Not Competed (e.g., sole source, urgency, etc., all > SAT)",
+            "Not Competed (e.g., sole source, urgency, etc., all > SAT)"),
+        ("Not Competed under SAP (e.g., Urgent, Sole source, Logical \
+            Follow-On, 8a, HUBZone & SDVOSB sole source, all < SAT)",
+            "Not Competed under SAP (e.g., Urgent, Sole source, Logical \
+            Follow-On, 8a, HUBZone & SDVOSB sole source, all < SAT)"),
+        ("Partial Small Business Set-Aside",
+            "Partial Small Business Set-Aside"),
+        ("Set-Aside", "Set-Aside"),
+        ("Sole Source", "Sole Source"),
+    )
+
+    SET_ASIDE_CHOICES = (
+        ("AbilityOne", "AbilityOne"),
+        ("HUBZone Small Business", "HUBZone Small Business"),
+        ("Multiple Small Business Categories",
+            "Multiple Small Business Categories"),
+        ("Other Than Small", "Other Than Small"),
+        ("Service Disabled Veteran-owned Small Business",
+            "Service Disabled Veteran-owned Small Business"),
+        ("Small Business", "Small Business"),
+        ("Small Disadvantaged Business (includes Section 8a)",
+            "Small Disadvantaged Business (includes Section 8a)"),
+        ("Veteran-Owned Small Business", "Veteran-Owned Small Business"),
+        ("Woman-Owned Small Business", "Woman-Owned Small Business"),
+    )
+
+    CONTRACT_TYPE_CHOICES = (
+        ("Labor Hours", "Labor Hours"),
+        ("Time and Materials", "Time and Materials"),
+    )
+
+    PROCUREMENT_METHOD_CHOICES = (
+        ("agile_bpa", "Agile Development Services BPA"),
+        ('micropurchase', "Micro-purchase Platform"),
+    )
+
     name = models.CharField(
         max_length=100,
         blank=False,
