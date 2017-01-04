@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import re
 
 from datetime import date, timedelta
 from django.db import models
@@ -6,7 +7,11 @@ from django.contrib.postgres.fields import ArrayField
 from django.shortcuts import reverse
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User, Group
-from django.template.loader import render_to_string
+from django.template.loader import (
+    render_to_string,
+    get_template,
+    TemplateDoesNotExist
+)
 
 
 # Create your models here.
@@ -669,39 +674,35 @@ class Buy(models.Model):
                 )
         return docs
 
-    def acquisition_plan_status(self):
-        # TODO: find a way to display the incomplete fields on the page
-        acq_plan_fields = [
-            self.base_period_length,
-            self.contracting_office,
-            self.contracting_officer,
-            self.contracting_specialist,
-            self.contractual_history,
-            self.description,
-            self.dollars,
-            self.name,
-            self.option_period_length,
-            self.option_periods,
-            self.procurement_method,
-            self.project,
-            self.rfq_id,
-            self.set_aside_status,
-        ]
-        if not self.acquisition_plan:
-            return 'Not yet generated'
-        else:
-            incomplete_fields = []
-            for field in acq_plan_fields:
-                if field is None:
-                    incomplete_fields.append(field)
-            percentage = (len(incomplete_fields) / len(acq_plan_fields)) * 100
-            return '{0:.2f}% Complete'.format(percentage)
-
-    def qasp_status(self):
-        return 'Not yet generated' if self.qasp is None else 'Complete'
-
-    def market_research_status(self):
-        return 'Not yet generated' if self.market_research is None else 'Complete'
+    def doc_status(self, doc_type):
+        try:
+            template = get_template('acq_templates/{0}/{1}.md'.format(
+                    self.procurement_method,
+                    doc_type,
+                ))
+        except:
+            return 'This buy has no {0} document'.format(doc_type)
+        with open(template.origin.name, 'r') as f:
+            content = f.read()
+        tags = re.findall(r'{{\sbuy\.(.*?)\s}}', content)
+        tags = set(tags)
+        complete_fields = []
+        for tag in tags:
+            try:
+                # Break the tag up into individual objects in order to walk
+                # through them
+                split = tag.split('.')
+                val = self
+                while len(split) > 0:
+                    val = getattr(val, split.pop(0))
+                if val is not None:
+                    complete_fields.append(tag)
+            except AttributeError:
+                # If an attribute errors, the object is None, which means we
+                # can ignore it here
+                pass
+        percentage = (len(complete_fields) / len(tags)) * 100
+        return '{0:.2f}% Complete'.format(percentage)
 
     ###################
     # Date calculations

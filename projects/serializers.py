@@ -31,8 +31,12 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class BuySerializer(serializers.ModelSerializer):
     project = ProjectSerializer()
-    procurement_method = serializers.CharField(source='get_procurement_method_display')
-    set_aside_status = serializers.CharField(source='get_set_aside_status_display')
+    procurement_method = serializers.CharField(
+        source='get_procurement_method_display'
+    )
+    set_aside_status = serializers.CharField(
+        source='get_set_aside_status_display'
+    )
 
     class Meta:
         model = Buy
@@ -45,7 +49,5 @@ class BuySerializer(serializers.ModelSerializer):
             'procurement_method',
             'status',
             'set_aside_status',
-            'rfq_id',
             'period_of_performance',
-            'github_repository',
         )
