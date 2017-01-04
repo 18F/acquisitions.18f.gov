@@ -704,6 +704,11 @@ class Buy(models.Model):
         percentage = (len(complete_fields) / len(tags)) * 100
         return '{0:.2f}% Complete'.format(percentage)
 
+    def acquisition_plan_review(self):
+        # TODO: method should return the acq plan status based on reviewers
+        # and their approvals
+        return "To be determined"
+
     ###################
     # Date calculations
     ###################
