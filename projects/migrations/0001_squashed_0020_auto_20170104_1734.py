@@ -145,63 +145,9 @@ class Migration(migrations.Migration):
             name='team_members',
             field=models.ManyToManyField(help_text='You may select from users who have signed the blanket NDA.', to=settings.AUTH_USER_MODEL),
         ),
-        migrations.CreateModel(
-            name='AgileBPA',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.TextField()),
-                ('dollars', models.PositiveIntegerField(null=True)),
-                ('public', models.BooleanField(default=False)),
-                ('contractual_history', models.TextField(default='This is the first contract for this functionality.')),
-                ('base_period_length', models.CharField(blank=True, max_length=100, null=True)),
-                ('option_periods', models.PositiveSmallIntegerField(blank=True, default=0, null=True)),
-                ('option_period_length', models.CharField(blank=True, max_length=100, null=True)),
-                ('procurement_method', models.CharField(default='Agile Development Services BPA Order', editable=False, max_length=200)),
-                ('set_aside_status', models.CharField(blank=True, choices=[('AbilityOne', 'AbilityOne'), ('HUBZone Small Business', 'HUBZone Small Business'), ('Multiple Small Business Categories', 'Multiple Small Business Categories'), ('Other Than Small', 'Other Than Small'), ('Service Disabled Veteran-owned Small Business', 'Service Disabled Veteran-owned Small Business'), ('Small Business', 'Small Business'), ('Small Disadvantaged Business (includes Section 8a)', 'Small Disadvantaged Business (includes Section 8a)'), ('Veteran-Owned Small Business', 'Veteran-Owned Small Business'), ('Woman-Owned Small Business', 'Woman-Owned Small Business')], max_length=200, null=True, verbose_name='Set-aside Status')),
-                ('rfq_id', models.CharField(blank=True, max_length=20, null=True, verbose_name='RFQ ID')),
-                ('github_repository', models.URLField(blank=True, null=True)),
-                ('locked', models.BooleanField(default=False)),
-                ('qasp', models.TextField(blank=True, null=True, verbose_name='QASP')),
-                ('acquisition_plan', models.TextField(blank=True, null=True)),
-                ('market_research', models.TextField(blank=True, null=True)),
-                ('issue_date', models.DateField(blank=True, null=True)),
-                ('award_date', models.DateField(blank=True, null=True)),
-                ('contracting_office', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='projects.ContractingOffice')),
-                ('contracting_officer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='projects.ContractingOfficer')),
-                ('contracting_officer_representative', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='projects.ContractingOfficerRepresentative')),
-                ('contracting_specialist', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='projects.ContractingSpecialist')),
-                ('nda_signed', models.ManyToManyField(blank=True, related_name='ndas', to=settings.AUTH_USER_MODEL)),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='buys', to='projects.Project')),
-                ('technical_evaluation_panel', models.ManyToManyField(blank=True, related_name='panels', to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
         migrations.AlterModelOptions(
             name='agencyoffice',
             options={'ordering': ['agency', 'name']},
-        ),
-        migrations.AlterModelOptions(
-            name='agilebpa',
-            options={'verbose_name': 'Agile BPA Order'},
-        ),
-        migrations.RemoveField(
-            model_name='agilebpa',
-            name='project',
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='amount_of_competition',
-            field=models.IntegerField(blank=True, null=True),
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='competition_strategy',
-            field=models.CharField(blank=True, choices=[('A/E Procedures', 'A/E Procedures'), ('Competed under SAP', 'Competed under SAP'), ('Competitive Delivery Order Fair Opportunity Provided', 'Competitive Delivery Order Fair Opportunity Provided'), ('Competitive Schedule Buy', 'Competitive Schedule Buy'), ('Fair Opportunity', 'Fair Opportunity'), ('Follow On to Competed Action (FAR 6.302-1)', 'Follow On to Competed Action (FAR 6.302-1)'), ('Follow On to Competed Action', 'Follow On to Competed Action'), ('Full and Open after exclusion of sources (competitive small business         set-asides, competitive 8a)', 'Full and Open after exclusion of sources (competitive small         business set-asides, competitive 8a)'), ('Full and Open Competition Unrestricted', 'Full and Open Competition Unrestricted'), ('Full and Open Competition', 'Full and Open Competition'), ('Limited Sources FSS Order', 'Limited Sources FSS Order'), ('Limited Sources', 'Limited Sources'), ('Non-Competitive Delivery Order', 'Non-Competitive Delivery Order'), ('Not Available for Competition (e.g., 8a sole source, HUBZone &         SDVOSB sole source, Ability One, all > SAT)', 'Not Available for Competition (e.g., 8a sole source, HUBZone &         SDVOSB sole source, Ability One, all > SAT)'), ('Not Competed (e.g., sole source, urgency, etc., all > SAT)', 'Not Competed (e.g., sole source, urgency, etc., all > SAT)'), ('Not Competed under SAP (e.g., Urgent, Sole source, Logical         Follow-On, 8a, HUBZone & SDVOSB sole source, all < SAT)', 'Not Competed under SAP (e.g., Urgent, Sole source, Logical         Follow-On, 8a, HUBZone & SDVOSB sole source, all < SAT)'), ('Partial Small Business Set-Aside', 'Partial Small Business Set-Aside'), ('Set-Aside', 'Set-Aside'), ('Sole Source', 'Sole Source')], max_length=200, null=True),
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='naics_code',
-            field=models.IntegerField(blank=True, null=True, verbose_name='NAICS Code'),
         ),
         migrations.AlterField(
             model_name='project',
@@ -215,16 +161,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
             ],
         ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='contract_type',
-            field=models.CharField(blank=True, choices=[('Labor Hours', 'Labor Hours'), ('Time and Materials', 'Time and Materials')], max_length=200, null=True),
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='requirements',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=200, null=True), blank=True, default=list, null=True, size=None),
-        ),
         migrations.CreateModel(
             name='AlternateContractingOfficerRepresentative',
             fields=[
@@ -235,71 +171,6 @@ class Migration(migrations.Migration):
             options={
                 'abstract': False,
             },
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='security_clearance_required',
-            field=models.BooleanField(default=False),
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='skills_needed',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=200, null=True), blank=True, default=list, null=True, size=None),
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='delivery_date',
-            field=models.DateField(blank=True, null=True),
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='google_drive_folder',
-            field=models.URLField(blank=True, null=True),
-        ),
-        migrations.AlterField(
-            model_name='agilebpa',
-            name='procurement_method',
-            field=models.CharField(choices=[('agile_bpa', 'Agile Development Services BPA'), ('micropurchase', 'Micro-purchase')], default='agile_bpa', editable=False, max_length=200),
-        ),
-        migrations.AlterField(
-            model_name='agilebpa',
-            name='acquisition_plan',
-            field=models.TextField(blank=True, help_text='Document: Acquisition Plan', null=True),
-        ),
-        migrations.AlterField(
-            model_name='agilebpa',
-            name='market_research',
-            field=models.TextField(blank=True, help_text='Document: Market Research', null=True),
-        ),
-        migrations.AlterField(
-            model_name='agilebpa',
-            name='qasp',
-            field=models.TextField(blank=True, help_text='Document: Quality Assurance Surveillance Plan', null=True, verbose_name='Quality Assurance Surveillance Plan'),
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='interview_questions',
-            field=models.TextField(blank=True, help_text='Document: Oral Interview Questions', null=True),
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='pws',
-            field=models.TextField(blank=True, help_text='Document: Performance Work Statement', null=True, verbose_name='Performance Work Statement'),
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='rfq',
-            field=models.TextField(blank=True, help_text='Document: Request for Quotations', null=True, verbose_name='Request for Quotations'),
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='question_period_length',
-            field=models.PositiveSmallIntegerField(blank=True, default=7, help_text='Length is measured in calendar days.', null=True),
-        ),
-        migrations.AddField(
-            model_name='agilebpa',
-            name='submission_period_length',
-            field=models.PositiveSmallIntegerField(blank=True, default=14, help_text='Length is measured in calendar days.', null=True),
         ),
         migrations.CreateModel(
             name='Buy',
@@ -351,32 +222,5 @@ class Migration(migrations.Migration):
                 ('technical_lead', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='technical_lead', to=settings.AUTH_USER_MODEL)),
                 ('vendor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='projects.Vendor')),
             ],
-        ),
-        migrations.RemoveField(
-            model_name='agilebpa',
-            name='contracting_office',
-        ),
-        migrations.RemoveField(
-            model_name='agilebpa',
-            name='contracting_officer',
-        ),
-        migrations.RemoveField(
-            model_name='agilebpa',
-            name='contracting_officer_representative',
-        ),
-        migrations.RemoveField(
-            model_name='agilebpa',
-            name='contracting_specialist',
-        ),
-        migrations.RemoveField(
-            model_name='agilebpa',
-            name='nda_signed',
-        ),
-        migrations.RemoveField(
-            model_name='agilebpa',
-            name='technical_evaluation_panel',
-        ),
-        migrations.DeleteModel(
-            name='AgileBPA',
         ),
     ]
