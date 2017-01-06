@@ -664,13 +664,22 @@ class Buy(models.Model):
     def available_docs(self):
         docs = []
         for field in self._meta.get_fields():
-            if 'Document' in field.help_text:
+            # Test every field to see if it has a document template. If it
+            # does, we can show it on the buy's page.
+            try:
+                template = 'acq_templates/{0}/{1}.md'.format(
+                                self.procurement_method,
+                                field.name,
+                            )
+                get_template(template)
                 docs.append(
                     {
                         'name': field.verbose_name.title(),
                         'short': field.name
                     }
                 )
+            except:
+                pass
         return docs
 
     def doc_status(self, doc_type):
