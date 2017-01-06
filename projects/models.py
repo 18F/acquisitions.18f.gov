@@ -678,7 +678,7 @@ class Buy(models.Model):
                         'short': field.name
                     }
                 )
-            except:
+            except TemplateDoesNotExist:
                 pass
         return docs
 
