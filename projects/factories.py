@@ -118,15 +118,20 @@ class ContractingOfficerRepresentativeFactory(
         ContractingOfficeFactory
     )
 
+procurement_methods = [x[0] for x in Buy.PROCUREMENT_METHOD_CHOICES]
+def generate_procurement_method():
+    return random.choice(procurement_methods)
 
 class BuyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Buy
 
+
     project = factory.SubFactory(
         ProjectFactory,
         public=factory.SelfAttribute('..public')
     )
+    procurement_method = factory.LazyFunction(generate_procurement_method)
     description = factory.Faker('paragraph')
     name = factory.Faker('catch_phrase')
     public = factory.Faker('boolean')
