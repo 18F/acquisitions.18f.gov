@@ -55,7 +55,6 @@ INSTALLED_APPS = (
     'markdown_deux',
     'floppyforms',
     'rest_framework_docs',
-    'drf_multiple_model',
 )
 
 MIDDLEWARE_CLASSES = (

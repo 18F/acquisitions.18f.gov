@@ -10,18 +10,14 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from drf_multiple_model.views import MultipleModelAPIView
-from drf_multiple_model.mixins import Query
-from projects.models import IAA, Project, AgileBPA, Micropurchase
+from projects.models import IAA, Project, Buy
 from projects.serializers import (
     IAASerializer,
     ProjectSerializer,
-    AgileBPASerializer,
-    MicropurchaseSerializer,
+    BuySerializer,
 )
 from projects.filters import (
-    AgileBPAFilter,
-    MicropurchaseFilter,
+    BuyFilter,
     ProjectFilter,
 )
 from nda.forms import NDAForm
@@ -90,10 +86,7 @@ def buys(request):
 
 
 def buy(request, buy):
-    try:
-        buy = Micropurchase.objects.get(id=buy)
-    except Micropurchase.DoesNotExist:
-        buy = get_object_or_404(AgileBPA, id=buy)
+    buy = get_object_or_404(Buy, id=buy)
     if not _public_check(buy, request.user):
         return render(request, "projects/private-page.html")
     if request.method == 'POST':
@@ -113,7 +106,7 @@ def buy(request, buy):
 def buy_nda(request, buy):
     if buy is None:
         return redirect(reverse('buys:buys'))
-    buy = AgileBPA.objects.get(id=buy)
+    buy = Buy.objects.get(id=buy)
     nda_form = NDAForm(request.POST or None)
     if nda_form.is_valid():
         buy.nda_signed.add(request.user)
@@ -126,7 +119,7 @@ def buy_nda(request, buy):
 
 
 def document(request, buy, doc_type):
-    buy = get_object_or_404(AgileBPA, id=buy)
+    buy = get_object_or_404(Buy, id=buy)
     if not _public_check(buy, request.user):
         raise Http404
     # Get the content of the document
@@ -146,7 +139,7 @@ def document(request, buy, doc_type):
 
 
 def download(request, buy, doc_type, doc_format):
-    buy = get_object_or_404(AgileBPA, id=buy)
+    buy = get_object_or_404(Buy, id=buy)
     supported_formats = ['markdown', 'md', 'docx', 'pdf']
     # Get the content of the document
     doc_content = _get_doc(buy, doc_type)
@@ -268,77 +261,19 @@ class ProjectDetail(mixins.RetrieveModelMixin,
         return self.retrieve(request, *args, **kwargs)
 
 
-class BuyList(MultipleModelAPIView):
+class BuyList(mixins.ListModelMixin, generics.GenericAPIView):
     """
     List all buys. This response includes all buys across the various
     categories of buy that are available in the system.
     """
-
-    flat = True
-    sorting_field = 'id'
-    add_model_type = False
-
-    @staticmethod
-    def buy_filter(queryset, request, *args, **kwargs):
-        if 'id' in request.query_params:
-            buy_id = request.query_params['id']
-            queryset = queryset.filter(id=buy_id)
-        if 'project_id' in request.query_params:
-            project_id = request.query_params['project_id']
-            queryset = queryset.filter(project__id=project_id)
-        if 'name' in request.query_params:
-            name = request.query_params['name']
-            queryset = queryset.filter(name=name)
-        # TODO: allow filtering by procurement_method
-        return queryset
-
-    def get_queryList(self):
-        if self.request.user.has_perm('projects.view_project'):
-            queryList = (
-                Query(
-                    AgileBPA.objects.all(),
-                    AgileBPASerializer,
-                    filter_fn=self.buy_filter,
-                ),
-                Query(
-                    Micropurchase.objects.all(),
-                    MicropurchaseSerializer,
-                    filter_fn=self.buy_filter,
-                )
-            )
-            return queryList
-        else:
-            queryList = (
-                Query(
-                    AgileBPA.objects.select_related('project').filter(
-                        public=True, project__public=True
-                    ),
-                    AgileBPASerializer,
-                    filter_fn=self.buy_filter,
-                ),
-                Query(
-                    Micropurchase.objects.select_related('project').filter(
-                        public=True, project__public=True),
-                    MicropurchaseSerializer,
-                    filter_fn=self.buy_filter,
-                )
-            )
-            return queryList
-
-
-class AgileBPAList(mixins.ListModelMixin,
-                   generics.GenericAPIView):
-    """
-    List all Agile BPA buys.
-    """
-    serializer_class = AgileBPASerializer
-    filter_class = AgileBPAFilter
+    serializer_class = BuySerializer
+    filter_class = BuyFilter
 
     def get_queryset(self):
         if self.request.user.has_perm('projects.view_project'):
-            return AgileBPA.objects.all()
+            return Buy.objects.all()
         else:
-            return AgileBPA.objects.select_related('project').filter(
+            return Buy.objects.select_related('project').filter(
                 public=True,
                 project__public=True
             )
@@ -347,64 +282,19 @@ class AgileBPAList(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
 
-class AgileBPADetail(mixins.RetrieveModelMixin,
-                     generics.GenericAPIView):
+class BuyDetail(mixins.RetrieveModelMixin,
+                generics.GenericAPIView):
     """
-    Retrieve details of one Agile BPA buy.
+    Retrieve details of one buy.
     """
-    serializer_class = AgileBPASerializer
+    serializer_class = BuySerializer
 
     def get_queryset(self):
-        buy = AgileBPA.objects.get(pk=self.kwargs['pk'])
+        buy = Buy.objects.get(pk=self.kwargs['pk'])
         if buy.public is True:
-            return AgileBPA.objects.filter(pk=self.kwargs['pk'])
+            return Buy.objects.filter(pk=self.kwargs['pk'])
         elif self.request.user.has_perm('projects.view_project'):
-            return AgileBPA.objects.filter(pk=self.kwargs['pk'])
-        else:
-            raise Http404
-
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-
-
-class MicropurchaseList(mixins.ListModelMixin,
-                        generics.GenericAPIView):
-    """
-    List all Micro-purchase buys. Micro-purchases have a maximum value of $3500
-    and require significantly less information that the other procurement
-    methods.
-    """
-    serializer_class = MicropurchaseSerializer
-    filter_class = MicropurchaseFilter
-
-    def get_queryset(self):
-        if self.request.user.has_perm('projects.view_project'):
-            return Micropurchase.objects.all()
-        else:
-            return Micropurchase.objects.select_related('project').filter(
-                public=True,
-                project__public=True
-            )
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-
-class MicropurchaseDetail(mixins.RetrieveModelMixin,
-                          generics.GenericAPIView):
-    """
-    Retrieve details of one Micro-purchase buy. Micro-purchases have a maximum
-    value of $3500 and require significantly less information that the other
-    procurement methods.
-    """
-    serializer_class = MicropurchaseSerializer
-
-    def get_queryset(self):
-        buy = Micropurchase.objects.get(pk=self.kwargs['pk'])
-        if buy.public is True:
-            return Micropurchase.objects.filter(pk=self.kwargs['pk'])
-        elif self.request.user.has_perm('projects.view_project'):
-            return Micropurchase.objects.filter(pk=self.kwargs['pk'])
+            return Buy.objects.filter(pk=self.kwargs['pk'])
         else:
             raise Http404
 

@@ -1,10 +1,8 @@
 #! /usr/bin/env python3
 from django.core.management.base import BaseCommand, CommandError
 from projects.factories import (
-    AgileBPAFactory,
-    AddAgileBPAFactory,
-    MicropurchaseFactory,
-    AddMicropurchaseFactory,
+    BuyFactory,
+    AddBuyFactory,
 )
 
 
@@ -29,8 +27,6 @@ class Command(BaseCommand):
         number = int(options['number'])
 
         if options['add']:
-            AddAgileBPAFactory.create_batch(number)
-            AddMicropurchaseFactory.create_batch(number)
+            AddBuyFactory.create_batch(number)
         else:
-            AgileBPAFactory.create_batch(number)
-            MicropurchaseFactory.create_batch(number)
+            BuyFactory.create_batch(number)

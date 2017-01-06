@@ -1,9 +1,9 @@
 import pytest
 from datetime import date
 from django.core.exceptions import ValidationError
-from projects.models import AgileBPA, Project
+from projects.models import Buy, Project
 from projects.factories import (
-    AgileBPAFactory,
+    BuyFactory,
     ProjectFactory,
     ContractingOfficeFactory,
     ContractingOfficerFactory,
@@ -18,7 +18,7 @@ class TestLocking:
     @pytest.mark.django_db
     def buy(self):
         project = ProjectFactory(public=True)
-        buy = AgileBPAFactory(project=project)
+        buy = BuyFactory(project=project)
         return buy
 
     @pytest.fixture
@@ -37,7 +37,7 @@ class TestLocking:
         buy.naics_code = 444444
         buy.option_period_length = '3 months'
         buy.option_periods = 3
-        buy.procurement_method = 'Agile BPA'
+        buy.procurement_method = 'agile_bpa'
         buy.product_owner = UserFactory()
         buy.public = True
         buy.qasp = '# QASP'
@@ -50,6 +50,7 @@ class TestLocking:
         assert not buy.ready_to_issue()
         with pytest.raises(ValidationError):
             buy.issue_date = date.today()
+            print(buy.delivery_date)
             buy.full_clean()
             buy.save()
 

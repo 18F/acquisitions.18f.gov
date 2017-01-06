@@ -2,8 +2,8 @@ from django.contrib.auth.models import Permission, User
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase, Client
 from django.shortcuts import reverse
-from projects.models import AgileBPA, Project
-from projects.factories import AgileBPAFactory, ProjectFactory
+from projects.models import Buy, Project
+from projects.factories import BuyFactory, ProjectFactory
 from acquisitions.factories import UserFactory
 
 

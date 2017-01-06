@@ -7,13 +7,12 @@ from django.forms import Textarea
 from projects.models import (
     Agency,
     AgencyOffice,
-    AgileBPA,
+    Buy,
     ContractingOffice,
     ContractingOfficer,
     ContractingOfficerRepresentative,
     ContractingSpecialist,
     IAA,
-    Micropurchase,
     Project,
 )
 from projects.widgets import DurationMultiWidget
@@ -29,7 +28,6 @@ from django.contrib.postgres.forms import SimpleArrayField
     ContractingOfficerRepresentative,
     Agency,
     AgencyOffice,
-    Micropurchase,
 )
 class WorkAdmin(admin.ModelAdmin):
     pass
@@ -52,9 +50,9 @@ class ProjectAdmin(admin.ModelAdmin):
             return []
 
 
-class AgileBPAForm(forms.ModelForm):
+class BuyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(AgileBPAForm, self).__init__(*args, **kwargs)
+        super(BuyForm, self).__init__(*args, **kwargs)
 
         # Limit the queryset for the technical evaluation panel to team members
         # for this project
@@ -94,7 +92,7 @@ class AgileBPAForm(forms.ModelForm):
     )
 
     class Meta:
-        model = AgileBPA
+        model = Buy
         exclude = ('nda_signed',)
         widgets = {
             'base_period_length': DurationMultiWidget(),
@@ -102,9 +100,9 @@ class AgileBPAForm(forms.ModelForm):
         }
 
 
-@admin.register(AgileBPA)
-class AgileBPAAdmin(admin.ModelAdmin):
-    form = AgileBPAForm
+@admin.register(Buy)
+class BuyAdmin(admin.ModelAdmin):
+    form = BuyForm
     filter_horizontal = ('technical_evaluation_panel',)
     fieldsets = (
         (None, {

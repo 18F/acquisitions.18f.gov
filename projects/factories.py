@@ -6,8 +6,7 @@ from acquisitions.factories import UserFactory
 from projects.models import (
     IAA,
     Project,
-    AgileBPA,
-    Micropurchase,
+    Buy,
     ContractingOffice,
     ContractingSpecialist,
     ContractingOfficer,
@@ -119,15 +118,20 @@ class ContractingOfficerRepresentativeFactory(
         ContractingOfficeFactory
     )
 
+procurement_methods = [x[0] for x in Buy.PROCUREMENT_METHOD_CHOICES]
+def generate_procurement_method():
+    return random.choice(procurement_methods)
 
-class AgileBPAFactory(factory.django.DjangoModelFactory):
+class BuyFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = AgileBPA
+        model = Buy
+
 
     project = factory.SubFactory(
         ProjectFactory,
         public=factory.SelfAttribute('..public')
     )
+    procurement_method = factory.LazyFunction(generate_procurement_method)
     description = factory.Faker('paragraph')
     name = factory.Faker('catch_phrase')
     public = factory.Faker('boolean')
@@ -139,28 +143,5 @@ class AgileBPAFactory(factory.django.DjangoModelFactory):
         return random.randint(min, max)
 
 
-class AddAgileBPAFactory(AgileBPAFactory):
-    project = factory.Iterator(Project.objects.all())
-
-
-class MicropurchaseFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = Micropurchase
-
-    project = factory.SubFactory(
-        ProjectFactory,
-        public=factory.SelfAttribute('..public')
-    )
-    description = factory.Faker('paragraph')
-    name = factory.Faker('catch_phrase')
-    public = factory.Faker('boolean')
-
-    @factory.lazy_attribute
-    def dollars(self):
-        min = 500
-        max = 3500
-        return random.randint(min, max)
-
-
-class AddMicropurchaseFactory(MicropurchaseFactory):
+class AddBuyFactory(BuyFactory):
     project = factory.Iterator(Project.objects.all())
