@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+export HOME=/home/vcap/app
+export TMPDIR=/home/vcap/tmp
+cd /home/vcap/app
+source .profile.d/python.sh
