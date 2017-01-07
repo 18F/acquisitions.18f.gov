@@ -138,7 +138,7 @@ MEDIA_URL = '/media/'
 # Cloud.gov UAA
 UAA_AUTH_URL = 'https://login.fr.cloud.gov/oauth/authorize'
 
-UAA_TOKEN_URL = 'https://uaa.cloud.gov/oauth/token'
+UAA_TOKEN_URL = 'https://uaa.fr.cloud.gov/oauth/token'
 
 UAA_CLIENT_ID = os.environ.get('UAA_CLIENT_ID', 'acquisitions-dev')
 
