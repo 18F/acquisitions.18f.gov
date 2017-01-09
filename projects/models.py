@@ -12,6 +12,7 @@ from django.template.loader import (
     get_template,
     TemplateDoesNotExist
 )
+from projects.fields import DocumentField
 
 
 # Create your models here.
@@ -537,38 +538,38 @@ class Buy(models.Model):
 
     # Documents for the buy
     # TODO: Consider using a MarkdownField() of some sort for in-app editing
-    qasp = models.TextField(
+    qasp = DocumentField(
         blank=True,
         null=True,
         verbose_name='Quality Assurance Surveillance Plan',
-        help_text='Document: Quality Assurance Surveillance Plan',
+        public=True
     )
-    acquisition_plan = models.TextField(
+    acquisition_plan = DocumentField(
         blank=True,
         null=True,
-        help_text='Document: Acquisition Plan',
+        public=False
     )
-    market_research = models.TextField(
+    market_research = DocumentField(
         blank=True,
         null=True,
-        help_text='Document: Market Research',
+        public=True
     )
-    pws = models.TextField(
+    pws = DocumentField(
         blank=True,
         null=True,
         verbose_name='Performance Work Statement',
-        help_text='Document: Performance Work Statement',
+        public=True
     )
-    rfq = models.TextField(
+    rfq = DocumentField(
         blank=True,
         null=True,
         verbose_name='Request for Quotations',
-        help_text='Document: Request for Quotations'
+        public=True
     )
-    interview_questions = models.TextField(
+    interview_questions = DocumentField(
         blank=True,
         null=True,
-        help_text='Document: Oral Interview Questions'
+        public=True
     )
 
     ################
@@ -661,24 +662,17 @@ class Buy(models.Model):
         setattr(self, doc_type, doc_content)
         self.save(update_fields=[doc_type])
 
-    def available_docs(self):
+    def available_docs(self, access_private=False):
         docs = []
         for field in self._meta.get_fields():
             # Test every field to see if it has a document template. If it
             # does, we can show it on the buy's page.
             try:
-                template = 'acq_templates/{0}/{1}.md'.format(
-                                self.procurement_method,
-                                field.name,
-                            )
-                get_template(template)
-                docs.append(
-                    {
-                        'name': field.verbose_name.title(),
-                        'short': field.name
-                    }
-                )
-            except TemplateDoesNotExist:
+                if field.public:
+                    docs.append(field.name)
+                if not field.public and access_private:
+                    docs.append(field.name)
+            except AttributeError:
                 pass
         return docs
 

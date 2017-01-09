@@ -70,7 +70,9 @@ class TestBuyModel:
             'interview_questions',
             'market_research',
         ])
-        assert 'acquisition_plan' not in buy.available_docs(access_private=False)
+        assert 'acquisition_plan' not in buy.available_docs(
+            access_private=False
+        )
 
     @pytest.mark.django_db
     def test_document_status(self):
