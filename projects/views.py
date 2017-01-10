@@ -45,7 +45,7 @@ def _make_response(doc_content, name, doc_type, doc_format):
 
 
 def _get_doc(buy, doc_type):
-    available_docs = [d['short'] for d in buy.available_docs()]
+    available_docs = [d for d in buy.available_docs()]
     # Check that the request is for a document that is available
     if doc_type not in available_docs:
         raise Http404
@@ -90,7 +90,7 @@ def buy(request, buy):
     if not _public_check(buy, request.user):
         return render(request, "projects/private-page.html")
     if request.method == 'POST':
-        doc_type = [i for i in request.POST if re.match("generate_\w+")]
+        doc_type = [i for i in request.POST if re.match("generate_\w+", i)]
         if len(doc_type) > 0:
             doc_type = doc_type[0][9:]
             buy.create_document(doc_type)
