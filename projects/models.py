@@ -589,12 +589,15 @@ class Buy(models.Model):
     # Buy status
     ############
     def status(self):
-        if self.delivery_date:
-            status = "Delivered"
-        elif self.award_date:
-            status = "Awarded"
-        elif self.issue_date:
-            status = "Out for Bid"
+        if self.delivery_date is not None:
+            if self.delivery_date <= date.today():
+                status = "Delivered"
+        elif self.award_date is not None:
+            if self.award_date <= date.today():
+                status = "Awarded"
+        elif self.issue_date is not None:
+            if self.issue_date <= date.today():
+                status = "Out for Bid"
         else:
             status = "Planning"
         return status
@@ -867,18 +870,16 @@ class Buy(models.Model):
                 'vendor': 'There shouldn\'t be a vendor before issuing'
             })
 
-        # Buys cannot be issued in the future
-        # TODO: add appropriate logic to let buys be set for future issuance
-        if self.issue_date and self.issue_date > date.today():
-            raise ValidationError({
-                'issue_date': 'For now, buys cannot be set for future issuance'
-            })
-
         # Don't allow award date without issue date
         if self.award_date and not self.issue_date:
             raise ValidationError({
                 'award_date': 'Please set an issue date first'
             })
+        elif self.award_date and self.issue_date:
+            if self.award_date < self.issue_date:
+                raise ValidationError({
+                    'award_date': 'Must be later than issue date'
+                })
 
         # Check NAICS Code
         if self.naics_code:
@@ -903,6 +904,11 @@ class Buy(models.Model):
                 'delivery_date': 'An award date and vendor are required to '
                                  'add the delivery date.'
             })
+        elif self.delivery_date and self.award_date:
+            if self.delivery_date < self.award_date:
+                raise ValidationError({
+                    'delivery_date' 'Must be later than award date'
+                })
 
         # Validators for micro-purchases
         ################################
