@@ -558,18 +558,19 @@ class Buy(models.Model):
         blank=True,
         null=True,
         verbose_name='Performance Work Statement',
-        public=True
+        public_after='issue_date'
     )
     rfq = DocumentField(
         blank=True,
         null=True,
         verbose_name='Request for Quotations',
-        public=True
+        public_after='issue_date'
     )
     interview_questions = DocumentField(
+        # TODO: need template for interview questions
         blank=True,
         null=True,
-        public=True
+        public_after='award_date'
     )
 
     ################
@@ -665,18 +666,33 @@ class Buy(models.Model):
     def available_docs(self, access_private=False):
         docs = []
         for field in self._meta.get_fields():
-            # Test every field to see if it has a document template. If it
-            # does, we can show it on the buy's page.
             try:
-                if field.public:
+                get_template('acq_templates/{0}/{1}.md'.format(
+                        self.procurement_method,
+                        field.name,
+                    ))
+                if self.doc_access_status(field.name, access_private):
                     docs.append(field.name)
-                if not field.public and access_private:
-                    docs.append(field.name)
-            except AttributeError:
+            except TemplateDoesNotExist:
                 pass
         return docs
 
-    def doc_status(self, doc_type):
+    def doc_access_status(self, doc_type, access_private=False):
+        # Grant access to all docs for those with private access
+        if access_private:
+            return True
+        # Check if the field has "public" boolean set
+        maybe_public = self._meta.get_field(doc_type).public
+        if maybe_public is not None:
+            return maybe_public
+        # Finally, see if field relies on another field for public status
+        public_after = self._meta.get_field(doc_type).public_after
+        if getattr(self, public_after) is not None:
+            return True
+        else:
+            return False
+
+    def doc_completion_status(self, doc_type):
         try:
             template = get_template('acq_templates/{0}/{1}.md'.format(
                     self.procurement_method,

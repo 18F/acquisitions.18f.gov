@@ -7,6 +7,12 @@ class DocumentField(TextField):
     "private"
 
     def __init__(self, *args, **kwargs):
-        public = kwargs.pop('public', False)
-        self.public = public
+        public = kwargs.pop('public', None)
+        public_after = kwargs.pop('public_after', None)
+        if public_after is not None:
+            self.public_after = public_after
+            self.public = None
+        elif public is not None:
+            self.public_after = None
+            self.public = public
         super(DocumentField, self).__init__(*args, **kwargs)

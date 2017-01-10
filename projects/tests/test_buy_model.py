@@ -77,4 +77,4 @@ class TestBuyModel:
     @pytest.mark.django_db
     def test_document_status(self):
         buy = BuyFactory(procurement_method='agile_bpa')
-        assert buy.doc_status('market_research') == "100.00% Complete"
+        assert buy.doc_completion_status('market_research') == "100.00% Complete"
