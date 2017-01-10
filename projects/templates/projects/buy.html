@@ -56,18 +56,18 @@
     {% if forloop.first %}<h2>Documents</h2>{% endif %}
       {% if forloop.counter0|divisibleby:"2" %}<div class="usa-grid-full acq-documents">{% endif %}
         <div class="usa-width-one-half" id="{{ doc }}">
-          <h3>{{ doc.name }}</h3>
-          {% if buy|has_document:doc.short %}
-          <p><a href="{% url 'buys:document' buy.id doc.short %}">View</a></p>
-          <p>Download: <a href="{% url 'buys:download' buy.id doc.short 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id doc.short 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id doc.short 'pdf' %}">.pdf</a></p>
+          <h3>{{ doc|title_format }}</h3>
+          {% if buy|has_document:doc %}
+          <p><a href="{% url 'buys:document' buy.id doc %}">View</a></p>
+          <p>Download: <a href="{% url 'buys:download' buy.id doc 'markdown' %}">.md</a> | <a href="{% url 'buys:download' buy.id doc 'docx' %}">.docx</a> | <a href="{% url 'buys:download' buy.id doc 'pdf' %}">.pdf</a></p>
           {% if perms.project.view_project %}
-          <button onclick="connectButtons(this)" type="submit" name="generate_{{ doc.short }}" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
+          <button onclick="connectButtons(this)" type="submit" name="generate_{{ doc }}" data-a11y-dialog-show="confirm-dialog">Regenerate</button>
           {% endif %}
           {% else %}
           {% if perms.project.view_project %}
           <form method="post">
             {% csrf_token %}
-            <button type="submit" name="generate_{{ doc.short }}">Generate</button>
+            <button type="submit" name="generate_{{ doc }}">Generate</button>
           </form>
           {% endif %}
           {% endif %}

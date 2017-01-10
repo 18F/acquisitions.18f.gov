@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 import re
 
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.shortcuts import reverse
@@ -12,6 +12,7 @@ from django.template.loader import (
     get_template,
     TemplateDoesNotExist
 )
+from projects.fields import DocumentField
 
 
 # Create your models here.
@@ -108,7 +109,7 @@ class IAA(models.Model):
         return budget
 
     def clean(self):
-        if self.signed_on > date.today():
+        if self.signed_on > datetime.now():
             raise ValidationError({
                 'signed_on': 'Date may not be in the future.'
             })
@@ -375,15 +376,15 @@ class Buy(models.Model):
     )
 
     # Milestone dates
-    issue_date = models.DateField(
+    issue_date = models.DateTimeField(
         blank=True,
         null=True,
     )
-    award_date = models.DateField(
+    award_date = models.DateTimeField(
         blank=True,
         null=True,
     )
-    delivery_date = models.DateField(
+    delivery_date = models.DateTimeField(
         blank=True,
         null=True,
     )
@@ -537,38 +538,39 @@ class Buy(models.Model):
 
     # Documents for the buy
     # TODO: Consider using a MarkdownField() of some sort for in-app editing
-    qasp = models.TextField(
+    qasp = DocumentField(
         blank=True,
         null=True,
         verbose_name='Quality Assurance Surveillance Plan',
-        help_text='Document: Quality Assurance Surveillance Plan',
+        public=True
     )
-    acquisition_plan = models.TextField(
+    acquisition_plan = DocumentField(
         blank=True,
         null=True,
-        help_text='Document: Acquisition Plan',
+        public=False
     )
-    market_research = models.TextField(
+    market_research = DocumentField(
         blank=True,
         null=True,
-        help_text='Document: Market Research',
+        public=True
     )
-    pws = models.TextField(
+    pws = DocumentField(
         blank=True,
         null=True,
         verbose_name='Performance Work Statement',
-        help_text='Document: Performance Work Statement',
+        public_after='issue_date'
     )
-    rfq = models.TextField(
+    rfq = DocumentField(
         blank=True,
         null=True,
         verbose_name='Request for Quotations',
-        help_text='Document: Request for Quotations'
+        public_after='issue_date'
     )
-    interview_questions = models.TextField(
+    interview_questions = DocumentField(
+        # TODO: need template for interview questions
         blank=True,
         null=True,
-        help_text='Document: Oral Interview Questions'
+        public_after='award_date'
     )
 
     ################
@@ -587,12 +589,15 @@ class Buy(models.Model):
     # Buy status
     ############
     def status(self):
-        if self.delivery_date:
-            status = "Delivered"
-        elif self.award_date:
-            status = "Awarded"
-        elif self.issue_date:
-            status = "Out for Bid"
+        if self.delivery_date is not None:
+            if self.delivery_date <= datetime.now():
+                status = "Delivered"
+        elif self.award_date is not None:
+            if self.award_date <= datetime.now():
+                status = "Awarded"
+        elif self.issue_date is not None:
+            if self.issue_date <= datetime.now():
+                status = "Out for Bid"
         else:
             status = "Planning"
         return status
@@ -661,28 +666,39 @@ class Buy(models.Model):
         setattr(self, doc_type, doc_content)
         self.save(update_fields=[doc_type])
 
-    def available_docs(self):
+    def available_docs(self, access_private=False):
         docs = []
         for field in self._meta.get_fields():
-            # Test every field to see if it has a document template. If it
-            # does, we can show it on the buy's page.
             try:
-                template = 'acq_templates/{0}/{1}.md'.format(
-                                self.procurement_method,
-                                field.name,
-                            )
-                get_template(template)
-                docs.append(
-                    {
-                        'name': field.verbose_name.title(),
-                        'short': field.name
-                    }
-                )
+                get_template('acq_templates/{0}/{1}.md'.format(
+                        self.procurement_method,
+                        field.name,
+                    ))
+                if self.doc_access_status(field.name, access_private):
+                    docs.append(field.name)
             except TemplateDoesNotExist:
                 pass
         return docs
 
-    def doc_status(self, doc_type):
+    def doc_access_status(self, doc_type, access_private=False):
+        # Grant access to all docs for those with private access
+        if access_private:
+            return True
+        # Check if the field has "public" boolean set
+        maybe_public = self._meta.get_field(doc_type).public
+        if maybe_public is not None:
+            return maybe_public
+        # Finally, see if field relies on another field for public status
+        public_after = self._meta.get_field(doc_type).public_after
+        if getattr(self, public_after) is not None:
+            if getattr(self, public_after) <= date.today():
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def doc_completion_status(self, doc_type):
         try:
             template = get_template('acq_templates/{0}/{1}.md'.format(
                     self.procurement_method,
@@ -857,18 +873,16 @@ class Buy(models.Model):
                 'vendor': 'There shouldn\'t be a vendor before issuing'
             })
 
-        # Buys cannot be issued in the future
-        # TODO: add appropriate logic to let buys be set for future issuance
-        if self.issue_date and self.issue_date > date.today():
-            raise ValidationError({
-                'issue_date': 'For now, buys cannot be set for future issuance'
-            })
-
         # Don't allow award date without issue date
         if self.award_date and not self.issue_date:
             raise ValidationError({
                 'award_date': 'Please set an issue date first'
             })
+        elif self.award_date and self.issue_date:
+            if self.award_date < self.issue_date:
+                raise ValidationError({
+                    'award_date': 'Must be later than issue date'
+                })
 
         # Check NAICS Code
         if self.naics_code:
@@ -893,6 +907,11 @@ class Buy(models.Model):
                 'delivery_date': 'An award date and vendor are required to '
                                  'add the delivery date.'
             })
+        elif self.delivery_date and self.award_date:
+            if self.delivery_date < self.award_date:
+                raise ValidationError({
+                    'delivery_date' 'Must be later than award date'
+                })
 
         # Validators for micro-purchases
         ################################

@@ -1,5 +1,5 @@
 import pytest
-from datetime import date
+from datetime import datetime
 from django.core.exceptions import ValidationError
 from projects.models import Buy, Project
 from projects.factories import (
@@ -49,7 +49,7 @@ class TestLocking:
     def test_cannot_issue(self, buy):
         assert not buy.ready_to_issue()
         with pytest.raises(ValidationError):
-            buy.issue_date = date.today()
+            buy.issue_date = datetime.now()
             print(buy.delivery_date)
             buy.full_clean()
             buy.save()
@@ -58,15 +58,15 @@ class TestLocking:
     @pytest.mark.django_db
     def test_can_issue(self, buy_plus):
         assert buy_plus.ready_to_issue()
-        buy_plus.issue_date = date.today()
+        buy_plus.issue_date = datetime.now()
         buy_plus.full_clean()
         buy_plus.save()
-        assert buy_plus.issue_date == date.today()
+        assert buy_plus.issue_date is not None
 
 
     @pytest.mark.django_db
     def test_locked_after_issuance(self, buy):
-        buy.issue_date = date.today()
+        buy.issue_date = datetime.now()
         buy.save()
         with pytest.raises(ValidationError):
             buy.dollars = 1
@@ -76,7 +76,7 @@ class TestLocking:
 
     @pytest.mark.django_db
     def test_can_award(self, buy_plus):
-        buy_plus.issue_date = date.today()
-        buy_plus.award_date = date.today()
+        buy_plus.issue_date = datetime.now()
+        buy_plus.award_date = datetime.now()
         buy_plus.full_clean()
         buy_plus.save()

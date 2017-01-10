@@ -59,7 +59,7 @@
     if (r1.readyState != 4 || r1.status != 200) return;
     var jsonResponse = JSON.parse(r1.responseText);
     if (jsonResponse.length > 0) {
-      for (const buy of jsonResponse) {
+      for (let buy of jsonResponse) {
         const state = statuses[buy.status];
         state.appendChild(createBuy(buy));
       }
