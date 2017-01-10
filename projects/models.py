@@ -691,7 +691,10 @@ class Buy(models.Model):
         # Finally, see if field relies on another field for public status
         public_after = self._meta.get_field(doc_type).public_after
         if getattr(self, public_after) is not None:
-            return True
+            if getattr(self, public_after) <= date.today():
+                return True
+            else:
+                return False
         else:
             return False
 
