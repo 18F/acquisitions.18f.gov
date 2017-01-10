@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 import re
 
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.shortcuts import reverse
@@ -109,7 +109,7 @@ class IAA(models.Model):
         return budget
 
     def clean(self):
-        if self.signed_on > date.today():
+        if self.signed_on > datetime.now():
             raise ValidationError({
                 'signed_on': 'Date may not be in the future.'
             })
@@ -376,15 +376,15 @@ class Buy(models.Model):
     )
 
     # Milestone dates
-    issue_date = models.DateField(
+    issue_date = models.DateTimeField(
         blank=True,
         null=True,
     )
-    award_date = models.DateField(
+    award_date = models.DateTimeField(
         blank=True,
         null=True,
     )
-    delivery_date = models.DateField(
+    delivery_date = models.DateTimeField(
         blank=True,
         null=True,
     )
@@ -590,13 +590,13 @@ class Buy(models.Model):
     ############
     def status(self):
         if self.delivery_date is not None:
-            if self.delivery_date <= date.today():
+            if self.delivery_date <= datetime.now():
                 status = "Delivered"
         elif self.award_date is not None:
-            if self.award_date <= date.today():
+            if self.award_date <= datetime.now():
                 status = "Awarded"
         elif self.issue_date is not None:
-            if self.issue_date <= date.today():
+            if self.issue_date <= datetime.now():
                 status = "Out for Bid"
         else:
             status = "Planning"
