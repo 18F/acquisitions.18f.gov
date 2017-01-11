@@ -9,6 +9,7 @@ cfenv==0.5.2
 dj-database-url==0.4.1
 django-filter==1.0.1
 django-floppyforms==1.7.0
+django-form-utils==1.0.3
 django-markdown-deux==1.0.5
 django==1.10.4
 djangorestframework-csv==2.0.0

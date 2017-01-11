@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'markdown_deux',
     'floppyforms',
     'rest_framework_docs',
+    'form_utils',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -134,6 +135,8 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Cloud.gov UAA
 UAA_AUTH_URL = 'https://login.fr.cloud.gov/oauth/authorize'
