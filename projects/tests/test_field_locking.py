@@ -54,7 +54,6 @@ class TestLocking:
             buy.full_clean()
             buy.save()
 
-
     @pytest.mark.django_db
     def test_can_issue(self, buy_plus):
         assert buy_plus.ready_to_issue()
@@ -62,7 +61,6 @@ class TestLocking:
         buy_plus.full_clean()
         buy_plus.save()
         assert buy_plus.issue_date is not None
-
 
     @pytest.mark.django_db
     def test_locked_after_issuance(self, buy):
@@ -72,7 +70,6 @@ class TestLocking:
             buy.dollars = 1
             buy.full_clean()
             buy.save()
-
 
     @pytest.mark.django_db
     def test_can_award(self, buy_plus):

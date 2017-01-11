@@ -31,6 +31,7 @@ project_patterns = [
 
 buy_patterns = [
     url(r'^$', views.buys, name='buys'),
+    url(r'^create$', views.create_buy, name='create_buy'),
     url(r'(?P<buy>\d+)/$', views.buy, name='buy'),
     url(r'(?P<buy>\d+)/nda/$', views.buy_nda, name='buy_nda'),
     url(r'(?P<buy>\d+)/(?P<doc_type>\w+)/$', views.document, name='document'),

@@ -20,6 +20,7 @@ from projects.filters import (
     BuyFilter,
     ProjectFilter,
 )
+from projects.forms import CreateBuyForm
 from nda.forms import NDAForm
 
 
@@ -100,6 +101,20 @@ def buy(request, buy):
         "projects/buy.html",
         {"buy": buy}
     )
+
+
+@login_required
+def create_buy(request):
+    if request.method == 'POST':
+        form = CreateBuyForm(request.POST)
+        if form.is_valid():
+            buy = form.save()
+            return redirect('buys:buy', buy.id)
+    else:
+        form = CreateBuyForm()
+    return render(request, 'projects/create_buy.html', {
+        'form': form
+    })
 
 
 @login_required

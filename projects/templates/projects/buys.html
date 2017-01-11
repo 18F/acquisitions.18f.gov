@@ -5,6 +5,7 @@
   <div class="usa-width-one-full">
     <h1>Buys</h1>
     {% if perms.projects.view_project %}<div>Showing: <strong>public</strong> and <strong>non-public</strong> buys</div>{% endif %}
+    {% if request.user.is_staff %}<div><a class="usa-button" href="/buys/create">Create Buy</a></div>{% endif %}
     <h2>Planning</h2>
     <div id="planning">
 
