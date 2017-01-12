@@ -528,14 +528,6 @@ class Buy(models.Model):
         related_name='ndas',
     )
 
-    # Locking doesn't do anything on its own, but should be used as an
-    # indicator of when the user shouldn't be able to edit the data. Initially,
-    # this was tied to award_date, but using a separate field should allow the
-    # entry to be unlocked for editing if necessary.
-    locked = models.BooleanField(
-        default=False
-    )
-
     # Documents for the buy
     # TODO: Consider using a MarkdownField() of some sort for in-app editing
     qasp = DocumentField(
@@ -830,30 +822,6 @@ class Buy(models.Model):
             return False
         else:
             return True
-
-    def locked_fields(self):
-        if self.locked:
-            fields = [
-                'acquisition_plan',
-                'base_period_length',
-                'contracting_office',
-                'contracting_officer_representative',
-                'contracting_officer',
-                'contracting_specialist',
-                'contractual_history',
-                'dollars'
-                'option_period_length',
-                'option_periods',
-                'procurement_method',
-                'project',
-                'public',
-                'qasp',
-                'rfq_id',
-                'set_aside_status',
-            ]
-        else:
-            fields = []
-        return fields
 
     ############
     # Validation
