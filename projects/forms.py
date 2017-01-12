@@ -19,7 +19,6 @@ class CreateBuyForm(forms.ModelForm):
 class EditBuyForm(BetterModelForm):
     class Meta:
         model = Buy
-        # fields = '__all__'
         fieldsets = [
             ('General Details', {
                 'fields': [
@@ -78,7 +77,8 @@ class EditBuyForm(BetterModelForm):
                     'issue_date',
                     'award_date',
                     'delivery_date',
-                ]
+                    ],
+                'classes': ['collapse']
                 }
             ),
             ('Award', {

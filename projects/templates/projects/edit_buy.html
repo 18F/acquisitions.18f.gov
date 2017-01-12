@@ -1,0 +1,41 @@
+{% extends "web/base.html" %}
+{% load form_utils %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>Edit: {{ buy.name }}</h1>
+    <form class="usa-form-large" action="/buys/{{ buy.id }}/edit" method="post">
+      {% csrf_token %}
+      {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+      {% for fieldset in form.fieldsets %}
+        <fieldset class="{{ fieldset.classes }}">
+        {% if fieldset.legend %}
+          <legend>{{ fieldset.legend }}</legend>
+        {% endif %}
+        {% if fieldset.description %}
+          <p class="description">{{ fieldset.description }}</p>
+        {% endif %}
+        {% for field in fieldset %}
+          {% if field.is_hidden %}
+            {{ field }}
+          {% else %}
+            <p{{ field.row_attrs }}>
+              {{ field.errors }}
+              {% if field|is_checkbox %}
+              {{ field }}
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {% else %}
+              {{ field.label_tag }}
+              {{ field }}
+              {% endif %}
+            </p>
+          {% endif %}
+        {% endfor %}
+        </fieldset>
+      {% endfor %}
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+</section>
+{% endblock %}
