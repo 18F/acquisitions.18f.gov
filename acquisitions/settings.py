@@ -14,6 +14,9 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import dj_database_url
 from django.utils import crypto
+from cfenv import AppEnv
+
+env = AppEnv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -143,9 +146,15 @@ UAA_AUTH_URL = 'https://login.fr.cloud.gov/oauth/authorize'
 
 UAA_TOKEN_URL = 'https://uaa.fr.cloud.gov/oauth/token'
 
-UAA_CLIENT_ID = os.environ.get('UAA_CLIENT_ID', 'acquisitions-dev')
+uaa_service = env.get_service(name='acquisitions-uaa-creds')
+if uaa_service is not None:
+    UAA_CLIENT_ID = uaa_service.credentials['UAA_CLIENT_ID']
 
-UAA_CLIENT_SECRET = os.environ.get('UAA_CLIENT_SECRET')
+    UAA_CLIENT_SECRET = uaa_service.credentials['UAA_CLIENT_SECRET']
+else:
+    UAA_CLIENT_ID = os.environ.get('UAA_CLIENT_ID', 'acquisitions-dev')
+
+    UAA_CLIENT_SECRET = os.environ.get('UAA_CLIENT_SECRET')
 
 LOGIN_URL = 'uaa_client:login'
 

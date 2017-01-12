@@ -8,6 +8,7 @@ applications:
   services:
   - acquisitions-staging-psql
   - acquisitions-new-relic
+  - acquisitions-uaa-creds
   stack: cflinuxfs2
   env:
     NEW_RELIC_APP_NAME: "acquisitions.18f.gov (staging)"
