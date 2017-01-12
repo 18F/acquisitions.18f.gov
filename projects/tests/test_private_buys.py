@@ -21,6 +21,7 @@ class TestPrivateBuys(TestCase):
         )
         self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
+        print(reverse('buys:buy', args=[self.buy.id]))
         response = self.client.get(reverse('buys:buy', args=[self.buy.id]))
         self.assertTemplateUsed(response, 'projects/buy.html')
 

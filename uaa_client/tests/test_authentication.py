@@ -28,8 +28,9 @@ class AuthenticationTests(TestCase):
         def mock_404_response(url, request):
             return httmock.response(404, "nope")
 
+        req = mock.MagicMock()
         with httmock.HTTMock(mock_404_response):
-            self.assertEqual(auth.exchange_code_for_access_token(None, 'u'),
+            self.assertEqual(auth.exchange_code_for_access_token(req, 'u'),
                              None)
         m.assert_called_with('POST https://example.org/token returned 404 '
                              'w/ content b\'nope\'')
@@ -43,6 +44,7 @@ class AuthenticationTests(TestCase):
                 'client_id': 'clientid',
                 'client_secret': 'clientsecret',
                 'grant_type': 'authorization_code',
+                'redirect_uri': 'https://redirect_uri',
                 'response_type': 'token'
             })
             return httmock.response(200, {
@@ -53,6 +55,7 @@ class AuthenticationTests(TestCase):
             })
 
         req = mock.MagicMock()
+        req.build_absolute_uri.return_value = 'https://redirect_uri'
 
         with httmock.HTTMock(mock_200_response):
             self.assertEqual(auth.exchange_code_for_access_token(req, 'foo'),

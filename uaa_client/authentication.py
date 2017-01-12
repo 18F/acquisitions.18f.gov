@@ -22,10 +22,12 @@ def get_token_url(request):
 
 
 def exchange_code_for_access_token(request, code):
+    redirect_uri = request.build_absolute_uri(reverse('uaa_client:callback'))
     payload = {
         'grant_type': 'authorization_code',
         'code': code,
         'response_type': 'token',
+        'redirect_uri': redirect_uri,
         'client_id': settings.UAA_CLIENT_ID,
         'client_secret': settings.UAA_CLIENT_SECRET
     }
