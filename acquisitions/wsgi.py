@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
 """
 
 import os
+import newrelic.agent
 from cfenv import AppEnv
 
 env = AppEnv()
@@ -17,8 +18,8 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "acquisitions.settings")
 
 # Initialize New Relic monitoring if on Cloud Foundry
-new_relic = env.get_service(label='acquisitions-new-relic')
-if new_relic:
+new_relic = env.get_service(name='acquisitions-new-relic')
+if new_relic is not None:
     new_relic_license = new_relic.credentials['NEW_RELIC_LICENSE_KEY']
     new_relic_app_name = os.environ.get('NEW_RELIC_APP_NAME')
     if new_relic_license and new_relic_app_name:
