@@ -41,7 +41,8 @@ class ViewTests(TestCase):
         self.assertEqual(get_query(urlinfo), {
             'client_id': 'clientid',
             'response_type': 'code',
-            'state': 'abcd'
+            'state': 'abcd',
+            'redirect_uri': 'http://testserver/auth/callback',
         })
         get_random_string.assert_called_with(length=32)
 
@@ -98,5 +99,5 @@ class ViewTests(TestCase):
     def test_logout(self):
         with mock.patch('django.contrib.auth.logout') as logout_mock:
             response = self.client.get('/auth/logout')
-            # logout_mock.assert_called()
+            self.assertEqual(logout_mock.call_count, 1)
             self.assertEqual(response.status_code, 200)
