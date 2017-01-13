@@ -102,10 +102,11 @@ class IAA(models.Model):
     def is_signed(self):
         return self.signed_on is not None
 
-    def budget_remaining(self):
+    def budget_remaining(self, exclude=[]):
         budget = self.dollars
         for project in self.project_set.all():
-            budget -= project.dollars
+            if project not in exclude:
+                budget -= project.dollars
         return budget
 
     def clean(self):
@@ -174,15 +175,16 @@ class Project(models.Model):
     def is_private(self):
         return not self.public
 
-    def budget_remaining(self):
+    def budget_remaining(self, exclude=[]):
         budget = self.dollars
         for buy in self.buy.all():
-            budget -= buy.dollars
+            if buy not in exclude:
+                budget -= buy.dollars
         return budget
 
     def clean(self):
         if self.dollars:
-            if self.dollars > self.iaa.budget_remaining():
+            if self.dollars > self.iaa.budget_remaining(exclude=[self]):
                 raise ValidationError({
                     'dollars': 'Value can\'t exceed remaining budget of'
                                'authorizing IAA'
@@ -859,7 +861,7 @@ class Buy(models.Model):
                     'naics_code': 'NAICS Code must be six digits'
                 })
 
-        if self.dollars > self.project.budget_remaining():
+        if self.dollars > self.project.budget_remaining(exclude=[self]):
             raise ValidationError({
                 'dollars': 'Value can\'t exceed project\'s remaining budget.'
             })
