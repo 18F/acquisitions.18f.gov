@@ -5,7 +5,7 @@
 <section class="usa-grid">
   <div class="usa-width-one-full">
     <h1>Edit: {{ buy.name }}</h1>
-    <form class="usa-form-large" action="/buys/{{ buy.id }}/edit" method="post">
+    <form class="usa-form-large" action="{{ buy.get_absolute_url }}edit" method="post">
       {% csrf_token %}
       {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
       {% for fieldset in form.fieldsets %}

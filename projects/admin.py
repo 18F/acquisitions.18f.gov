@@ -81,7 +81,7 @@ class BuyForm(forms.ModelForm):
         required=False,
         widget=Textarea,
     )
-    skills = SimpleArrayField(
+    skills_needed = SimpleArrayField(
         CharField(),
         delimiter='\n',
         help_text='Multiple skills are allowed. Enter each one on its '
@@ -114,7 +114,6 @@ class BuyAdmin(admin.ModelAdmin):
                 'public',
                 'github_repository',
                 'google_drive_folder',
-                'locked',
             )
         }),
         ('Staffing', {
@@ -141,7 +140,7 @@ class BuyAdmin(admin.ModelAdmin):
             'fields': (
                 'contractual_history',
                 'requirements',
-                'skills',
+                'skills_needed',
                 'base_period_length',
                 (
                     'option_periods',
@@ -179,9 +178,3 @@ class BuyAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-
-    def get_readonly_fields(self, request, obj=None):
-        if obj:
-            return obj.locked_fields()
-        else:
-            return []

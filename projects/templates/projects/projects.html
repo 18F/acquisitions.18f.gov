@@ -91,7 +91,7 @@
       if (r1.readyState != 4 || r1.status != 200) return;
       var jsonResponse = JSON.parse(r1.responseText);
       if (jsonResponse.length > 0) {
-        for (const project of jsonResponse) {
+        for (let project of jsonResponse) {
           current.appendChild(createProject(project));
         }
       } else {
@@ -107,7 +107,7 @@
     r2.onreadystatechange = function () {
       if (r2.readyState != 4 || r2.status != 200) return;
       var jsonResponse = JSON.parse(r2.responseText);
-      for (const buy of jsonResponse) {
+      for (let buy of jsonResponse) {
         createBuy(buy);
       }
     }

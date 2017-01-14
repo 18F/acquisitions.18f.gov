@@ -3,7 +3,7 @@
 {% block content %}
 <section class="usa-grid">
   <div class="usa-width-one-full">
-    <h1>{{ project.name }}</h1>
+    <h1>{{ project.name }} {% if user.is_staff %}<a class="usa-button" href="{{ project.get_absolute_url }}edit">Edit</a>{% endif %}</h1>
     {% if project.is_private %}<div>This project is not yet public.</div>{% endif %}
     <h2>Description</h2>
     <div id="description">

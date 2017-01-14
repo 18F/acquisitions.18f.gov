@@ -33,6 +33,7 @@ DEBUG = os.environ.get('DEBUG', default=True) != "False"
 
 ALLOWED_HOSTS = ['*']
 
+APPEND_SLASH = True
 
 # Application definition
 

@@ -20,7 +20,12 @@ from projects.filters import (
     BuyFilter,
     ProjectFilter,
 )
-from projects.forms import CreateBuyForm, EditBuyForm
+from projects.forms import (
+    IAAForm,
+    ProjectForm,
+    CreateBuyForm,
+    EditBuyForm,
+)
 from nda.forms import NDAForm
 
 
@@ -101,6 +106,39 @@ def buy(request, buy):
         "projects/buy.html",
         {"buy": buy}
     )
+
+
+@login_required
+def edit_iaa(request):
+    if request.method == 'POST':
+        form = IAAForm(request.POST)
+        if form.is_valid():
+            iaa = form.save()
+            return redirect('iaas:iaa', iaa.id)
+    else:
+        form = IAAForm()
+    return render(request, 'projects/edit_iaa.html', {
+        'form': form
+    })
+
+
+@login_required
+def edit_project(request, project=None):
+    if request.method == 'POST':
+        print('got post')
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            print('valid!')
+            project = form.save()
+            return redirect('projects:project', project.id)
+    else:
+        if project is not None:
+            project = Project.objects.get(id=project)
+        form = ProjectForm(instance=project)
+    return render(request, 'projects/edit_project.html', {
+        'form': form,
+        'project': project,
+    })
 
 
 @login_required

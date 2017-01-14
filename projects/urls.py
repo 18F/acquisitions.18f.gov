@@ -21,12 +21,16 @@ api_patterns = [
 
 iaa_patterns = [
     url(r'^$', views.iaas, name='iaas'),
+    url(r'^create$', views.edit_iaa, name='edit_iaa'),
     url(r'(?P<iaa>\w+)', views.iaa, name='iaa'),
+    url(r'(?P<iaa>\d+)/edit/$', views.edit_iaa, name='edit_iaa'),
 ]
 
 project_patterns = [
     url(r'^$', views.projects, name='projects'),
-    url(r'(?P<project>\w+)', views.project, name='project'),
+    url(r'^create$', views.edit_project, name='edit_project'),
+    url(r'(?P<project>\d+)/$', views.project, name='project'),
+    url(r'(?P<project>\d+)/edit/$', views.edit_project, name='edit_project'),
 ]
 
 buy_patterns = [
