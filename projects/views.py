@@ -50,8 +50,10 @@ def _make_response(doc_content, name, doc_type, doc_format):
     return response
 
 
-def _get_doc(buy, doc_type):
-    available_docs = [d for d in buy.available_docs()]
+def _get_doc(buy, doc_type, access_private=False):
+    available_docs = [d for d in buy.available_docs(
+        access_private=access_private
+    )]
     # Check that the request is for a document that is available
     if doc_type not in available_docs:
         raise Http404
@@ -101,10 +103,15 @@ def buy(request, buy):
             doc_type = doc_type[0][9:]
             buy.create_document(doc_type)
             return redirect('buys:document', buy.id, doc_type)
+    access_private = request.user.is_staff
+    documents = buy.available_docs(access_private=access_private)
     return render(
         request,
         "projects/buy.html",
-        {"buy": buy}
+        {
+            "buy": buy,
+            "documents": documents
+        }
     )
 
 
@@ -188,12 +195,15 @@ def buy_nda(request, buy):
 
 
 def document(request, buy, doc_type):
+    print('documents!')
     buy = get_object_or_404(Buy, id=buy)
     if not _public_check(buy, request.user):
+        print('NO')
         raise Http404
     # Get the content of the document
-    doc_content = _get_doc(buy, doc_type)
+    doc_content = _get_doc(buy, doc_type, request.user.is_staff)
     if doc_content is not None:
+        print('yes!')
         return render(
             request,
             "projects/document.html",
