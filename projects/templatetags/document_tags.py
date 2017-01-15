@@ -9,5 +9,9 @@ def has_document(obj, doc):
 
 
 @register.filter
-def title_format(word):
-    return word.replace('_', ' ').capitalize()
+def title_format(name):
+    name = name.replace('_', ' ').title()
+    # If length is very short, it's likely to be an acronym
+    if len(name) <= 4:
+        name = name.upper()
+    return name
