@@ -4,15 +4,16 @@ import factory.fuzzy
 import random
 from acquisitions.factories import UserFactory
 from projects.models import (
-    IAA,
-    Project,
-    Buy,
-    ContractingOffice,
-    ContractingSpecialist,
-    ContractingOfficer,
-    ContractingOfficerRepresentative,
     Agency,
     AgencyOffice,
+    Buy,
+    ContractingOffice,
+    ContractingOfficer,
+    ContractingOfficerRepresentative,
+    ContractingSpecialist,
+    IAA,
+    ProcurementMethod,
+    Project,
 )
 
 
@@ -118,9 +119,11 @@ class ContractingOfficerRepresentativeFactory(
         ContractingOfficeFactory
     )
 
-procurement_methods = [x[0] for x in Buy.PROCUREMENT_METHOD_CHOICES]
-def generate_procurement_method():
-    return random.choice(procurement_methods)
+class ProcurementMethodFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ProcurementMethod
+
+    name = factory.Faker('color_name')
 
 class BuyFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -131,7 +134,9 @@ class BuyFactory(factory.django.DjangoModelFactory):
         ProjectFactory,
         public=factory.SelfAttribute('..public')
     )
-    procurement_method = factory.LazyFunction(generate_procurement_method)
+    procurement_method = factory.SubFactory(
+        ProcurementMethodFactory
+    )
     description = factory.Faker('paragraph')
     name = factory.Faker('catch_phrase')
     public = factory.Faker('boolean')

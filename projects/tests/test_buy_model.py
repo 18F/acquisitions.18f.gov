@@ -1,6 +1,11 @@
 import pytest
 from django.template.loader import TemplateDoesNotExist
-from projects.factories import IAAFactory, ProjectFactory, BuyFactory
+from projects.factories import (
+    IAAFactory,
+    ProjectFactory,
+    BuyFactory,
+    ProcurementMethodFactory,
+)
 
 
 class TestBuyModel:
@@ -48,20 +53,29 @@ class TestBuyModel:
 
     @pytest.mark.django_db
     def test_create_document(self):
-        buy = BuyFactory(procurement_method='agile_bpa')
+        procurement_method = ProcurementMethodFactory(
+            short_name='agile_bpa'
+        )
+        buy = BuyFactory(procurement_method=procurement_method)
         assert not buy.qasp
         buy.create_document('qasp')
         assert buy.qasp
 
     @pytest.mark.django_db
     def test_not_create_document(self):
-        buy = BuyFactory(procurement_method='micropurchase')
+        procurement_method = ProcurementMethodFactory(
+            short_name='micropurchase'
+        )
+        buy = BuyFactory(procurement_method=procurement_method)
         with pytest.raises(TemplateDoesNotExist):
             buy.create_document('acquisition_plan')
 
     @pytest.mark.django_db
     def test_available_documents(self):
-        buy = BuyFactory(procurement_method='agile_bpa')
+        procurement_method = ProcurementMethodFactory(
+            short_name='agile_bpa'
+        )
+        buy = BuyFactory(procurement_method=procurement_method)
         assert set(buy.available_docs(access_private=True)) == set([
             'qasp',
             'acquisition_plan',
@@ -77,6 +91,9 @@ class TestBuyModel:
 
     @pytest.mark.django_db
     def test_document_status(self):
-        buy = BuyFactory(procurement_method='agile_bpa')
+        procurement_method = ProcurementMethodFactory(
+            short_name='agile_bpa'
+        )
+        buy = BuyFactory(procurement_method=procurement_method)
         assert buy.doc_completion_status(
             'market_research') == "100.00% Complete"
