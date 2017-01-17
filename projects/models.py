@@ -268,6 +268,24 @@ class Vendor(models.Model):
         pass
 
 
+class ProcurementMethod(models.Model):
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
+    )
+    vendors = models.ManyToManyField(
+        Vendor,
+        blank=True,
+    )
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return self.name
+
+
 class Buy(models.Model):
     COMPETITION_STRATEGY_CHOICES = (
         ("A/E Procedures", "A/E Procedures"),
@@ -325,10 +343,10 @@ class Buy(models.Model):
         ("Time and Materials", "Time and Materials"),
     )
 
-    PROCUREMENT_METHOD_CHOICES = (
-        ("agile_bpa", "Agile Development Services BPA"),
-        ('micropurchase', "Micro-purchase Platform"),
-    )
+    # PROCUREMENT_METHOD_CHOICES = (
+    #     ("agile_bpa", "Agile Development Services BPA"),
+    #     ('micropurchase', "Micro-purchase Platform"),
+    # )
 
     name = models.CharField(
         max_length=100,
@@ -433,9 +451,8 @@ class Buy(models.Model):
         null=True,
         verbose_name="NAICS Code"
     )
-    procurement_method = models.CharField(
-        max_length=200,
-        choices=PROCUREMENT_METHOD_CHOICES,
+    procurement_method = models.ForeignKey(
+        ProcurementMethod,
         blank=False,
         null=False,
     )
@@ -747,9 +764,6 @@ class Buy(models.Model):
     ############################
     # Logicless template methods
     ############################
-    def procurement_vehicle(self):
-        return self.get_procurement_method_display()
-
     def tasks(self):
         # A version of responsibilities for use in a logicless template
         bulleted = ['- {0}'.format(req) for req in self.requirements]

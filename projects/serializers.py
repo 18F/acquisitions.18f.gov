@@ -31,9 +31,6 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class BuySerializer(serializers.ModelSerializer):
     project = ProjectSerializer()
-    procurement_method = serializers.CharField(
-        source='get_procurement_method_display'
-    )
     set_aside_status = serializers.CharField(
         source='get_set_aside_status_display'
     )
