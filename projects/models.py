@@ -343,11 +343,6 @@ class Buy(models.Model):
         ("Time and Materials", "Time and Materials"),
     )
 
-    # PROCUREMENT_METHOD_CHOICES = (
-    #     ("agile_bpa", "Agile Development Services BPA"),
-    #     ('micropurchase', "Micro-purchase Platform"),
-    # )
-
     name = models.CharField(
         max_length=100,
         blank=False,
@@ -453,8 +448,9 @@ class Buy(models.Model):
     )
     procurement_method = models.ForeignKey(
         ProcurementMethod,
-        blank=False,
-        null=False,
+        # blank=False,
+        # null=False,
+        null=True,
     )
     set_aside_status = models.CharField(
         max_length=200,
