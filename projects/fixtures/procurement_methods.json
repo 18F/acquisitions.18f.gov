@@ -1,1 +1,1 @@
-[{"model": "projects.procurementmethod", "pk": 1, "fields": {"name": "Micro-Purchase Platform", "vendors": []}}, {"model": "projects.procurementmethod", "pk": 2, "fields": {"name": "Agile Delivery Services BPA", "vendors": []}}]
+[{"model": "projects.procurementmethod", "pk": 1, "fields": {"name": "Agile Delivery Services BPA", "short_name": "agile_bpa", "vendors": []}}, {"model": "projects.procurementmethod", "pk": 2, "fields": {"name": "Micro-Purchase Platform", "short_name": "micropurchase", "vendors": []}}]
