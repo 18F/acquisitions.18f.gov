@@ -268,6 +268,31 @@ class Vendor(models.Model):
         pass
 
 
+class ProcurementMethod(models.Model):
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=False,
+    )
+    short_name = models.CharField(
+        max_length=30,
+        blank=False,
+        null=False,
+        help_text="This should correspond to the folder name used for this "
+                  "procurment method in the templates."
+    )
+    vendors = models.ManyToManyField(
+        Vendor,
+        blank=True,
+    )
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return self.name
+
+
 class Buy(models.Model):
     COMPETITION_STRATEGY_CHOICES = (
         ("A/E Procedures", "A/E Procedures"),
@@ -323,11 +348,6 @@ class Buy(models.Model):
     CONTRACT_TYPE_CHOICES = (
         ("Labor Hours", "Labor Hours"),
         ("Time and Materials", "Time and Materials"),
-    )
-
-    PROCUREMENT_METHOD_CHOICES = (
-        ("agile_bpa", "Agile Development Services BPA"),
-        ('micropurchase', "Micro-purchase Platform"),
     )
 
     name = models.CharField(
@@ -433,11 +453,11 @@ class Buy(models.Model):
         null=True,
         verbose_name="NAICS Code"
     )
-    procurement_method = models.CharField(
-        max_length=200,
-        choices=PROCUREMENT_METHOD_CHOICES,
-        blank=False,
-        null=False,
+    procurement_method = models.ForeignKey(
+        ProcurementMethod,
+        # blank=False,
+        # null=False,
+        null=True,
     )
     set_aside_status = models.CharField(
         max_length=200,
@@ -652,7 +672,7 @@ class Buy(models.Model):
     def create_document(self, doc_type):
         doc_content = render_to_string(
             'acq_templates/{0}/{1}.md'.format(
-                self.procurement_method,
+                self.procurement_method.short_name,
                 doc_type,
             ),
             {'buy': self, 'date': date.today()}
@@ -665,7 +685,7 @@ class Buy(models.Model):
         for field in self._meta.get_fields():
             try:
                 get_template('acq_templates/{0}/{1}.md'.format(
-                        self.procurement_method,
+                        self.procurement_method.short_name,
                         field.name,
                     ))
                 if self.doc_access_status(field.name, access_private):
@@ -695,7 +715,7 @@ class Buy(models.Model):
     def doc_completion_status(self, doc_type):
         try:
             template = get_template('acq_templates/{0}/{1}.md'.format(
-                    self.procurement_method,
+                    self.procurement_method.short_name,
                     doc_type,
                 ))
         except:
@@ -747,9 +767,6 @@ class Buy(models.Model):
     ############################
     # Logicless template methods
     ############################
-    def procurement_vehicle(self):
-        return self.get_procurement_method_display()
-
     def tasks(self):
         # A version of responsibilities for use in a logicless template
         bulleted = ['- {0}'.format(req) for req in self.requirements]
@@ -885,7 +902,7 @@ class Buy(models.Model):
 
         # Validators for micro-purchases
         ################################
-        if self.procurement_method == 'micropurchase' and self.dollars and not self.is_micropurchase():
+        if self.procurement_method.short_name == 'micropurchase' and self.dollars and not self.is_micropurchase():
             raise ValidationError({
                 'dollars': 'A micro-purchase must be $3500 or less'
             })

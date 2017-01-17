@@ -1,17 +1,22 @@
 import pytest
 from projects.forms import CreateBuyForm, EditBuyForm
-from projects.factories import ProjectFactory, BuyFactory
+from projects.factories import (
+    ProjectFactory,
+    BuyFactory,
+    ProcurementMethodFactory,
+)
 
 
 @pytest.mark.django_db
 def test_create_buy_form():
     project = ProjectFactory.create()
+    procurement_method = ProcurementMethodFactory.create()
     data = {
         "name": "New Buy",
         "description": "This is a new buy for things",
         "dollars": 50,
         "project": project.id,
-        "procurement_method": "agile_bpa"
+        "procurement_method": procurement_method.id
     }
     form = CreateBuyForm(data)
     assert form.is_valid(), form.errors

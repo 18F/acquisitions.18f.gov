@@ -13,6 +13,7 @@ from projects.models import (
     ContractingOfficerRepresentative,
     ContractingSpecialist,
     IAA,
+    ProcurementMethod,
     Project,
 )
 from projects.widgets import DurationMultiWidget
@@ -28,6 +29,7 @@ from django.contrib.postgres.forms import SimpleArrayField
     ContractingOfficerRepresentative,
     Agency,
     AgencyOffice,
+    ProcurementMethod,
 )
 class WorkAdmin(admin.ModelAdmin):
     pass
