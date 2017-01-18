@@ -134,6 +134,30 @@ class IAA(models.Model):
                 'signed_on': 'Date may not be in the future.'
             })
 
+        if self.signed_on and not self.cogs_amount or not self.non_cogs_amount:
+            raise ValidationError({
+                'signed_on': 'Cost fields must be provided before the IAA can '
+                'be signed.'
+            })
+
+        if self.signed_on and not self.expires_on:
+            raise ValidationError({
+                'signed_on': 'An expiration date must be provided before the '
+                'IAA can be signed.'
+            })
+
+        if self.signed_on and not self.color_of_money:
+            raise ValidationError({
+                'signed_on': 'Color of money must be provided before the '
+                'IAA can be signed.'
+            })
+
+        if self.signed_on and not self.authority:
+            raise ValidationError({
+                'signed_on': 'Statutory authority must be provided before the '
+                'IAA can be signed.'
+            })
+
     class Meta:
         verbose_name = 'IAA'
 
