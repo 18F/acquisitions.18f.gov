@@ -72,15 +72,22 @@ class IAA(models.Model):
         blank=True,
         null=True,
     )
-    dollars = models.IntegerField(
+    cogs_amount = models.IntegerField(
         blank=True,
         null=True,
+        verbose_name='Cost of Goods Sold'
+    )
+    non_cogs_amount = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Cost of Team Labor'
     )
     color_of_money = models.CharField(
         choices=(
-            ('No-Year Money', 'No-Year Money'),
-            ('1-Year Money', '1-Year Money'),
-            ('2-Year Money', '2-Year Money'),
+            ('no_year', 'No-Year Money'),
+            ('1_year', '1-Year Money'),
+            ('2_year', '2-Year Money'),
+            ('fcsf', 'FCSF Money'),
         ),
         max_length=100,
         blank=True,
@@ -88,8 +95,8 @@ class IAA(models.Model):
     ),
     authority = models.CharField(
         choices=(
-            ('ASF', 'Alternating Services Fund'),
-            ('Economy', 'Economy Act'),
+            ('asf', 'Acquisition Services Fund'),
+            ('economy', 'Economy Act'),
         ),
         max_length=100,
         blank=True,
@@ -102,8 +109,11 @@ class IAA(models.Model):
     def is_signed(self):
         return self.signed_on is not None
 
+    def budget(self):
+        return self.cogs_amount + self.non_cogs_amount
+
     def budget_remaining(self, exclude=[]):
-        budget = self.dollars
+        budget = self.budget()
         for project in self.project_set.all():
             if project not in exclude:
                 budget -= project.dollars

@@ -43,7 +43,8 @@ class IAAFactory(factory.django.DjangoModelFactory):
         prefix='IAA',
         chars=string.digits,
         )
-    dollars = factory.fuzzy.FuzzyInteger(1000, 999999)
+    cogs_amount = factory.fuzzy.FuzzyInteger(1000, 999999)
+    non_cogs_amount = factory.fuzzy.FuzzyInteger(1000, 999999)
     signed_on = None
     client = factory.SubFactory(AgencyOfficeFactory)
 
@@ -68,7 +69,7 @@ class ProjectFactory(factory.django.DjangoModelFactory):
     @factory.lazy_attribute
     def dollars(self):
         min = 1000
-        max = self.iaa.dollars
+        max = self.iaa.budget()
         return random.randint(min, max)
 
 
