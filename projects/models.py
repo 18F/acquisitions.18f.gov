@@ -23,6 +23,37 @@ class Agency(models.Model):
         null=False,
         unique=True,
     )
+    address = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False,
+    )
+    location_code = models.IntegerField(
+        blank=False,
+        null=False,
+        verbose_name='Agency Location Code (ALC)',
+        help_text='For more information, see'
+                  ' https://tfm.fiscal.treasury.gov/v1/p2/c330.html'
+    )
+    component_tas_number = models.IntegerField(
+        blank=False,
+        null=False,
+    )
+    business_type_event_code = models.IntegerField(
+        blank=False,
+        null=False,
+    )
+    object_code = models.IntegerField(
+        blank=True,
+        null=True,
+    )
+    business_partner_number = models.IntegerField(
+        blank=False,
+        null=False,
+        help_text='This may be a BPN, a DUNS number, or a Dept. of Defense '
+                  'Activity Address Code (DoDAAC). Including the +4 for the '
+                  'number is also accepted.'
+    )
 
     def __str__(self):
         return "{0}".format(self.name)
@@ -40,6 +71,11 @@ class AgencyOffice(models.Model):
     )
     agency = models.ForeignKey(
         Agency,
+        blank=False,
+        null=False,
+    )
+    address = models.CharField(
+        max_length=255,
         blank=False,
         null=False,
     )
@@ -68,9 +104,24 @@ class IAA(models.Model):
         blank=True,
         null=True,
     )
-    expires_on = models.DateField(
+    performance_begins = models.DateField(
         blank=True,
         null=True,
+    )
+    performance_ends = models.DateField(
+        blank=True,
+        null=True,
+    )
+    funding_expires_on = models.DateField(
+        blank=True,
+        null=True,
+        help_text='The last date an obligation can occur.'
+    )
+    funding_canceled_on = models.DateField(
+        blank=True,
+        null=True,
+        help_text='The cancellation date is the fifth year from the expiration'
+                  ' date (the last date the payment must be disbursed)'
     )
     cogs_amount = models.IntegerField(
         blank=True,
@@ -81,6 +132,9 @@ class IAA(models.Model):
         blank=True,
         null=True,
         verbose_name='Cost of Team Labor'
+    )
+    assisted_acquisition = models.BooleanField(
+        blank=True,
     )
     color_of_money = models.CharField(
         choices=(
@@ -97,6 +151,9 @@ class IAA(models.Model):
         choices=(
             ('asf', 'Acquisition Services Fund'),
             ('economy', 'Economy Act'),
+            ('franchise', 'Franchise Fund'),
+            ('revolving', 'Revolving Fund'),
+            ('working_capital', 'Working Capital Fund'),
         ),
         max_length=100,
         blank=True,
@@ -117,7 +174,7 @@ class IAA(models.Model):
 
     def duration(self):
         try:
-            return self.expires_on - self.signed_on
+            return self.performance_ends - self.performance_begins
         except TypeError:
             return "To be determined"
 
@@ -140,9 +197,15 @@ class IAA(models.Model):
                 'be signed.'
             })
 
-        if self.signed_on and not self.expires_on:
+        if self.signed_on and not self.performance_ends or not self.performance_begins:
             raise ValidationError({
-                'signed_on': 'An expiration date must be provided before the '
+                'signed_on': 'Period of perfomance fields must be provided '
+                'before the IAA can be signed.'
+            })
+
+        if self.signed_on and not self.funding_expires_on or not self.funding_canceled_on:
+            raise ValidationError({
+                'signed_on': 'Funding deadlines must be provided before the '
                 'IAA can be signed.'
             })
 
