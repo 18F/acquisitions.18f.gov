@@ -110,7 +110,16 @@ class IAA(models.Model):
         return self.signed_on is not None
 
     def budget(self):
-        return self.cogs_amount + self.non_cogs_amount
+        try:
+            return self.cogs_amount + self.non_cogs_amount
+        except TypeError:
+            return "To be determined"
+
+    def duration(self):
+        try:
+            return self.expires_on - self.signed_on
+        except TypeError:
+            return "To be determined"
 
     def budget_remaining(self, exclude=[]):
         budget = self.budget()
@@ -120,7 +129,7 @@ class IAA(models.Model):
         return budget
 
     def clean(self):
-        if self.signed_on > datetime.now():
+        if self.signed_on > date.today():
             raise ValidationError({
                 'signed_on': 'Date may not be in the future.'
             })
