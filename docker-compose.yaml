@@ -1,0 +1,33 @@
+version: '2'
+services:
+  migration:
+    build: .
+    image: app
+    volumes:
+      - .:/app
+    links:
+      - db
+    environment:
+      DATABASE_URL: "postgres://postgres@db/acquisitions"
+    command: ./wait-for-it.sh -s -q -t 0 db:5432 -- ./manage.py migrate
+
+  web:
+    image: app
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    links:
+      - db
+    depends_on:
+      - migration
+    environment:
+      DATABASE_URL: "postgres://postgres@db/acquisitions"
+    command: ./wait-for-it.sh -s -q -t 0 db:5432 -- ./manage.py runserver 0.0.0.0:8000
+
+  db:
+    image: postgres
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_DB: "acquisitions"
