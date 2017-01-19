@@ -64,7 +64,9 @@ And then run the application:
 
 ## Docker
 
-To get started, you will need to have [Docker installed](https://www.docker.com/products/overview).  Once you have Docker installed, you can install all of the project dependencies, setup a database, and start the project running by running the following:
+To get started, you will need to have [Docker installed](https://www.docker.com/products/overview).
+Once you have Docker installed, you can install all of the project dependencies,
+setup a database, and start the project website by running the following:
 
 ```shell
 docker-compose up -d
@@ -72,7 +74,11 @@ docker-compose up -d
 
 The project should now be available at http://localhost:8000.
 
-The `-d` flag causes Docker to "detach" and run the project in the background once it's running.  This `docker-compose` step takes care of installing everything that the project needs and setting up the database structure, but it doesn't actually put any data into the database or users, so there's not much to view and there's no way to login.
+The `-d` flag causes Docker to "detach" and run the project in the background
+once it's running.  This `docker-compose` step takes care of installing
+everything that the project needs and setting up the database structure, but
+it doesn't actually put any data into the database or users, so there's not
+much to view and there's no way to login.
 
 To create a superuser account, run the following:
 
@@ -80,7 +86,8 @@ To create a superuser account, run the following:
 docker-compose exec web ./manage.py createsuperuser --noinput --username foo --email foo@localhost
 ```
 
-You can change the username and email to whatever you want, but note that whatever email you use is what you will use to log into the website.
+You can change the username and email to whatever you want, but note that
+whatever email you use is what you will use to log into the website.
 
 You can also load some dummy data into the project using the following commands:
 
