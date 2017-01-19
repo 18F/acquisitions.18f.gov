@@ -96,7 +96,6 @@ docker-compose exec web ./manage.py create_team
 docker-compose exec web ./manage.py create_projects
 docker-compose exec web ./manage.py create_buys --add
 docker-compose exec web ./manage.py create_content
-
 ```
 
 ## Deployment
