@@ -47,8 +47,7 @@ class IAAFactory(factory.django.DjangoModelFactory):
         prefix='IAA',
         chars=string.digits,
         )
-    cogs_amount = factory.Faker('random_int', min=1000, max=999999)
-    non_cogs_amount = factory.Faker('random_int', min=1000, max=999999)
+    budget = factory.Faker('random_int', min=5000, max=99999)
     assisted_acquisition = factory.Faker('boolean')
     signed_on = None
     business_event_type_code = factory.Faker(
@@ -78,9 +77,15 @@ class ProjectFactory(factory.django.DjangoModelFactory):
     public = factory.Faker('boolean')
 
     @factory.lazy_attribute
-    def dollars(self):
+    def non_cogs_amount(self):
         min = 1000
-        max = self.iaa.budget()
+        max = self.iaa.budget
+        return random.randint(min, max)
+
+    @factory.lazy_attribute
+    def cogs_amount(self):
+        min = 0
+        max = self.iaa.budget - self.non_cogs_amount
         return random.randint(min, max)
 
 
@@ -156,7 +161,7 @@ class BuyFactory(factory.django.DjangoModelFactory):
     @factory.lazy_attribute
     def dollars(self):
         min = 500
-        max = self.project.dollars
+        max = self.project.budget()
         return random.randint(min, max)
 
 

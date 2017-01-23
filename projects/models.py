@@ -133,15 +133,9 @@ class IAA(models.Model):
         help_text='The cancellation date is the fifth year from the expiration'
                   ' date (the last date the payment must be disbursed)'
     )
-    cogs_amount = models.IntegerField(
-        blank=True,
-        null=True,
-        verbose_name='Cost of Goods Sold'
-    )
-    non_cogs_amount = models.IntegerField(
-        blank=True,
-        null=True,
-        verbose_name='Cost of Team Labor'
+    budget = models.IntegerField(
+        blank=False,
+        null=False,
     )
     assisted_acquisition = models.BooleanField(
         blank=True,
@@ -176,12 +170,6 @@ class IAA(models.Model):
     def is_signed(self):
         return self.signed_on is not None
 
-    def budget(self):
-        try:
-            return self.cogs_amount + self.non_cogs_amount
-        except TypeError:
-            return "To be determined"
-
     def duration(self):
         try:
             return self.performance_ends - self.performance_begins
@@ -189,22 +177,34 @@ class IAA(models.Model):
             return "To be determined"
 
     def budget_remaining(self, exclude=[]):
-        budget = self.budget()
+        budget = self.budget
         for project in self.project_set.all():
             if project not in exclude:
                 budget -= project.dollars
         return budget
 
+    def allocated(self):
+        allocated = 0
+        for project in self.project_set.all():
+            allocated += project.budget()
+        return allocated
+
+    def total_cogs(self):
+        cogs = 0
+        for project in self.project_set.all():
+            cogs += project.cogs_amount
+        return cogs
+
+    def total_non_cogs(self):
+        non_cogs = 0
+        for project in self.project_set.all():
+            non_cogs += project.non_cogs_amount
+        return non_cogs
+
     def clean(self):
         if self.signed_on > date.today():
             raise ValidationError({
                 'signed_on': 'Date may not be in the future.'
-            })
-
-        if self.signed_on and not self.cogs_amount or not self.non_cogs_amount:
-            raise ValidationError({
-                'signed_on': 'Cost fields must be provided before the IAA can '
-                'be signed.'
             })
 
         if self.signed_on and not self.performance_ends or not self.performance_begins:
@@ -268,9 +268,15 @@ class Project(models.Model):
         blank=False,
         null=False,
     )
-    dollars = models.IntegerField(
-        blank=True,
-        null=True,
+    cogs_amount = models.IntegerField(
+        blank=False,
+        null=False,
+        verbose_name='Cost of Goods Sold'
+    )
+    non_cogs_amount = models.IntegerField(
+        blank=False,
+        null=False,
+        verbose_name='Cost of Team Labor'
     )
     public = models.BooleanField(
         default=False,
@@ -291,8 +297,11 @@ class Project(models.Model):
     def is_private(self):
         return not self.public
 
+    def budget(self):
+        return self.cogs_amount + self.non_cogs_amount
+
     def budget_remaining(self, exclude=[]):
-        budget = self.dollars
+        budget = self.budget()
         for buy in self.buy.all():
             if buy not in exclude:
                 budget -= buy.dollars

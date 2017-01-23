@@ -1,0 +1,28 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+  <table>
+    <thead>
+      <th>Client</th>
+      <th>Total</th>
+      <th>Allocated</th>
+      <th>COGS</th>
+      <th>Non-COGS</th>
+    </thead>
+    <tbody>
+      {% for doc in docs %}
+        <tr>
+          <td>{{ doc.client }}</td>
+          <td>{{ doc.budget }}</td>
+          <td>{{ doc.allocated }}</td>
+          <td>{{ doc.total_cogs }}</td>
+          <td>{{ doc.total_non_cogs }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+{% endblock %}

@@ -3,7 +3,8 @@ import pypandoc
 import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponse
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.core.files.temp import NamedTemporaryFile
 from rest_framework import viewsets, status, mixins, generics
 from rest_framework.views import APIView
@@ -26,6 +27,7 @@ from projects.forms import (
     CreateBuyForm,
     EditBuyForm,
 )
+from acquisitions import settings
 from nda.forms import NDAForm
 
 
@@ -261,6 +263,12 @@ def download(request, buy, doc_type, doc_format):
             return _make_response(doc_content, buy.name, doc_type, doc_format)
     else:
         raise Http404
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def financials(request):
+    docs = IAA.objects.all()
+    return render(request, 'projects/financials.html', {'docs': docs})
 
 
 class IAAList(mixins.ListModelMixin,
