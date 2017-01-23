@@ -29,8 +29,8 @@ class TestBuyModel:
 
     @pytest.mark.django_db
     def test_is_micropurchase(self):
-        iaa = IAAFactory(cogs_amount=500000)
-        project = ProjectFactory(iaa=iaa, dollars=300000)
+        iaa = IAAFactory(budget=500000)
+        project = ProjectFactory(iaa=iaa, non_cogs_amount=300000)
         buy = BuyFactory(project=project, dollars=2000)
         assert buy.is_micropurchase() is True
         buy.dollars = 3500
@@ -40,8 +40,8 @@ class TestBuyModel:
 
     @pytest.mark.django_db
     def test_is_under_sat(self):
-        iaa = IAAFactory(cogs_amount=500000)
-        project = ProjectFactory(iaa=iaa, dollars=300000)
+        iaa = IAAFactory(budget=500000)
+        project = ProjectFactory(iaa=iaa, non_cogs_amount=300000)
         buy = BuyFactory(project=project, dollars=2000)
         assert buy.is_under_sat() is True
         buy.dollars = 15000

@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
-import re
 
+import re
 from datetime import datetime, date, timedelta
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
@@ -133,7 +133,9 @@ class IAA(models.Model):
         help_text='The cancellation date is the fifth year from the expiration'
                   ' date (the last date the payment must be disbursed)'
     )
-    budget = models.IntegerField(
+    budget = models.DecimalField(
+        max_digits=20,
+        decimal_places=2,
         blank=False,
         null=False,
     )
@@ -180,7 +182,7 @@ class IAA(models.Model):
         budget = self.budget
         for project in self.project_set.all():
             if project not in exclude:
-                budget -= project.dollars
+                budget -= project.budget()
         return budget
 
     def allocated(self):
@@ -268,12 +270,16 @@ class Project(models.Model):
         blank=False,
         null=False,
     )
-    cogs_amount = models.IntegerField(
+    cogs_amount = models.DecimalField(
+        max_digits=20,
+        decimal_places=2,
         blank=False,
         null=False,
         verbose_name='Cost of Goods Sold'
     )
-    non_cogs_amount = models.IntegerField(
+    non_cogs_amount = models.DecimalField(
+        max_digits=20,
+        decimal_places=2,
         blank=False,
         null=False,
         verbose_name='Cost of Team Labor'
@@ -491,9 +497,11 @@ class Buy(models.Model):
         blank=False,
         null=False,
     )
-    dollars = models.PositiveIntegerField(
+    dollars = models.DecimalField(
+        max_digits=20,
+        decimal_places=2,
         blank=False,
-        null=True,
+        null=False,
     )
     requirements = ArrayField(
         # https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#arrayfield

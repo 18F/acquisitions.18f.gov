@@ -13,4 +13,4 @@ class TestFinancialView:
         iaa = IAAFactory.create()
         response = client.get(reverse('financials'))
         assert response.status_code == 200
-        assert str.encode(iaa.id) in response.content
+        assert str.encode(iaa.client.name) in response.content
