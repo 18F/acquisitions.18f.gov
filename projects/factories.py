@@ -23,6 +23,9 @@ class AgencyFactory(factory.django.DjangoModelFactory):
 
     # TODO: Create a Faker provider for agency names
     name = factory.Faker('company')
+    address = factory.Faker('address')
+    business_partner_number = factory.Faker('random_number', digits=9)
+    location_code = factory.Faker('random_number', digits=8)
 
 
 class AgencyOfficeFactory(factory.django.DjangoModelFactory):
@@ -33,6 +36,7 @@ class AgencyOfficeFactory(factory.django.DjangoModelFactory):
     agency = factory.SubFactory(
         AgencyFactory
     )
+    address = factory.Faker('address')
 
 
 class IAAFactory(factory.django.DjangoModelFactory):
@@ -43,9 +47,16 @@ class IAAFactory(factory.django.DjangoModelFactory):
         prefix='IAA',
         chars=string.digits,
         )
-    cogs_amount = factory.fuzzy.FuzzyInteger(1000, 999999)
-    non_cogs_amount = factory.fuzzy.FuzzyInteger(1000, 999999)
+    cogs_amount = factory.Faker('random_int', min=1000, max=999999)
+    non_cogs_amount = factory.Faker('random_int', min=1000, max=999999)
+    assisted_acquisition = factory.Faker('boolean')
     signed_on = None
+    business_event_type_code = factory.Faker(
+                                    'password',
+                                    length=8,
+                                    special_chars=False,
+                                    lower_case=False,
+                                )
     client = factory.SubFactory(AgencyOfficeFactory)
 
 

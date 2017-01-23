@@ -35,14 +35,6 @@ class Agency(models.Model):
         help_text='For more information, see'
                   ' https://tfm.fiscal.treasury.gov/v1/p2/c330.html'
     )
-    component_tas_number = models.IntegerField(
-        blank=False,
-        null=False,
-    )
-    business_type_event_code = models.IntegerField(
-        blank=False,
-        null=False,
-    )
     object_code = models.IntegerField(
         blank=True,
         null=True,
@@ -99,6 +91,24 @@ class IAA(models.Model):
         AgencyOffice,
         blank=False,
         null=False,
+    )
+    treasury_account_symbol = models.CharField(
+        # TODO: Ideally used the USASpending.gov API instead
+        # TODO: TAS widget
+        # TODO: TAS parser/validator
+        max_length=20,
+        blank=False,
+        null=False,
+    )
+    business_event_type_code = models.CharField(
+        # TODO: BETC validator based on spreadsheet in link below
+        max_length=8,
+        blank=False,
+        null=False,
+        help_text='An 8-character alphanumeric code indicating the type of '
+                  'activity (e.g. payments, collections, investments) taking '
+                  'place. For more information, see '
+                  'https://www.fiscal.treasury.gov/fsservices/gov/acctg/cars/factsheet_betc.htm'
     )
     signed_on = models.DateField(
         blank=True,
