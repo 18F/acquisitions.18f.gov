@@ -267,8 +267,18 @@ def download(request, buy, doc_type, doc_format):
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def financials(request):
+    totals = {}
     docs = IAA.objects.all()
-    return render(request, 'projects/financials.html', {'docs': docs})
+    totals['budgeted'] = sum([i.budget for i in docs])
+    totals['allocated'] = sum([i.allocated() for i in docs])
+    return render(
+        request,
+        'projects/financials.html',
+        {
+            'docs': docs,
+            'totals': totals,
+        }
+    )
 
 
 class IAAList(mixins.ListModelMixin,

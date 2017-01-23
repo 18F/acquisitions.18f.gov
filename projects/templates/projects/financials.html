@@ -4,26 +4,39 @@
 {% block content %}
 <section class="usa-grid">
   <div class="usa-width-one-full">
-  <table>
-    <thead>
-      <th>Client</th>
-      <th>Total</th>
-      <th>Allocated</th>
-      <th>COGS</th>
-      <th>Non-COGS</th>
-    </thead>
-    <tbody>
-      {% for doc in docs %}
+    <h1>Financials Overview</h1>
+    <table>
+      <tbody>
         <tr>
-          <td>{{ doc.client }}</td>
-          <td>${{ doc.budget|intcomma }}</td>
-          <td>${{ doc.allocated|intcomma }}</td>
-          <td>${{ doc.total_cogs|intcomma }}</td>
-          <td>${{ doc.total_non_cogs|intcomma }}</td>
+          <td>Total Budgeted</td>
+          <td>${{ totals.budgeted|intcomma }}</td>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+        <tr>
+          <td>Total Allocated</td>
+          <td>${{ totals.allocated|intcomma }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <thead>
+        <th>Client</th>
+        <th>Total</th>
+        <th>Allocated</th>
+        <th>COGS</th>
+        <th>Non-COGS</th>
+      </thead>
+      <tbody>
+        {% for doc in docs %}
+          <tr>
+            <td>{{ doc.client }}</td>
+            <td>${{ doc.budget|intcomma }}</td>
+            <td>${{ doc.allocated|intcomma }}</td>
+            <td>${{ doc.total_cogs|intcomma }}</td>
+            <td>${{ doc.total_non_cogs|intcomma }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </section>
 {% endblock %}
