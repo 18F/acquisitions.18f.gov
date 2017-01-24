@@ -29,6 +29,7 @@ SECRET_KEY = SECRET_KEY = os.environ.get('SECRET_KEY',
                                          crypto.get_random_string(60))
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# The weird evaluation is because the environment variable is a string rather than a boolean
 DEBUG = os.environ.get('DEBUG', default=True) != "False"
 
 ALLOWED_HOSTS = ['*']
