@@ -50,6 +50,10 @@ urlpatterns = [
         include(projects_urls.iaa_patterns, namespace='iaas')
     ),
     url(
+        r'^clients/',
+        include(projects_urls.client_patterns, namespace='clients')
+    ),
+    url(
         r'^news/',
         include(news_urls.urlpatterns, namespace='news')
     ),

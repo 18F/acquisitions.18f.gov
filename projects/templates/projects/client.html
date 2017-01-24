@@ -1,0 +1,17 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <h1>{{ client }}</h1>
+    <h2>Signed IAAs</h2>
+    <ul>
+    {% for iaa in client.signed_iaas %}
+      <li><a href="{{ iaa.get_absolute_url }}">{{ iaa }}</a></li>
+    {% empty %}
+    <div class="">No signed IAAs yet.</div>
+    {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endblock %}

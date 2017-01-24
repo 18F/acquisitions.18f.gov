@@ -28,7 +28,7 @@
       <tbody>
         {% for doc in docs %}
           <tr>
-            <td>{{ doc.client }}</td>
+            <td><a href="{{ doc.client.get_absolute_url }}">{{ doc.client }}</a></td>
             <td>${{ doc.budget|intcomma }}</td>
             <td>${{ doc.allocated|intcomma }}</td>
             <td>${{ doc.total_cogs|intcomma }}</td>

@@ -76,7 +76,7 @@
       if (r1.readyState != 4 || r1.status != 200) return;
       var jsonResponse = JSON.parse(r1.responseText);
       if (jsonResponse.length > 0) {
-        for (const iaa of jsonResponse) {
+        for (let iaa of jsonResponse) {
           current.appendChild(createIAA(iaa));
         }
       } else {
@@ -85,18 +85,18 @@
         div.appendChild(content);
         current.appendChild(div);
       }
+      let r2 = new XMLHttpRequest();
+      r2.open("GET", "/api/projects/", true);
+      r2.onreadystatechange = function () {
+        if (r2.readyState != 4 || r2.status != 200) return;
+        var jsonResponse = JSON.parse(r2.responseText);
+        for (let project of jsonResponse) {
+          createProject(project);
+        }
+      }
+      r2.send();
     };
     r1.send();
-    let r2 = new XMLHttpRequest();
-    r2.open("GET", "/api/projects/", true);
-    r2.onreadystatechange = function () {
-      if (r2.readyState != 4 || r2.status != 200) return;
-      var jsonResponse = JSON.parse(r2.responseText);
-      for (const project of jsonResponse) {
-        createProject(project);
-      }
-    }
-    r2.send();
   });
 </script>
 {% endblock %}

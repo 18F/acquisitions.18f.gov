@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from projects.models import IAA, Project, Buy
+from projects.models import IAA, Project, Buy, AgencyOffice
 from projects.serializers import (
     IAASerializer,
     ProjectSerializer,
@@ -115,6 +115,24 @@ def buy(request, buy):
             "documents": documents
         }
     )
+
+
+def clients(request):
+    return render(request, "projects/clients.html")
+
+
+def client(request, client):
+    client = get_object_or_404(AgencyOffice, id=client)
+    if not client.is_public() and not request.user.has_perm('projects.view_project'):
+        return render(request, "projects/private-page.html")
+    else:
+        return render(
+            request,
+            "projects/client.html",
+            {
+                "client": client,
+            }
+        )
 
 
 @login_required

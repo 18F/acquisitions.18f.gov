@@ -47,4 +47,9 @@ buy_patterns = [
     ),
 ]
 
+client_patterns = [
+    url(r'^$', views.clients, name='clients'),
+    url(r'^(?P<client>\w+)$', views.client, name='client'),
+]
+
 api_patterns = format_suffix_patterns(api_patterns)

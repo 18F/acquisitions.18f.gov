@@ -75,6 +75,16 @@ class AgencyOffice(models.Model):
     def __str__(self):
         return "{0} - {1}".format(self.agency.name, self.name)
 
+    def get_absolute_url(self):
+        return reverse('clients:client', args=[self.id])
+
+    def signed_iaas(self):
+        return self.iaa_set.exclude(signed_on=None)
+
+    # Consider client to be public if there is at least one signed IAA
+    def is_public(self):
+        return len(self.signed_iaas()) > 0
+
     class Meta:
         unique_together = ('name', 'agency')
         ordering = ['agency', 'name']
@@ -168,6 +178,9 @@ class IAA(models.Model):
 
     def __str__(self):
         return "{0} | {1}".format(self.client, self.id)
+
+    def get_absolute_url(self):
+        return reverse('iaas:iaa', args=[self.id])
 
     def is_signed(self):
         return self.signed_on is not None
