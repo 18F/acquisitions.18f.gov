@@ -20,16 +20,16 @@ git clone https://github.com/18f/acquisitions.18f.gov.git
 cd acquisitions.18f.gov
 ```
 
-From here, you can proceed to install and execute the project directly on to your computer, or you can skip down to the [Docker instructions](#docker) to get everything into Docker containers.
+This is a Django project, built using Python 3. From here, you can proceed to install and execute the project directly on to your computer, or you can skip down to the [Docker instructions](#docker) to get everything into Docker containers.
 
-This is a Django project, built using Python 3. We recommend using [`pyenv`](https://github.com/yyuu/pyenv) to manage your Python versions. Additionally, some form of [`virtualenv`](https://github.com/pypa/virtualenv) is recommended, either as-is or using [`virtualenvwrapper`](http://virtualenvwrapper.readthedocs.io/en/latest/). (With `pyenv`, [`pyenv-virtualwrapper`](https://github.com/yyuu/pyenv-virtualenvwrapper) can help with this.) With that, you can:
+We recommend using [`pyenv`](https://github.com/yyuu/pyenv) to manage your Python versions. Additionally, some form of [`virtualenv`](https://github.com/pypa/virtualenv) is recommended, either as-is or using [`virtualenvwrapper`](http://virtualenvwrapper.readthedocs.io/en/latest/). (With `pyenv`, [`pyenv-virtualwrapper`](https://github.com/yyuu/pyenv-virtualenvwrapper) can help with this.) With Python installed, you can:
 
 ```
 pyenv install 3.5.1
 python --version          # Should display Python 3.5.1
 pyenv virtualenvwrapper   # not necessary if it's already loaded in your .bash_profile or .zshrc
 mkvirtualenv acquisitions
-pip install -r requirements.txt
+pip install -r requirements.txt requirements-dev.txt
 ```
 
 The project runs a PostgreSQL database. Set up the database and create the user groups:
@@ -56,7 +56,9 @@ password:
 ./manage.py createsuperuser --noinput --username foo --email foo@localhost
 ```
 
-And then run the application:
+You can use the superuser's email to log in to the system. 
+
+Finally, run the application:
 
 ```
 ./manage.py runserver
