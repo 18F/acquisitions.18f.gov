@@ -11,54 +11,9 @@ public-facing site for the office's efforts, as well as an internal site for
 coordinating and tracking work. See [the elements below](#elements) for more
 about what's included.
 
-## Installation
+## Setup and local development
 
-First, get a local copy of the project:
-
-```
-git clone https://github.com/18f/acquisitions.18f.gov.git
-cd acquisitions.18f.gov
-```
-
-This is a Django project, built using Python 3. We recommend using [`pyenv`](https://github.com/yyuu/pyenv) to manage your Python versions. Additionally, some form of [`virtualenv`](https://github.com/pypa/virtualenv) is recommended, either as-is or using [`virtualenvwrapper`](http://virtualenvwrapper.readthedocs.io/en/latest/). (With `pyenv`, [`pyenv-virtualwrapper`](https://github.com/yyuu/pyenv-virtualenvwrapper) can help with this.) With that, you can:
-
-```
-pyenv install 3.5.1
-python --version          # Should display Python 3.5.1
-pyenv virtualenvwrapper   # not necessary if it's already loaded in your .bash_profile or .zshrc
-mkvirtualenv acquisitions
-pip install -r requirements.txt
-```
-
-The project runs a PostgreSQL database. Set up the database and create the user groups:
-
-```
-createdb acquisitions
-./manage.py migrate
-./manage.py init_groups
-```
-
-Optionally, populate the database with some fake data:
-
-```
-./manage.py create_team
-./manage.py create_projects
-./manage.py create_buys --add
-./manage.py create_content
-```
-
-Because of the authentication flow, a superuser should be created without a
-password:
-
-```
-./manage.py createsuperuser --noinput --username foo --email foo@localhost
-```
-
-And then run the application:
-
-```
-./manage.py runserver
-```
+See [the setup docs](./docs/setup.md) for direct and Docker installation information.
 
 ## Deployment
 
