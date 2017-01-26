@@ -56,7 +56,7 @@ password:
 ./manage.py createsuperuser --noinput --username foo --email foo@localhost
 ```
 
-You can use the superuser's email to log in to the system. 
+You can use the superuser's email to log in to the system.
 
 Finally, run the application:
 
@@ -94,10 +94,7 @@ whatever email you use is what you will use to log into the website.
 You can also load some dummy data into the project using the following commands:
 
 ```shell
-docker-compose exec web ./manage.py create_team
-docker-compose exec web ./manage.py create_projects
-docker-compose exec web ./manage.py create_buys --add
-docker-compose exec web ./manage.py create_content
+docker-compose exec web ./bin/seed-db.sh
 ```
 
 ## Deployment
