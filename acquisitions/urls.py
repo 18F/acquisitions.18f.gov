@@ -30,6 +30,7 @@ api_patterns = projects_urls.api_patterns + team_urls.api_patterns
 
 urlpatterns = [
     url(r'^$', web_views.index),
+    url(r'^search$', web_views.search),
     url(r'^guides$', web_views.guides),
     url(r'^api/$', DRFDocsView.as_view(), name='api_docs'),
     url(r'^api/', include(api_patterns, namespace='api')),
