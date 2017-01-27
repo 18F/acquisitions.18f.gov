@@ -51,7 +51,6 @@ INSTALLED_APPS = (
     'team',
     'web',
     'nda',
-    'uaa_client',
     'news',
     'acquisitions',
 
@@ -163,12 +162,10 @@ LOGIN_URL = 'uaa_client:login'
 
 LOGIN_REDIRECT_URL = '/'
 
-if DEBUG:
-    INSTALLED_APPS += ('fake_uaa_provider',)
-
 if not UAA_CLIENT_SECRET:
     if DEBUG:
         # We'll be using the Fake UAA Provider.
+        INSTALLED_APPS += ('uaa_client.fake_uaa_provider',)
         UAA_CLIENT_SECRET = 'fake-uaa-provider-client-secret'
         UAA_AUTH_URL = UAA_TOKEN_URL = 'fake:'
     else:

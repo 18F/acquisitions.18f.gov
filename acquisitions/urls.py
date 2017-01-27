@@ -60,11 +60,12 @@ urlpatterns = [
     url(r'^profile/$', web_views.profile),
     url(r'^profile/refresh_token/$', web_views.refresh_token),
     url(r'^profile/sign_nda/$', nda_views.sign_nda),
-    url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
+    # url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
+    url(r'^auth/', include('uaa_client.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += [
-        url(r'^', include('fake_uaa_provider.urls',
+        url(r'^', include('uaa_client.fake_uaa_provider.urls',
                           namespace='fake_uaa_provider'))
         ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
