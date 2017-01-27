@@ -4,7 +4,9 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
+-e git+https://github.com/18F/cg-django-uaa.git#egg=cg-django-uaa
 acq-templates==0.1.2
+appdirs==1.4.0            # via setuptools
 cfenv==0.5.2
 dj-database-url==0.4.1
 django-filter==1.0.1
@@ -23,13 +25,15 @@ markdown2==2.3.2          # via django-markdown-deux
 markdown==2.6.7
 newrelic==2.76.0.55
 orderedmultidict==0.7.11  # via furl
+packaging==16.8           # via setuptools
 pillow==3.4.2
 psycopg2==2.6.2
 pyjwt==1.4.2
 pypandoc==1.3.3
+pyparsing==2.1.10         # via packaging
 python-dateutil==2.6.0    # via faker
 requests==2.12.4
-six==1.10.0               # via djangorestframework-csv, faker, furl, orderedmultidict, python-dateutil
+six==1.10.0               # via djangorestframework-csv, faker, furl, orderedmultidict, packaging, python-dateutil, setuptools
 unicodecsv==0.14.1        # via djangorestframework-csv
 wheel==0.29.0             # via pypandoc
 whitenoise==3.2.2

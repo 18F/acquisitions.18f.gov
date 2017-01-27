@@ -19,3 +19,5 @@ PyJWT
 pypandoc
 requests
 whitenoise
+
+-e git+https://github.com/18F/cg-django-uaa.git#egg=cg-django-uaa
