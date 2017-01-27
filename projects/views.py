@@ -3,14 +3,15 @@ import pypandoc
 import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponse
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.core.files.temp import NamedTemporaryFile
 from rest_framework import viewsets, status, mixins, generics
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from projects.models import IAA, Project, Buy
+from projects.models import IAA, Project, Buy, AgencyOffice
 from projects.serializers import (
     IAASerializer,
     ProjectSerializer,
@@ -21,11 +22,13 @@ from projects.filters import (
     ProjectFilter,
 )
 from projects.forms import (
+    ClientForm,
     IAAForm,
     ProjectForm,
     CreateBuyForm,
     EditBuyForm,
 )
+from acquisitions import settings
 from nda.forms import NDAForm
 
 
@@ -115,15 +118,51 @@ def buy(request, buy):
     )
 
 
+def clients(request):
+    return render(request, "projects/clients.html")
+
+
+def client(request, client):
+    client = get_object_or_404(AgencyOffice, id=client)
+    if not client.is_public() and not request.user.has_perm('projects.view_project'):
+        return render(request, "projects/private-page.html")
+    else:
+        return render(
+            request,
+            "projects/client.html",
+            {
+                "client": client,
+            }
+        )
+
+
 @login_required
-def edit_iaa(request):
+def edit_client(request, client=None):
+    if request.method == 'POST':
+        form = ClientForm(request.POST)
+        if form.is_valid():
+            client = form.save()
+            return redirect('clients:client', client.id)
+    else:
+        if client is not None:
+            client = AgencyOffice.objects.get(id=client)
+        form = ClientForm(instance=client)
+    return render(request, 'projects/edit_client.html', {
+        'form': form
+    })
+
+
+@login_required
+def edit_iaa(request, iaa=None):
     if request.method == 'POST':
         form = IAAForm(request.POST)
         if form.is_valid():
             iaa = form.save()
             return redirect('iaas:iaa', iaa.id)
     else:
-        form = IAAForm()
+        if iaa is not None:
+            iaa = IAA.objects.get(id=iaa)
+        form = IAAForm(instance=iaa)
     return render(request, 'projects/edit_iaa.html', {
         'form': form
     })
@@ -261,6 +300,22 @@ def download(request, buy, doc_type, doc_format):
             return _make_response(doc_content, buy.name, doc_type, doc_format)
     else:
         raise Http404
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def financials(request):
+    totals = {}
+    docs = IAA.objects.all()
+    totals['budgeted'] = sum([i.budget for i in docs])
+    totals['allocated'] = sum([i.allocated() for i in docs])
+    return render(
+        request,
+        'projects/financials.html',
+        {
+            'docs': docs,
+            'totals': totals,
+        }
+    )
 
 
 class IAAList(mixins.ListModelMixin,

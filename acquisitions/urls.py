@@ -19,6 +19,7 @@ from web import views as web_views
 from nda import views as nda_views
 from team import urls as team_urls
 from projects import urls as projects_urls
+from projects import views as project_views
 from news import urls as news_urls
 from django.conf import settings
 from django.conf.urls.static import static
@@ -33,6 +34,7 @@ urlpatterns = [
     url(r'^guides$', web_views.guides),
     url(r'^api/$', DRFDocsView.as_view(), name='api_docs'),
     url(r'^api/', include(api_patterns, namespace='api')),
+    url(r'^financials$', project_views.financials, name='financials'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^team/', include(team_urls.urlpatterns, namespace='team')),
     url(
@@ -46,6 +48,10 @@ urlpatterns = [
     url(
         r'^iaas/',
         include(projects_urls.iaa_patterns, namespace='iaas')
+    ),
+    url(
+        r'^clients/',
+        include(projects_urls.client_patterns, namespace='clients')
     ),
     url(
         r'^news/',

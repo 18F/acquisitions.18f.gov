@@ -34,6 +34,5 @@ def test_edit_buy_form():
         "qasp": "something new"
     }
     form = EditBuyForm(instance=buy)
-    print(buy.project.dollars, buy.project.budget_remaining(), buy.dollars)
     # assert form.is_valid(), form.errors
     # assert buy.qasp == "something new"

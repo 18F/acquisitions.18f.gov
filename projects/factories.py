@@ -23,6 +23,9 @@ class AgencyFactory(factory.django.DjangoModelFactory):
 
     # TODO: Create a Faker provider for agency names
     name = factory.Faker('company')
+    address = factory.Faker('address')
+    business_partner_number = factory.Faker('random_number', digits=9)
+    location_code = factory.Faker('random_number', digits=8)
 
 
 class AgencyOfficeFactory(factory.django.DjangoModelFactory):
@@ -33,6 +36,7 @@ class AgencyOfficeFactory(factory.django.DjangoModelFactory):
     agency = factory.SubFactory(
         AgencyFactory
     )
+    address = factory.Faker('address')
 
 
 class IAAFactory(factory.django.DjangoModelFactory):
@@ -43,8 +47,15 @@ class IAAFactory(factory.django.DjangoModelFactory):
         prefix='IAA',
         chars=string.digits,
         )
-    dollars = factory.fuzzy.FuzzyInteger(1000, 999999)
+    budget = factory.Faker('random_int', min=5000, max=99999)
+    assisted_acquisition = factory.Faker('boolean')
     signed_on = None
+    business_event_type_code = factory.Faker(
+                                    'password',
+                                    length=8,
+                                    special_chars=False,
+                                    lower_case=False,
+                                )
     client = factory.SubFactory(AgencyOfficeFactory)
 
 
@@ -66,9 +77,15 @@ class ProjectFactory(factory.django.DjangoModelFactory):
     public = factory.Faker('boolean')
 
     @factory.lazy_attribute
-    def dollars(self):
+    def non_cogs_amount(self):
         min = 1000
-        max = self.iaa.dollars
+        max = self.iaa.budget
+        return random.randint(min, max)
+
+    @factory.lazy_attribute
+    def cogs_amount(self):
+        min = 0
+        max = self.iaa.budget - self.non_cogs_amount
         return random.randint(min, max)
 
 
@@ -144,7 +161,7 @@ class BuyFactory(factory.django.DjangoModelFactory):
     @factory.lazy_attribute
     def dollars(self):
         min = 500
-        max = self.project.dollars
+        max = self.project.budget()
         return random.randint(min, max)
 
 

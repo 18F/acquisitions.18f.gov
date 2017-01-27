@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
-import re
 
+import re
 from datetime import datetime, date, timedelta
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
@@ -23,6 +23,29 @@ class Agency(models.Model):
         null=False,
         unique=True,
     )
+    address = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False,
+    )
+    location_code = models.IntegerField(
+        blank=False,
+        null=False,
+        verbose_name='Agency Location Code (ALC)',
+        help_text='For more information, see'
+                  ' https://tfm.fiscal.treasury.gov/v1/p2/c330.html'
+    )
+    object_code = models.IntegerField(
+        blank=True,
+        null=True,
+    )
+    business_partner_number = models.IntegerField(
+        blank=False,
+        null=False,
+        help_text='This may be a BPN, a DUNS number, or a Dept. of Defense '
+                  'Activity Address Code (DoDAAC). Including the +4 for the '
+                  'number is also accepted.'
+    )
 
     def __str__(self):
         return "{0}".format(self.name)
@@ -43,9 +66,24 @@ class AgencyOffice(models.Model):
         blank=False,
         null=False,
     )
+    address = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False,
+    )
 
     def __str__(self):
         return "{0} - {1}".format(self.agency.name, self.name)
+
+    def get_absolute_url(self):
+        return reverse('clients:client', args=[self.id])
+
+    def signed_iaas(self):
+        return self.iaa_set.exclude(signed_on=None)
+
+    # Consider client to be public if there is at least one signed IAA
+    def is_public(self):
+        return len(self.signed_iaas()) > 0
 
     class Meta:
         unique_together = ('name', 'agency')
@@ -64,23 +102,62 @@ class IAA(models.Model):
         blank=False,
         null=False,
     )
+    treasury_account_symbol = models.CharField(
+        # TODO: Ideally used the USASpending.gov API instead
+        # TODO: TAS widget
+        # TODO: TAS parser/validator
+        max_length=20,
+        blank=False,
+        null=False,
+    )
+    business_event_type_code = models.CharField(
+        # TODO: BETC validator based on spreadsheet in link below
+        max_length=8,
+        blank=False,
+        null=False,
+        help_text='An 8-character alphanumeric code indicating the type of '
+                  'activity (e.g. payments, collections, investments) taking '
+                  'place. For more information, see '
+                  'https://www.fiscal.treasury.gov/fsservices/gov/acctg/cars/factsheet_betc.htm'
+    )
     signed_on = models.DateField(
         blank=True,
         null=True,
     )
-    expires_on = models.DateField(
+    performance_begins = models.DateField(
         blank=True,
         null=True,
     )
-    dollars = models.IntegerField(
+    performance_ends = models.DateField(
         blank=True,
         null=True,
+    )
+    funding_expires_on = models.DateField(
+        blank=True,
+        null=True,
+        help_text='The last date an obligation can occur.'
+    )
+    funding_canceled_on = models.DateField(
+        blank=True,
+        null=True,
+        help_text='The cancellation date is the fifth year from the expiration'
+                  ' date (the last date the payment must be disbursed)'
+    )
+    budget = models.DecimalField(
+        max_digits=20,
+        decimal_places=2,
+        blank=False,
+        null=False,
+    )
+    assisted_acquisition = models.BooleanField(
+        blank=True,
     )
     color_of_money = models.CharField(
         choices=(
-            ('No-Year Money', 'No-Year Money'),
-            ('1-Year Money', '1-Year Money'),
-            ('2-Year Money', '2-Year Money'),
+            ('no_year', 'No-Year Money'),
+            ('1_year', '1-Year Money'),
+            ('2_year', '2-Year Money'),
+            ('fcsf', 'FCSF Money'),
         ),
         max_length=100,
         blank=True,
@@ -88,8 +165,11 @@ class IAA(models.Model):
     ),
     authority = models.CharField(
         choices=(
-            ('ASF', 'Alternating Services Fund'),
-            ('Economy', 'Economy Act'),
+            ('asf', 'Acquisition Services Fund'),
+            ('economy', 'Economy Act'),
+            ('franchise', 'Franchise Fund'),
+            ('revolving', 'Revolving Fund'),
+            ('working_capital', 'Working Capital Fund'),
         ),
         max_length=100,
         blank=True,
@@ -99,20 +179,71 @@ class IAA(models.Model):
     def __str__(self):
         return "{0} | {1}".format(self.client, self.id)
 
+    def get_absolute_url(self):
+        return reverse('iaas:iaa', args=[self.id])
+
     def is_signed(self):
         return self.signed_on is not None
 
+    def duration(self):
+        try:
+            return self.performance_ends - self.performance_begins
+        except TypeError:
+            return "To be determined"
+
     def budget_remaining(self, exclude=[]):
-        budget = self.dollars
+        budget = self.budget
         for project in self.project_set.all():
             if project not in exclude:
-                budget -= project.dollars
+                budget -= project.budget()
         return budget
 
+    def allocated(self):
+        allocated = 0
+        for project in self.project_set.all():
+            allocated += project.budget()
+        return allocated
+
+    def total_cogs(self):
+        cogs = 0
+        for project in self.project_set.all():
+            cogs += project.cogs_amount
+        return cogs
+
+    def total_non_cogs(self):
+        non_cogs = 0
+        for project in self.project_set.all():
+            non_cogs += project.non_cogs_amount
+        return non_cogs
+
     def clean(self):
-        if self.signed_on > datetime.now():
+        if self.signed_on > date.today():
             raise ValidationError({
                 'signed_on': 'Date may not be in the future.'
+            })
+
+        if self.signed_on and not self.performance_ends or not self.performance_begins:
+            raise ValidationError({
+                'signed_on': 'Period of perfomance fields must be provided '
+                'before the IAA can be signed.'
+            })
+
+        if self.signed_on and not self.funding_expires_on or not self.funding_canceled_on:
+            raise ValidationError({
+                'signed_on': 'Funding deadlines must be provided before the '
+                'IAA can be signed.'
+            })
+
+        if self.signed_on and not self.color_of_money:
+            raise ValidationError({
+                'signed_on': 'Color of money must be provided before the '
+                'IAA can be signed.'
+            })
+
+        if self.signed_on and not self.authority:
+            raise ValidationError({
+                'signed_on': 'Statutory authority must be provided before the '
+                'IAA can be signed.'
             })
 
     class Meta:
@@ -152,9 +283,19 @@ class Project(models.Model):
         blank=False,
         null=False,
     )
-    dollars = models.IntegerField(
-        blank=True,
-        null=True,
+    cogs_amount = models.DecimalField(
+        max_digits=20,
+        decimal_places=2,
+        blank=False,
+        null=False,
+        verbose_name='Cost of Goods Sold'
+    )
+    non_cogs_amount = models.DecimalField(
+        max_digits=20,
+        decimal_places=2,
+        blank=False,
+        null=False,
+        verbose_name='Cost of Team Labor'
     )
     public = models.BooleanField(
         default=False,
@@ -175,8 +316,11 @@ class Project(models.Model):
     def is_private(self):
         return not self.public
 
+    def budget(self):
+        return self.cogs_amount + self.non_cogs_amount
+
     def budget_remaining(self, exclude=[]):
-        budget = self.dollars
+        budget = self.budget()
         for buy in self.buy.all():
             if buy not in exclude:
                 budget -= buy.dollars
@@ -366,9 +510,11 @@ class Buy(models.Model):
         blank=False,
         null=False,
     )
-    dollars = models.PositiveIntegerField(
+    dollars = models.DecimalField(
+        max_digits=20,
+        decimal_places=2,
         blank=False,
-        null=True,
+        null=False,
     )
     requirements = ArrayField(
         # https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#arrayfield
