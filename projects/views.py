@@ -153,14 +153,16 @@ def edit_client(request, client=None):
 
 
 @login_required
-def edit_iaa(request):
+def edit_iaa(request, iaa=None):
     if request.method == 'POST':
         form = IAAForm(request.POST)
         if form.is_valid():
             iaa = form.save()
             return redirect('iaas:iaa', iaa.id)
     else:
-        form = IAAForm()
+        if iaa is not None:
+            iaa = IAA.objects.get(id=iaa)
+        form = IAAForm(instance=iaa)
     return render(request, 'projects/edit_iaa.html', {
         'form': form
     })
