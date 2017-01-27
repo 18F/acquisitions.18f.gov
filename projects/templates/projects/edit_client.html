@@ -1,0 +1,28 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+<section class="usa-grid">
+  <div class="usa-width-one-full">
+    <form class="" action="/clients/create" method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="">
+        {{ form.name.errors }}
+        {{ form.name.label_tag }}
+        {{ form.name }}
+      </div>
+      <div class="">
+        {{ form.agency.errors }}
+        {{ form.agency.label_tag }}
+        {{ form.agency }}
+      </div>
+      <div class="">
+        {{ form.address.errors }}
+        {{ form.address.label_tag }}
+        {{ form.address }}
+      </div>
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+</section>
+{% endblock %}

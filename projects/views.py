@@ -22,6 +22,7 @@ from projects.filters import (
     ProjectFilter,
 )
 from projects.forms import (
+    ClientForm,
     IAAForm,
     ProjectForm,
     CreateBuyForm,
@@ -133,6 +134,22 @@ def client(request, client):
                 "client": client,
             }
         )
+
+
+@login_required
+def edit_client(request, client=None):
+    if request.method == 'POST':
+        form = ClientForm(request.POST)
+        if form.is_valid():
+            client = form.save()
+            return redirect('clients:client', client.id)
+    else:
+        if client is not None:
+            client = AgencyOffice.objects.get(id=client)
+        form = ClientForm(instance=client)
+    return render(request, 'projects/edit_client.html', {
+        'form': form
+    })
 
 
 @login_required

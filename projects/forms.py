@@ -1,10 +1,16 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.postgres.forms import SimpleArrayField
-from projects.models import Buy, Project, IAA
+from projects.models import Buy, Project, IAA, AgencyOffice
 from projects.widgets import DurationMultiWidget
 from form_utils.forms import BetterModelForm
 from form_utils.widgets import AutoResizeTextarea
+
+
+class ClientForm(forms.ModelForm):
+    class Meta:
+        model = AgencyOffice
+        fields = '__all__'
 
 
 class IAAForm(forms.ModelForm):
