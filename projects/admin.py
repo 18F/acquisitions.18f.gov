@@ -41,15 +41,15 @@ class ProjectAdmin(admin.ModelAdmin):
         model = Project
         fields = '__all__'
 
-    def get_readonly_fields(self, request, obj=None):
-        if request.user not in obj.team_members.all() and not request.user.is_superuser:
-            # Get all fields on model
-            all_fields = [f.name for f in obj._meta.get_fields()]
-            # Remove "buys", which is a manager for the buy model
-            all_fields.remove('buys')
-            return all_fields
-        else:
-            return []
+    # def get_readonly_fields(self, request, obj=None):
+    #     if request.user not in obj.team_members.all() and not request.user.is_superuser:
+    #         # Get all fields on model
+    #         all_fields = [f.name for f in obj._meta.get_fields()]
+    #         # Remove "buys", which is a manager for the buy model
+    #         all_fields.remove('buys')
+    #         return all_fields
+    #     else:
+    #         return []
 
 
 class BuyForm(forms.ModelForm):
@@ -149,6 +149,7 @@ class BuyAdmin(admin.ModelAdmin):
                     'option_period_length',
                 ),
                 'naics_code',
+                'procurement_method',
                 'set_aside_status',
                 'competition_strategy',
                 'contract_type',
