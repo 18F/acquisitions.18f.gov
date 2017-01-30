@@ -141,6 +141,7 @@ class ProcurementMethodFactory(factory.django.DjangoModelFactory):
         model = ProcurementMethod
 
     name = factory.Faker('color_name')
+    short_name = factory.Faker('password')
 
 class BuyFactory(factory.django.DjangoModelFactory):
     class Meta:
