@@ -136,6 +136,7 @@ class ContractingOfficerRepresentativeFactory(
         ContractingOfficeFactory
     )
 
+
 class ProcurementMethodFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ProcurementMethod
@@ -143,10 +144,10 @@ class ProcurementMethodFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('color_name')
     short_name = factory.Faker('password')
 
+
 class BuyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Buy
-
 
     project = factory.SubFactory(
         ProjectFactory,

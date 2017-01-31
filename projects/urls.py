@@ -22,8 +22,8 @@ api_patterns = [
 iaa_patterns = [
     url(r'^$', views.iaas, name='iaas'),
     url(r'^create$', views.edit_iaa, name='edit_iaa'),
-    url(r'(?P<iaa>\w+)', views.iaa, name='iaa'),
-    url(r'(?P<iaa>\d+)/edit/$', views.edit_iaa, name='edit_iaa'),
+    url(r'(?P<iaa>\w+)$', views.iaa, name='iaa'),
+    url(r'(?P<iaa>\w+)/edit/$', views.edit_iaa, name='edit_iaa'),
 ]
 
 project_patterns = [

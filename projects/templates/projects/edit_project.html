@@ -7,42 +7,42 @@
     <form class="" action="/projects/create" method="post">
       {% csrf_token %}
       {{ form.non_field_errors }}
-      <div class="">
+      <div class="{% if form.name.field.required %}required{% endif %}">
         {{ form.name.errors }}
         {{ form.name.label_tag }}
         {{ form.name }}
       </div>
-      <div class="">
+      <div class="{% if form.description.field.required %}required{% endif %}">
         {{ form.description.errors }}
         {{ form.description.label_tag }}
         {{ form.description }}
       </div>
-      <div class="">
+      <div class="{% if form.project_type.field.required %}required{% endif %}">
         {{ form.project_type.errors }}
         {{ form.project_type.label_tag }}
         {{ form.project_type }}
       </div>
-      <div class="">
+      <div class="{% if form.iaa.field.required %}required{% endif %}">
         {{ form.iaa.errors }}
         {{ form.iaa.label_tag }}
         {{ form.iaa }}
       </div>
-      <div class="">
+      <div class="{% if form.dollars.field.required %}required{% endif %}">
         {{ form.dollars.errors }}
         {{ form.dollars.label_tag }}
         {{ form.dollars }}
       </div>
-      <div class="">
+      <div class="{% if form.team_members.field.required %}required{% endif %}">
         {{ form.team_members.errors }}
         {{ form.team_members.label_tag }}
         {{ form.team_members }}
       </div>
-      <div class="">
+      <div class="{% if form.public.field.required %}required{% endif %}">
         {{ form.public.errors }}
         {{ form.public }}
         <label for="{{ form.public.id_for_label }}">{{ form.public.label }}</label>
       </div>
-      <div class="">
+      <div class="{% if form.active.field.required %}required{% endif %}">
         {{ form.active.errors }}
         {{ form.active }}
         <label for="{{ form.active.id_for_label }}">{{ form.active.label }}</label>

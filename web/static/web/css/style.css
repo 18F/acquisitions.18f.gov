@@ -11,6 +11,12 @@ blockquote {
   box-shadow: 0 2px 3px #3e94cf, 0 2px 5px #3e94cf;
 }
 
+/* Forms */
+.required {
+  border-left: 5px solid #3e94cf;
+  padding-left: 5px;
+}
+
 /* Buys */
 
 .acq-documents {

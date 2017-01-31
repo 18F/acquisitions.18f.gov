@@ -161,10 +161,11 @@ def edit_iaa(request, iaa=None):
             return redirect('iaas:iaa', iaa.id)
     else:
         if iaa is not None:
-            iaa = IAA.objects.get(id=iaa)
+            iaa = IAA.objects.get_object_or_404(id=iaa)
         form = IAAForm(instance=iaa)
     return render(request, 'projects/edit_iaa.html', {
-        'form': form
+        'form': form,
+        'iaa': iaa,
     })
 
 
@@ -179,7 +180,7 @@ def edit_project(request, project=None):
             return redirect('projects:project', project.id)
     else:
         if project is not None:
-            project = Project.objects.get(id=project)
+            project = Project.objects.get_object_or_404(id=project)
         form = ProjectForm(instance=project)
     return render(request, 'projects/edit_project.html', {
         'form': form,
@@ -203,7 +204,7 @@ def create_buy(request):
 
 @login_required
 def edit_buy(request, buy):
-    buy = Buy.objects.get(id=buy)
+    buy = Buy.objects.get_object_or_404(id=buy)
     if request.method == 'POST':
         form = EditBuyForm(request.POST)
         if form.is_valid():
