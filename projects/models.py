@@ -492,6 +492,7 @@ class Buy(models.Model):
     CONTRACT_TYPE_CHOICES = (
         ("Labor Hours", "Labor Hours"),
         ("Time and Materials", "Time and Materials"),
+        ("Firm Fixed Price", "Firm Fixed Price"),
     )
 
     name = models.CharField(
