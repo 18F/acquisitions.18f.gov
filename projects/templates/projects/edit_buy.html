@@ -8,6 +8,12 @@
     <form class="usa-form-large" action="{{ buy.get_absolute_url }}edit" method="post">
       {% csrf_token %}
       {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+      <div class="{% if form.name.field.required %}required{% endif %}">
+        {{ form.name.errors }}
+        {{ form.name.label_tag }}
+        {{ form.name }}
+      </div>
+      {#
       {% for fieldset in form.fieldsets %}
         <fieldset class="{{ fieldset.classes }}">
         {% if fieldset.legend %}
@@ -33,7 +39,7 @@
           {% endif %}
         {% endfor %}
         </fieldset>
-      {% endfor %}
+      {% endfor %}#}
       <input type="submit" value="Submit" />
     </form>
   </div>

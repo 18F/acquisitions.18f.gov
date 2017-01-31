@@ -268,10 +268,10 @@ class Project(models.Model):
     )
     iaa = models.ForeignKey(
         IAA,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         blank=False,
-        # TODO: should null=False?
-        null=True,
+        null=False,
+        verbose_name="IAA",
     )
     project_type = models.CharField(
         choices=(
@@ -288,14 +288,14 @@ class Project(models.Model):
         decimal_places=2,
         blank=False,
         null=False,
-        verbose_name='Cost of Goods Sold'
+        verbose_name='Cost of Goods Sold (COGS)'
     )
     non_cogs_amount = models.DecimalField(
         max_digits=20,
         decimal_places=2,
         blank=False,
         null=False,
-        verbose_name='Cost of Team Labor'
+        verbose_name='Cost of Team Labor (non-COGS)'
     )
     public = models.BooleanField(
         default=False,
@@ -323,14 +323,14 @@ class Project(models.Model):
         budget = self.budget()
         for buy in self.buy.all():
             if buy not in exclude:
-                budget -= buy.dollars
+                budget -= buy.budget
         return budget
 
     def clean(self):
-        if self.dollars:
-            if self.dollars > self.iaa.budget_remaining(exclude=[self]):
+        if self.budget:
+            if self.budget > self.iaa.budget_remaining(exclude=[self]):
                 raise ValidationError({
-                    'dollars': 'Value can\'t exceed remaining budget of'
+                    'budget': 'Value can\'t exceed remaining budget of'
                                'authorizing IAA'
                 })
 
@@ -510,7 +510,7 @@ class Buy(models.Model):
         blank=False,
         null=False,
     )
-    dollars = models.DecimalField(
+    budget = models.DecimalField(
         max_digits=20,
         decimal_places=2,
         blank=False,
@@ -780,10 +780,10 @@ class Buy(models.Model):
     SIMPLIFIED_ACQUISITION_THRESHOLD = 150000
 
     def is_micropurchase(self):
-        return self.dollars <= self.MICROPURCHASE_THRESHOLD
+        return self.budget <= self.MICROPURCHASE_THRESHOLD
 
     def is_under_sat(self):
-        return self.dollars <= self.SIMPLIFIED_ACQUISITION_THRESHOLD
+        return self.budget <= self.SIMPLIFIED_ACQUISITION_THRESHOLD
 
     #######################
     # Period of Performance
@@ -953,7 +953,7 @@ class Buy(models.Model):
         required_fields = [
             self.base_period_length,
             self.description,
-            self.dollars,
+            self.budget,
             self.name,
             self.procurement_method,
             self.product_owner,
@@ -1024,9 +1024,9 @@ class Buy(models.Model):
                     'naics_code': 'NAICS Code must be six digits'
                 })
 
-        if self.dollars > self.project.budget_remaining(exclude=[self]):
+        if self.budget > self.project.budget_remaining(exclude=[self]):
             raise ValidationError({
-                'dollars': 'Value can\'t exceed project\'s remaining budget.'
+                'budget': 'Value can\'t exceed project\'s remaining budget.'
             })
 
         if (self.project.public is not True) and (self.public is True):
@@ -1048,9 +1048,9 @@ class Buy(models.Model):
 
         # Validators for micro-purchases
         ################################
-        if self.procurement_method.short_name == 'micropurchase' and self.dollars and not self.is_micropurchase():
+        if self.procurement_method.short_name == 'micropurchase' and self.budget and not self.is_micropurchase():
             raise ValidationError({
-                'dollars': 'A micro-purchase must be $3500 or less'
+                'budget': 'A micro-purchase must be $3500 or less'
             })
 
         if self.is_micropurchase():

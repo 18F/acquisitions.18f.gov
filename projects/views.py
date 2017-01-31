@@ -145,7 +145,7 @@ def edit_client(request, client=None):
             return redirect('clients:client', client.id)
     else:
         if client is not None:
-            client = AgencyOffice.objects.get(id=client)
+            client = get_object_or_404(AgencyOffice, id=client)
         form = ClientForm(instance=client)
     return render(request, 'projects/edit_client.html', {
         'form': form
@@ -161,7 +161,7 @@ def edit_iaa(request, iaa=None):
             return redirect('iaas:iaa', iaa.id)
     else:
         if iaa is not None:
-            iaa = IAA.objects.get_object_or_404(id=iaa)
+            iaa = get_object_or_404(IAA, id=iaa)
         form = IAAForm(instance=iaa)
     return render(request, 'projects/edit_iaa.html', {
         'form': form,
@@ -180,7 +180,7 @@ def edit_project(request, project=None):
             return redirect('projects:project', project.id)
     else:
         if project is not None:
-            project = Project.objects.get_object_or_404(id=project)
+            project = get_object_or_404(Project, id=project)
         form = ProjectForm(instance=project)
     return render(request, 'projects/edit_project.html', {
         'form': form,
@@ -204,7 +204,7 @@ def create_buy(request):
 
 @login_required
 def edit_buy(request, buy):
-    buy = Buy.objects.get_object_or_404(id=buy)
+    buy = get_object_or_404(Buy, id=buy)
     if request.method == 'POST':
         form = EditBuyForm(request.POST)
         if form.is_valid():

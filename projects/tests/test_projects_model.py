@@ -14,16 +14,16 @@ class TestProjectsModel:
     @pytest.mark.django_db
     def test_budget_remaining(self):
         project = ProjectFactory.create(non_cogs_amount=200, cogs_amount=0)
-        buy = BuyFactory.create(dollars=50, project=project)
+        buy = BuyFactory.create(budget=50, project=project)
         assert project.budget_remaining() == 150
-        buy2 = BuyFactory.create(dollars=50, project=project)
+        buy2 = BuyFactory.create(budget=50, project=project)
         assert project.budget_remaining() == 100
 
     @pytest.mark.django_db
     def test_budget_remaining_clean(self):
         project = ProjectFactory.create(non_cogs_amount=200)
         buy = BuyFactory.create(
-            dollars=150,
+            budget=150,
             project=project,
             public=project.public
         )

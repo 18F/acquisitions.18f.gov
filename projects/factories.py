@@ -161,7 +161,7 @@ class BuyFactory(factory.django.DjangoModelFactory):
     public = factory.Faker('boolean')
 
     @factory.lazy_attribute
-    def dollars(self):
+    def budget(self):
         min = 500
         max = self.project.budget()
         return random.randint(min, max)

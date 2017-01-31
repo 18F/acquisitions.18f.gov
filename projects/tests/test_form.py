@@ -14,7 +14,7 @@ def test_create_buy_form():
     data = {
         "name": "New Buy",
         "description": "This is a new buy for things",
-        "dollars": 50,
+        "budget": 50,
         "project": project.id,
         "procurement_method": procurement_method.id
     }
@@ -28,7 +28,7 @@ def test_edit_buy_form():
     data = {
         "name": buy.name,
         "description": buy.description,
-        "dollars": buy.dollars,
+        "budget": buy.budget,
         "project": buy.project.id,
         "procurement_method": buy.procurement_method,
         "qasp": "something new"

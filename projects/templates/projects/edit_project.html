@@ -27,10 +27,15 @@
         {{ form.iaa.label_tag }}
         {{ form.iaa }}
       </div>
-      <div class="{% if form.dollars.field.required %}required{% endif %}">
-        {{ form.dollars.errors }}
-        {{ form.dollars.label_tag }}
-        {{ form.dollars }}
+      <div class="{% if form.cogs_amount.field.required %}required{% endif %}">
+        {{ form.cogs_amount.errors }}
+        {{ form.cogs_amount.label_tag }}
+        {{ form.cogs_amount }}
+      </div>
+      <div class="{% if form.non_cogs_amount.field.required %}required{% endif %}">
+        {{ form.non_cogs_amount.errors }}
+        {{ form.non_cogs_amount.label_tag }}
+        {{ form.non_cogs_amount }}
       </div>
       <div class="{% if form.team_members.field.required %}required{% endif %}">
         {{ form.team_members.errors }}

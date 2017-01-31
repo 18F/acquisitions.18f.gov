@@ -32,7 +32,7 @@ class CreateBuyForm(forms.ModelForm):
             'name',
             'description',
             'project',
-            'dollars',
+            'budget',
             'procurement_method'
         ]
 
@@ -75,7 +75,7 @@ class EditBuyForm(BetterModelForm):
                 'fields': [
                     'name',
                     'description',
-                    'dollars',
+                    'budget',
                     'project',
                     'public',
                     'procurement_method',

@@ -112,7 +112,7 @@ class BuyAdmin(admin.ModelAdmin):
                 'name',
                 'description',
                 'project',
-                'dollars',
+                'budget',
                 'public',
                 'github_repository',
                 'google_drive_folder',
