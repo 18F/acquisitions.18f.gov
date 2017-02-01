@@ -17,7 +17,7 @@
 {% endif %}
 <section class="usa-grid">
   <div class="usa-width-one-full">
-    <h1>{{ buy.name }}</h1>
+    <h1>{{ buy.name }} {% if user.is_staff %}<a class="usa-button" href="{{ buy.get_absolute_url }}edit">Edit</a>{% endif %}</h1>
     {% if buy.is_private %}<div>This buy is not yet public.</div>{% endif %}
     <h2>Description</h2>
     <div id="description">

@@ -3,7 +3,7 @@
 {% block content %}
 <section class="usa-grid">
   <div class="usa-width-one-full">
-    <h1>{{ iaa.client }}</h1>
+    <h1>{{ iaa.client }} {% if user.is_staff %}<a class="usa-button" href="{{ iaa.get_absolute_url }}edit">Edit</a>{% endif %}</h1>
     {% if not iaa.is_signed %}<div>This IAA is not yet signed.</div>
     {% else %}
     <h2>Signed On</h2>
