@@ -50,11 +50,6 @@
         {{ form.public }}
         <label for="{{ form.public.id_for_label }}">{{ form.public.label }}</label>
       </div>
-      <div class="{% if form.active.field.required %}required{% endif %}">
-        {{ form.active.errors }}
-        {{ form.active }}
-        <label for="{{ form.active.id_for_label }}">{{ form.active.label }}</label>
-      </div>
       <input type="submit" value="Submit" />
     </form>
   </div>

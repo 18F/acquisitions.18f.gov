@@ -303,12 +303,6 @@ class Project(models.Model):
     public = models.BooleanField(
         default=False,
     )
-    # TODO: should active status be determined by IAA status? Probably not
-    # directly, but it would make sense to check that projects don't outlast
-    # the underlying IAA
-    active = models.BooleanField(
-        default=True,
-    )
 
     def __str__(self):
         return "{0}".format(self.name)
