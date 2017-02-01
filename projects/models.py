@@ -191,6 +191,9 @@ class IAA(models.Model):
         except TypeError:
             return "To be determined"
 
+    def active(self):
+        return self.performance_ends > date.today() and date.today() > self.performance_begins
+
     def budget_remaining(self, exclude=[]):
         budget = self.budget
         for project in self.project_set.all():
