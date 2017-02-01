@@ -180,21 +180,44 @@
         {{ form.security_clearance_required }}
         <label for="{{ form.security_clearance_required.id_for_label }}">{{ form.security_clearance_required.label }}</label>
       </div>
-      <h2>Milestone dates</h2>
-      <div class="{% if form.issue_date.field.required %}required{% endif %}">
-        {{ form.issue_date.errors }}
-        {{ form.issue_date.label_tag }}
-        {{ form.issue_date }}
-      </div>
-      <div class="{% if form.award_date.field.required %}required{% endif %}">
-        {{ form.award_date.errors }}
-        {{ form.award_date.label_tag }}
-        {{ form.award_date }}
-      </div>
-      <div class="{% if form.delivery_date.field.required %}required{% endif %}">
-        {{ form.delivery_date.errors }}
-        {{ form.delivery_date.label_tag }}
-        {{ form.delivery_date }}
+      <div class="usa-grid-full">
+        <h2>Timeline</h2>
+        <div class="usa-width-one-half">
+          <h3>Planned dates</h3>
+          <div class="{% if form.planned_issue_date.field.required %}required{% endif %}">
+            {{ form.planned_issue_date.errors }}
+            {{ form.planned_issue_date.label_tag }}
+            {{ form.planned_issue_date }}
+          </div>
+          <div class="{% if form.planned_award_date.field.required %}required{% endif %}">
+            {{ form.planned_award_date.errors }}
+            {{ form.planned_award_date.label_tag }}
+            {{ form.planned_award_date }}
+          </div>
+          <div class="{% if form.planned_delivery_date.field.required %}required{% endif %}">
+            {{ form.planned_delivery_date.errors }}
+            {{ form.planned_delivery_date.label_tag }}
+            {{ form.planned_delivery_date }}
+          </div>
+        </div>
+        <div class="usa-width-one-half">
+          <h3>Actual dates</h3>
+          <div class="{% if form.issue_date.field.required %}required{% endif %}">
+            {{ form.issue_date.errors }}
+            {{ form.issue_date.label_tag }}
+            {{ form.issue_date }}
+          </div>
+          <div class="{% if form.award_date.field.required %}required{% endif %}">
+            {{ form.award_date.errors }}
+            {{ form.award_date.label_tag }}
+            {{ form.award_date }}
+          </div>
+          <div class="{% if form.delivery_date.field.required %}required{% endif %}">
+            {{ form.delivery_date.errors }}
+            {{ form.delivery_date.label_tag }}
+            {{ form.delivery_date }}
+          </div>
+        </div>
       </div>
       <h2>Award</h2>
       <div class="{% if form.amount_of_competition.field.required %}required{% endif %}">

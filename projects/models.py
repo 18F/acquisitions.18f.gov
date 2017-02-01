@@ -548,6 +548,18 @@ class Buy(models.Model):
     )
 
     # Milestone dates
+    planned_issue_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    planned_award_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    planned_delivery_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
     issue_date = models.DateTimeField(
         blank=True,
         null=True,
@@ -662,6 +674,7 @@ class Buy(models.Model):
     github_repository = models.URLField(
         blank=True,
         null=True,
+        verbose_name="GitHub repository"
     )
     google_drive_folder = models.URLField(
         blank=True,
