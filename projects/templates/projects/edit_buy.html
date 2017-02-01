@@ -8,6 +8,9 @@
     <form class="usa-form-large" action="{{ buy.get_absolute_url }}edit" method="post">
       {% csrf_token %}
       {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+      <div class="required">
+        Required field
+      </div>
       <h2>General details</h2>
       <div class="{% if form.name.field.required %}required{% endif %}">
         {{ form.name.errors }}
