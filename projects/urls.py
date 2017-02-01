@@ -17,6 +17,10 @@ api_patterns = [
     url(r'^iaas/(?P<pk>[0-9]+)$',
         views.IAADetail.as_view(),
         name='iaa-detail'),
+    url(r'^clients/$', views.ClientList.as_view(), name='client-list'),
+    url(r'^clients/(?P<pk>[0-9]+)$',
+        views.ClientDetail.as_view(),
+        name='client-detail'),
 ]
 
 iaa_patterns = [

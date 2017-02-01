@@ -1,9 +1,33 @@
 from rest_framework import serializers
-from projects.models import IAA, Project, Buy
+from projects.models import Agency, AgencyOffice, IAA, Project, Buy
+
+
+class AgencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Agency
+        fields = (
+            'name',
+            'address',
+        )
+
+
+class ClientSerializer(serializers.ModelSerializer):
+    agency = AgencySerializer()
+    client = serializers.CharField(
+        source='__str__'
+    )
+
+    class Meta:
+        model = AgencyOffice
+        fields = (
+            'id',
+            'client',
+            'agency',
+        )
 
 
 class IAASerializer(serializers.ModelSerializer):
-    client = serializers.StringRelatedField(read_only=True)
+    client = ClientSerializer()
 
     class Meta:
         model = IAA

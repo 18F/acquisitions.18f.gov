@@ -16,6 +16,7 @@ from projects.serializers import (
     IAASerializer,
     ProjectSerializer,
     BuySerializer,
+    ClientSerializer,
 )
 from projects.filters import (
     BuyFilter,
@@ -341,6 +342,43 @@ def financials(request):
             'totals': totals,
         }
     )
+
+
+class ClientList(mixins.ListModelMixin,
+              generics.GenericAPIView):
+    """
+    List all Clients
+    """
+    serializer_class = ClientSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated():
+            return AgencyOffice.objects.all()
+        else:
+            return AgencyOffice.objects.exclude(iaa__signed_on=None)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class ClientDetail(mixins.RetrieveModelMixin,
+                generics.GenericAPIView):
+    """
+    Retrieve details of one Client
+    """
+    serializer_class = ClientSerializer
+
+    def get_queryset(self):
+        iaa = AgencyOffice.objects.get(pk=self.kwargs['pk'])
+        if iaa.signed_on:
+            return AgencyOffice.objects.filter(pk=self.kwargs['pk'])
+        elif self.request.user.is_authenticated():
+            return AgencyOffice.objects.filter(pk=self.kwargs['pk'])
+        else:
+            raise Http404
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
 
 class IAAList(mixins.ListModelMixin,
