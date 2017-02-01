@@ -17,6 +17,11 @@ blockquote {
   padding-left: 5px;
 }
 
+.helptext {
+  font-size: 90%;
+  font-style: italic;
+}
+
 /* Buys */
 
 .acq-documents {

@@ -16,16 +16,19 @@
         {{ form.name.errors }}
         {{ form.name.label_tag }}
         {{ form.name }}
+        {% if form.name.help_text %}<span class="helptext">{{ form.name.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.description.field.required %}required{% endif %}">
         {{ form.description.errors }}
         {{ form.description.label_tag }}
         {{ form.description }}
+        {% if form.description.help_text %}<span class="helptext">{{ form.description.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.project.field.required %}required{% endif %}">
         {{ form.project.errors }}
         {{ form.project.label_tag }}
         {{ form.project }}
+        {% if form.project.help_text %}<span class="helptext">{{ form.project.help_text }}</span>{% endif %}
       </div>
       <div class="">
         <a href="{{ buy.project.get_absolute_url }}edit">Edit project</a>
@@ -34,154 +37,181 @@
         {{ form.budget.errors }}
         {{ form.budget.label_tag }}
         {{ form.budget }}
+        {% if form.budget.help_text %}<span class="helptext">{{ form.budget.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.public.field.required %}required{% endif %}">
         {{ form.public.errors }}
         {{ form.public }}
         <label for="{{ form.public.id_for_label }}">{{ form.public.label }}</label>
+        {% if form.public.help_text %}<span class="helptext">{{ form.public.help_text }}</span>{% endif %}
       </div>
       <h2>Staffing</h2>
-      <div class="">
-        {% for staff in buy.project.team_members.all %}
-          {{ staff }}
-        {% endfor %}
+      <div class="explanation">
+        Staff may be selected from team members of the <a href="{{ buy.project.get_absolute_url }}">associated project</a>.
       </div>
       <div class="{% if form.product_owner.field.required %}required{% endif %}">
         {{ form.product_owner.errors }}
         {{ form.product_owner.label_tag }}
         {{ form.product_owner }}
+        {% if form.product_owner.help_text %}<span class="helptext">{{ form.product_owner.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.product_lead.field.required %}required{% endif %}">
         {{ form.product_lead.errors }}
         {{ form.product_lead.label_tag }}
         {{ form.product_lead }}
+        {% if form.product_lead.help_text %}<span class="helptext">{{ form.product_lead.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.acquisition_lead.field.required %}required{% endif %}">
         {{ form.acquisition_lead.errors }}
         {{ form.acquisition_lead.label_tag }}
         {{ form.acquisition_lead }}
+        {% if form.acquisition_lead.help_text %}<span class="helptext">{{ form.acquisition_lead.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.technical_lead.field.required %}required{% endif %}">
         {{ form.technical_lead.errors }}
         {{ form.technical_lead.label_tag }}
         {{ form.technical_lead }}
+        {% if form.technical_lead.help_text %}<span class="helptext">{{ form.technical_lead.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.technical_evaluation_panel.field.required %}required{% endif %}">
         {{ form.technical_evaluation_panel.errors }}
         {{ form.technical_evaluation_panel.label_tag }}
         {{ form.technical_evaluation_panel }}
+        {% if form.technical_evaluation_panel.help_text %}<span class="helptext">{{ form.technical_evaluation_panel.help_text }}</span>{% endif %}
       </div>
       <h2>Contracting office</h2>
       <div class="{% if form.contracting_office.field.required %}required{% endif %}">
         {{ form.contracting_office.errors }}
         {{ form.contracting_office.label_tag }}
         {{ form.contracting_office }}
+        {% if form.contracting_office.help_text %}<span class="helptext">{{ form.contracting_office.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.contracting_officer.field.required %}required{% endif %}">
         {{ form.contracting_officer.errors }}
         {{ form.contracting_officer.label_tag }}
         {{ form.contracting_officer }}
+        {% if form.contracting_officer.help_text %}<span class="helptext">{{ form.contracting_officer.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.contracting_specialist.field.required %}required{% endif %}">
         {{ form.contracting_specialist.errors }}
         {{ form.contracting_specialist.label_tag }}
         {{ form.contracting_specialist }}
+        {% if form.contracting_specialist.help_text %}<span class="helptext">{{ form.contracting_specialist.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.contracting_officer_representative.field.required %}required{% endif %}">
         {{ form.contracting_officer_representative.errors }}
         {{ form.contracting_officer_representative.label_tag }}
         {{ form.contracting_officer_representative }}
+        {% if form.contracting_officer_representative.help_text %}<span class="helptext">{{ form.contracting_officer_representative.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.alternate_contracting_officer_representative.field.required %}required{% endif %}">
         {{ form.alternate_contracting_officer_representative.errors }}
         {{ form.alternate_contracting_officer_representative.label_tag }}
         {{ form.alternate_contracting_officer_representative }}
+        {% if form.alternate_contracting_officer_representative.help_text %}<span class="helptext">{{ form.alternate_contracting_officer_representative.help_text }}</span>{% endif %}
       </div>
       <h2>Contract elements</h2>
       <div class="{% if form.contractual_history.field.required %}required{% endif %}">
         {{ form.contractual_history.errors }}
         {{ form.contractual_history.label_tag }}
         {{ form.contractual_history }}
+        {% if form.contractual_history.help_text %}<span class="helptext">{{ form.contractual_history.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.requirements.field.required %}required{% endif %}">
         {{ form.requirements.errors }}
         {{ form.requirements.label_tag }}
         {{ form.requirements }}
+        {% if form.requirements.help_text %}<span class="helptext">{{ form.requirements.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.skills_needed.field.required %}required{% endif %}">
         {{ form.skills_needed.errors }}
         {{ form.skills_needed.label_tag }}
         {{ form.skills_needed }}
+        {% if form.skills_needed.help_text %}<span class="helptext">{{ form.skills_needed.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.base_period_length.field.required %}required{% endif %}">
         {{ form.base_period_length.errors }}
         {{ form.base_period_length.label_tag }}
         {{ form.base_period_length }}
+        {% if form.base_period_length.help_text %}<span class="helptext">{{ form.base_period_length.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.option_periods.field.required %}required{% endif %}">
         {{ form.option_periods.errors }}
         {{ form.option_periods.label_tag }}
         {{ form.option_periods }}
+        {% if form.option_periods.help_text %}<span class="helptext">{{ form.option_periods.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.option_period_length.field.required %}required{% endif %}">
         {{ form.option_period_length.errors }}
         {{ form.option_period_length.label_tag }}
         {{ form.option_period_length }}
+        {% if form.option_period_length.help_text %}<span class="helptext">{{ form.option_period_length.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.question_period_length.field.required %}required{% endif %}">
         {{ form.question_period_length.errors }}
         {{ form.question_period_length.label_tag }}
         {{ form.question_period_length }}
+        {% if form.question_period_length.help_text %}<span class="helptext">{{ form.question_period_length.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.submission_period_length.field.required %}required{% endif %}">
         {{ form.submission_period_length.errors }}
         {{ form.submission_period_length.label_tag }}
         {{ form.submission_period_length }}
+        {% if form.submission_period_length.help_text %}<span class="helptext">{{ form.submission_period_length.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.naics_code.field.required %}required{% endif %}">
         {{ form.naics_code.errors }}
         {{ form.naics_code.label_tag }}
         {{ form.naics_code }}
+        {% if form.naics_code.help_text %}<span class="helptext">{{ form.naics_code.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.procurement_method.field.required %}required{% endif %}">
         {{ form.procurement_method.errors }}
         {{ form.procurement_method.label_tag }}
         {{ form.procurement_method }}
+        {% if form.procurement_method.help_text %}<span class="helptext">{{ form.procurement_method.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.set_aside_status.field.required %}required{% endif %}">
         {{ form.set_aside_status.errors }}
         {{ form.set_aside_status.label_tag }}
         {{ form.set_aside_status }}
+        {% if form.set_aside_status.help_text %}<span class="helptext">{{ form.set_aside_status.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.competition_strategy.field.required %}required{% endif %}">
         {{ form.competition_strategy.errors }}
         {{ form.competition_strategy.label_tag }}
         {{ form.competition_strategy }}
+        {% if form.competition_strategy.help_text %}<span class="helptext">{{ form.competition_strategy.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.contract_type.field.required %}required{% endif %}">
         {{ form.contract_type.errors }}
         {{ form.contract_type.label_tag }}
         {{ form.contract_type }}
+        {% if form.contract_type.help_text %}<span class="helptext">{{ form.contract_type.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.rfq_id.field.required %}required{% endif %}">
         {{ form.rfq_id.errors }}
         {{ form.rfq_id.label_tag }}
         {{ form.rfq_id }}
+        {% if form.rfq_id.help_text %}<span class="helptext">{{ form.rfq_id.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.github_repository.field.required %}required{% endif %}">
         {{ form.github_repository.errors }}
         {{ form.github_repository.label_tag }}
         {{ form.github_repository }}
+        {% if form.github_repository.help_text %}<span class="helptext">{{ form.github_repository.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.google_drive_folder.field.required %}required{% endif %}">
         {{ form.google_drive_folder.errors }}
         {{ form.google_drive_folder.label_tag }}
         {{ form.google_drive_folder }}
+        {% if form.google_drive_folder.help_text %}<span class="helptext">{{ form.google_drive_folder.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.security_clearance_required.field.required %}required{% endif %}">
         {{ form.security_clearance_required.errors }}
         {{ form.security_clearance_required }}
         <label for="{{ form.security_clearance_required.id_for_label }}">{{ form.security_clearance_required.label }}</label>
+        {% if form.security_clearance_required.help_text %}<span class="helptext">{{ form.security_clearance_required.help_text }}</span>{% endif %}
       </div>
       <div class="usa-grid-full">
         <h2>Timeline</h2>
@@ -191,16 +221,19 @@
             {{ form.planned_issue_date.errors }}
             {{ form.planned_issue_date.label_tag }}
             {{ form.planned_issue_date }}
+            {% if form.planned_issue_date.help_text %}<span class="helptext">{{ form.planned_issue_date.help_text }}</span>{% endif %}
           </div>
           <div class="{% if form.planned_award_date.field.required %}required{% endif %}">
             {{ form.planned_award_date.errors }}
             {{ form.planned_award_date.label_tag }}
             {{ form.planned_award_date }}
+            {% if form.planned_award_date.help_text %}<span class="helptext">{{ form.planned_award_date.help_text }}</span>{% endif %}
           </div>
           <div class="{% if form.planned_delivery_date.field.required %}required{% endif %}">
             {{ form.planned_delivery_date.errors }}
             {{ form.planned_delivery_date.label_tag }}
             {{ form.planned_delivery_date }}
+            {% if form.planned_delivery_date.help_text %}<span class="helptext">{{ form.planned_delivery_date.help_text }}</span>{% endif %}
           </div>
         </div>
         <div class="usa-width-one-half">
@@ -209,16 +242,19 @@
             {{ form.issue_date.errors }}
             {{ form.issue_date.label_tag }}
             {{ form.issue_date }}
+            {% if form.issue_date.help_text %}<span class="helptext">{{ form.issue_date.help_text }}</span>{% endif %}
           </div>
           <div class="{% if form.award_date.field.required %}required{% endif %}">
             {{ form.award_date.errors }}
             {{ form.award_date.label_tag }}
             {{ form.award_date }}
+            {% if form.award_date.help_text %}<span class="helptext">{{ form.award_date.help_text }}</span>{% endif %}
           </div>
           <div class="{% if form.delivery_date.field.required %}required{% endif %}">
             {{ form.delivery_date.errors }}
             {{ form.delivery_date.label_tag }}
             {{ form.delivery_date }}
+            {% if form.delivery_date.help_text %}<span class="helptext">{{ form.delivery_date.help_text }}</span>{% endif %}
           </div>
         </div>
       </div>
@@ -227,11 +263,13 @@
         {{ form.amount_of_competition.errors }}
         {{ form.amount_of_competition.label_tag }}
         {{ form.amount_of_competition }}
+        {% if form.amount_of_competition.help_text %}<span class="helptext">{{ form.amount_of_competition.help_text }}</span>{% endif %}
       </div>
       <div class="{% if form.vendor.field.required %}required{% endif %}">
         {{ form.vendor.errors }}
         {{ form.vendor.label_tag }}
         {{ form.vendor }}
+        {% if form.vendor.help_text %}<span class="helptext">{{ form.vendor.help_text }}</span>{% endif %}
       </div>
       <input type="submit" value="Submit" />
     </form>
