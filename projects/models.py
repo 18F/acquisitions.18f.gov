@@ -302,6 +302,9 @@ class Project(models.Model):
     )
     public = models.BooleanField(
         default=False,
+        help_text='Whether this project will be displayed to people outside of'
+                  ' the TTS Office of Acquisitions. A project must be public'
+                  ' for buys within it to also be public.'
     )
 
     def __str__(self):
@@ -538,6 +541,9 @@ class Buy(models.Model):
     )
     public = models.BooleanField(
         default=False,
+        help_text='Whether this buy will be displayed to people outside of'
+                  ' the TTS Office of Acquisitions. It\'s likely that a buy'
+                  ' should become public (as "Planning") before it is issued.'
     )
     amount_of_competition = models.IntegerField(
         blank=True,
