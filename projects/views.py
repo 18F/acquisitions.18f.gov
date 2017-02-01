@@ -153,15 +153,28 @@ def edit_client(request, client=None):
 
 
 @login_required
-def edit_iaa(request, iaa=None):
+def create_iaa(request):
     if request.method == 'POST':
         form = IAAForm(request.POST)
         if form.is_valid():
             iaa = form.save()
             return redirect('iaas:iaa', iaa.id)
     else:
-        if iaa is not None:
-            iaa = get_object_or_404(IAA, id=iaa)
+        form = IAAForm()
+    return render(request, 'projects/edit_iaa.html', {
+        'form': form,
+    })
+
+
+@login_required
+def edit_iaa(request, iaa=None):
+    iaa = get_object_or_404(IAA, id=iaa)
+    if request.method == 'POST':
+        form = IAAForm(request.POST, instance=iaa)
+        if form.is_valid():
+            iaa = form.save()
+            return redirect('iaas:iaa', iaa.id)
+    else:
         form = IAAForm(instance=iaa)
     return render(request, 'projects/edit_iaa.html', {
         'form': form,
@@ -170,17 +183,28 @@ def edit_iaa(request, iaa=None):
 
 
 @login_required
-def edit_project(request, project=None):
+def create_project(request):
     if request.method == 'POST':
-        print('got post')
         form = ProjectForm(request.POST)
         if form.is_valid():
-            print('valid!')
             project = form.save()
             return redirect('projects:project', project.id)
     else:
-        if project is not None:
-            project = get_object_or_404(Project, id=project)
+        form = ProjectForm()
+    return render(request, 'projects/edit_project.html', {
+        'form': form,
+    })
+
+
+@login_required
+def edit_project(request, project=project):
+    project = get_object_or_404(Project, id=project)
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, instance=project)
+        if form.is_valid():
+            project = form.save()
+            return redirect('projects:project', project.id)
+    else:
         form = ProjectForm(instance=project)
     return render(request, 'projects/edit_project.html', {
         'form': form,
@@ -206,7 +230,7 @@ def create_buy(request):
 def edit_buy(request, buy):
     buy = get_object_or_404(Buy, id=buy)
     if request.method == 'POST':
-        form = EditBuyForm(request.POST)
+        form = EditBuyForm(request.POST, instance=buy)
         if form.is_valid():
             form.save()
             return redirect('buys:buy', buy.id)

@@ -21,23 +21,23 @@ api_patterns = [
 
 iaa_patterns = [
     url(r'^$', views.iaas, name='iaas'),
-    url(r'^create$', views.edit_iaa, name='edit_iaa'),
-    url(r'(?P<iaa>\w+)$', views.iaa, name='iaa'),
+    url(r'^create/$', views.edit_iaa, name='edit_iaa'),
+    url(r'(?P<iaa>\w+)/$', views.iaa, name='iaa'),
     url(r'(?P<iaa>\w+)/edit/$', views.edit_iaa, name='edit_iaa'),
 ]
 
 project_patterns = [
     url(r'^$', views.projects, name='projects'),
-    url(r'^create$', views.edit_project, name='edit_project'),
+    url(r'^create/$', views.create_project, name='create_project'),
     url(r'(?P<project>\d+)/$', views.project, name='project'),
     url(r'(?P<project>\d+)/edit/$', views.edit_project, name='edit_project'),
 ]
 
 buy_patterns = [
     url(r'^$', views.buys, name='buys'),
-    url(r'^create$', views.create_buy, name='create_buy'),
+    url(r'^create/$', views.create_buy, name='create_buy'),
     url(r'(?P<buy>\d+)/$', views.buy, name='buy'),
-    url(r'(?P<buy>\d+)/edit$', views.edit_buy, name='edit_buy'),
+    url(r'(?P<buy>\d+)/edit/$', views.edit_buy, name='edit_buy'),
     url(r'(?P<buy>\d+)/nda/$', views.buy_nda, name='buy_nda'),
     url(r'(?P<buy>\d+)/(?P<doc_type>\w+)/$', views.document, name='document'),
     url(
@@ -49,8 +49,8 @@ buy_patterns = [
 
 client_patterns = [
     url(r'^$', views.clients, name='clients'),
-    url(r'^create$', views.edit_client, name='edit_client'),
-    url(r'^(?P<client>\w+)$', views.client, name='client'),
+    url(r'^create/$', views.edit_client, name='edit_client'),
+    url(r'^(?P<client>\w+)/$', views.client, name='client'),
     url(r'(?P<client>\d+)/edit/$', views.edit_client, name='edit_client'),
 ]
 

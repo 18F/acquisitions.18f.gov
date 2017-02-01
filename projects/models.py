@@ -328,10 +328,13 @@ class Project(models.Model):
 
     def clean(self):
         if self.budget:
-            if self.budget > self.iaa.budget_remaining(exclude=[self]):
+            if self.budget() > self.iaa.budget_remaining(exclude=[self]):
                 raise ValidationError({
-                    'budget': 'Value can\'t exceed remaining budget of'
-                               'authorizing IAA'
+                    'cogs_amount': 'Value can\'t exceed remaining budget of'
+                    ' authorizing IAA',
+                    'non_cogs_amount': 'Value can\'t exceed remaining budget'
+                    ' of authorizing IAA',
+
                 })
 
     class Meta:

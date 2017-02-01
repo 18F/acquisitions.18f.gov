@@ -4,7 +4,7 @@
 <section class="usa-grid">
   <div class="usa-width-one-full">
     <h1>{% if project %}Edit: {{ project.name }}{% else %}Create Project{% endif %}</h1>
-    <form class="" action="/projects/create" method="post">
+    <form class="" action="{{ project.get_absolute_url }}edit/" method="post">
       {% csrf_token %}
       {{ form.non_field_errors }}
       <div class="{% if form.name.field.required %}required{% endif %}">
@@ -26,6 +26,9 @@
         {{ form.iaa.errors }}
         {{ form.iaa.label_tag }}
         {{ form.iaa }}
+      </div>
+      <div class="">
+        IAA budget available: {{ project.iaa.budget_remaining }}
       </div>
       <div class="{% if form.cogs_amount.field.required %}required{% endif %}">
         {{ form.cogs_amount.errors }}
