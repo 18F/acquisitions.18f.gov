@@ -22,6 +22,10 @@ blockquote {
   font-style: italic;
 }
 
+.form-sidebar {
+  padding-top: 3rem;
+}
+
 /* Buys */
 
 .acq-documents {

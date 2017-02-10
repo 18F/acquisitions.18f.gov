@@ -805,6 +805,15 @@ class Buy(models.Model):
     def is_under_sat(self):
         return self.budget <= self.SIMPLIFIED_ACQUISITION_THRESHOLD
 
+    ##########
+    # Finances
+    ##########
+    def project_budget_except_this(self):
+        if self.project is not None:
+            return self.project.budget_remaining(exclude=[self])
+        else:
+            return "To be determined"
+
     #######################
     # Period of Performance
     #######################

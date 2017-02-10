@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load form_utils %}
+{% load humanize %}
 
 {% block content %}
 <section class="usa-grid">
@@ -33,11 +34,20 @@
       <div class="">
         <a href="{{ buy.project.get_absolute_url }}edit">Edit project</a>
       </div>
-      <div class="{% if form.budget.field.required %}required{% endif %}">
-        {{ form.budget.errors }}
-        {{ form.budget.label_tag }}
-        {{ form.budget }}
-        {% if form.budget.help_text %}<span class="helptext">{{ form.budget.help_text }}</span>{% endif %}
+      <div class="usa-grid-full">
+        <div class="usa-width-three-fourths">
+          <div class="{% if form.budget.field.required %}required{% endif %}">
+            {{ form.budget.errors }}
+            {{ form.budget.label_tag }}
+            {{ form.budget }}
+            {% if form.budget.help_text %}<span class="helptext">{{ form.budget.help_text }}</span>{% endif %}
+          </div>
+        </div>
+        <div class="usa-width-one-fourth">
+          <div class="form-sidebar">
+            Available: <span id="budget-available">${{ buy.project.budget_remaining|intcomma }}</span>
+          </div>
+        </div>
       </div>
       <div class="{% if form.public.field.required %}required{% endif %}">
         {{ form.public.errors }}
@@ -46,7 +56,7 @@
         {% if form.public.help_text %}<span class="helptext">{{ form.public.help_text }}</span>{% endif %}
       </div>
       <h2>Staffing</h2>
-      <div class="explanation">
+      <div class="form-explanation">
         Staff may be selected from team members of the <a href="{{ buy.project.get_absolute_url }}">associated project</a>.
       </div>
       <div class="{% if form.product_owner.field.required %}required{% endif %}">
@@ -275,4 +285,18 @@
     </form>
   </div>
 </section>
+<script type="text/javascript">
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  let available = document.getElementById("budget-available");
+  let budget = document.getElementById("id_budget");
+  budget.addEventListener('keyup', function() {
+    let value = Number({{ buy.project_budget_except_this }}) - Number(budget.value);
+    available.innerHTML = "$" + numberWithCommas(value.toFixed(2))
+  });
+})
+</script>
 {% endblock %}
